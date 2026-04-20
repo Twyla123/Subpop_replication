@@ -12,21 +12,22 @@ Upgrades over old step6_analyze_results.ipynb:
   6. Generalization analysis               (unseen questions + unseen subgroups)
   7. Population-weighted aggregate opinion
 
-Outputs (under OUT_DIR):
-    evaluation_summary.csv       - main results table
-    per_attribute_wd.csv         - WD breakdown by attribute
-    bootstrap_ci.csv             - bootstrap confidence intervals
-    entropy_analysis.csv         - entropy of predicted vs ground truth
-    disagreement_heatmaps/       - one CSV per attribute
-    ablation_table.csv           - full ablation comparison (SubPop Table 1)
-    population_weighted.csv      - weighted aggregate opinions
+Scope-matched outputs:
+  evaluation/descriptive_all_rows/   — every question, every (attr, group, qkey) row
+  evaluation/test_only_fair/         — test questions only (apples-to-apples comparison
+                                       between zero-shot and fine-tuned models, which are
+                                       only evaluated on held-out test questions)
+  evaluation/                        — ablation_table.csv (both scopes combined)
+                                       method_coverage.csv (audit manifest)
+                                       disagreement_heatmaps/ (ground truth + per-method)
 
 Usage:
-    python step6_full_evaluation.py \
-        --ground_truth_csv  approach2_outputs/cms/cms_survey_distributions.csv \
-        --questions_json    approach2_outputs/cms/cms_questions.json \
-        --predictions_dir   approach2_outputs/cms \
-        --weights_csv       approach2_outputs/cms/cms_subgroup_weights.csv \
+    python step6_full_evaluation.py \\
+        --ground_truth_csv  approach2_outputs/cms/cms_survey_distributions.csv \\
+        --questions_json    approach2_outputs/cms/cms_questions.json \\
+        --question_split_json approach2_outputs/cms/cms_question_split.json \\
+        --predictions_dir   approach2_outputs/cms \\
+        --weights_csv       approach2_outputs/cms/cms_subgroup_weights.csv \\
         --output_dir        approach2_outputs/cms/evaluation
 """
 
@@ -36,7 +37,7 @@ import json
 import sys
 from itertools import combinations
 from pathlib import Path
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Set
 
 import numpy as np
 import pandas as pd
@@ -142,6 +143,13 @@ def load_distributions(csv_path: str) -> pd.DataFrame:
     return df
 
 
+def _filter_by_qkeys(df: pd.DataFrame, filter_qkeys: Optional[Set[str]]) -> pd.DataFrame:
+    """Return df filtered to filter_qkeys rows, or df unchanged if filter_qkeys is None."""
+    if filter_qkeys is None:
+        return df
+    return df[df["qkey"].isin(filter_qkeys)]
+
+
 # =========================================================================
 # 1. BOOTSTRAP CONFIDENCE INTERVALS
 # =========================================================================
@@ -153,10 +161,13 @@ def compute_bootstrap_ci(
     n_bootstrap: int = 1000,
     confidence: float = 0.95,
     seed: int = 42,
+    filter_qkeys: Optional[Set[str]] = None,
 ) -> pd.DataFrame:
     """
     Compute bootstrap CI for WD between predicted and ground truth distributions.
     For each (attribute, group, question) pair, resample and compute WD.
+
+    filter_qkeys: if provided, restrict analysis to this set of question keys.
     """
     np.random.seed(seed)
     alpha = 1 - confidence
@@ -168,6 +179,7 @@ def compute_bootstrap_ci(
         suffixes=("_gt", "_pred"),
         how="inner",
     )
+    merged = _filter_by_qkeys(merged, filter_qkeys)
 
     for _, row in merged.iterrows():
         gt = parse_dist(row["responses_gt"])
@@ -218,10 +230,13 @@ def per_attribute_wd(
     ground_truth_df: pd.DataFrame,
     predictions_df: pd.DataFrame,
     ordinal_flags: dict = None,
-) -> pd.DataFrame:
+    filter_qkeys: Optional[Set[str]] = None,
+) -> tuple:
     """
     Compute mean WD per attribute (SubPop Tables 9-10).
     Shows which demographic dimensions the model captures best/worst.
+
+    filter_qkeys: if provided, restrict analysis to this set of question keys.
     """
     merged = ground_truth_df.merge(
         predictions_df,
@@ -229,6 +244,7 @@ def per_attribute_wd(
         suffixes=("_gt", "_pred"),
         how="inner",
     )
+    merged = _filter_by_qkeys(merged, filter_qkeys)
 
     rows = []
     for _, row in merged.iterrows():
@@ -247,6 +263,11 @@ def per_attribute_wd(
 
     detail_df = pd.DataFrame(rows)
 
+    if detail_df.empty:
+        empty = pd.DataFrame(columns=["attribute", "mean_wd", "std_wd", "n_pairs"])
+        empty_grp = pd.DataFrame(columns=["attribute", "group", "mean_wd", "n_pairs"])
+        return empty, empty_grp, detail_df
+
     # Aggregate: mean WD per attribute, per group, and overall
     per_attr = detail_df.groupby("attribute")["wd"].agg(["mean", "std", "count"]).reset_index()
     per_attr.columns = ["attribute", "mean_wd", "std_wd", "n_pairs"]
@@ -264,10 +285,13 @@ def per_attribute_wd(
 def entropy_analysis(
     ground_truth_df: pd.DataFrame,
     predictions_df: pd.DataFrame,
+    filter_qkeys: Optional[Set[str]] = None,
 ) -> pd.DataFrame:
     """
     Compare entropy of predicted vs ground truth distributions.
     Checks if model preserves response diversity or collapses.
+
+    filter_qkeys: if provided, restrict analysis to this set of question keys.
     """
     merged = ground_truth_df.merge(
         predictions_df,
@@ -275,6 +299,7 @@ def entropy_analysis(
         suffixes=("_gt", "_pred"),
         how="inner",
     )
+    merged = _filter_by_qkeys(merged, filter_qkeys)
 
     rows = []
     for _, row in merged.iterrows():
@@ -307,11 +332,15 @@ def intergroup_disagreement(
     predictions_df: pd.DataFrame,
     ground_truth_df: pd.DataFrame = None,
     ordinal_flags: dict = None,
+    filter_qkeys: Optional[Set[str]] = None,
 ) -> Dict[str, pd.DataFrame]:
     """
     For each attribute, compute pairwise WD between groups on the same question.
     Returns dict of attribute → DataFrame heatmaps.
     Mirrors SubPop Figure 4.
+
+    filter_qkeys: if provided, restrict disagreement computation to this set of
+                  question keys (useful for fair comparison on test questions only).
     """
     heatmaps = {}
 
@@ -321,13 +350,17 @@ def intergroup_disagreement(
 
         for attr in df["attribute"].unique():
             attr_df = df[df["attribute"] == attr]
-            groups = sorted(attr_df["group"].unique())
+            # Apply qkey filter within this attribute's data
+            attr_df = _filter_by_qkeys(attr_df, filter_qkeys)
 
+            if attr_df.empty:
+                continue
+
+            groups = sorted(attr_df["group"].unique())
             if len(groups) < 2:
                 continue
 
-            # Compute average pairwise WD across all questions
-            n_questions = attr_df["qkey"].nunique()
+            # Compute average pairwise WD across all (filtered) questions
             disagreement_matrix = pd.DataFrame(0.0, index=groups, columns=groups)
             count_matrix = pd.DataFrame(0, index=groups, columns=groups)
 
@@ -373,7 +406,7 @@ def build_ablation_table(
     prediction_files: Dict[str, str],
     bounds_csv: Optional[str] = None,
     ordinal_flags: dict = None,
-    filter_qkeys: Optional[set] = None,
+    filter_qkeys: Optional[Set[str]] = None,
 ) -> pd.DataFrame:
     """
     Build SubPop Table 1-style ablation table.
@@ -393,8 +426,8 @@ def build_ablation_table(
                 suffixes=("_gt", "_pred"), how="inner",
             )
             # Restrict to the requested question subset when asked
-            if filter_qkeys is not None:
-                merged = merged[merged["qkey"].isin(filter_qkeys)]
+            merged = _filter_by_qkeys(merged, filter_qkeys)
+
             method_wds = {}
             for _, row in merged.iterrows():
                 gt = parse_dist(row["responses_gt"])
@@ -444,16 +477,20 @@ def build_ablation_table(
 def population_weighted_opinion(
     predictions_df: pd.DataFrame,
     weights_df: pd.DataFrame,
+    filter_qkeys: Optional[Set[str]] = None,
 ) -> pd.DataFrame:
     """
     Compute population-weighted aggregate opinion per question.
     Uses PUMS PWGTP weights for proper population representation.
+
+    filter_qkeys: if provided, restrict to this set of question keys.
     """
     merged = predictions_df.merge(
         weights_df,
         on=["attribute", "group"],
         how="left",
     )
+    merged = _filter_by_qkeys(merged, filter_qkeys)
 
     rows = []
     for qkey in merged["qkey"].unique():
@@ -499,6 +536,39 @@ def population_weighted_opinion(
 
 
 # =========================================================================
+# COVERAGE MANIFEST HELPER
+# =========================================================================
+
+def _coverage_row(
+    method: str,
+    scope: str,
+    merged_df: pd.DataFrame,
+) -> dict:
+    """Build one row for the method_coverage.csv manifest."""
+    if merged_df.empty:
+        return {
+            "method": method,
+            "scope": scope,
+            "n_rows": 0,
+            "n_qkeys": 0,
+            "qkeys": "",
+            "n_attributes": 0,
+            "attributes": "",
+        }
+    qkeys = sorted(merged_df["qkey"].unique().tolist())
+    attrs = sorted(merged_df["attribute"].unique().tolist())
+    return {
+        "method": method,
+        "scope": scope,
+        "n_rows": len(merged_df),
+        "n_qkeys": len(qkeys),
+        "qkeys": "|".join(qkeys),
+        "n_attributes": len(attrs),
+        "attributes": "|".join(attrs),
+    }
+
+
+# =========================================================================
 # MAIN
 # =========================================================================
 
@@ -513,7 +583,7 @@ def main():
                         help="Path to cms_questions.json (needed for ordinal vs nominal flag)")
     parser.add_argument("--question_split_json", type=str,
                         default=None,
-                        help="Path to cms_question_split.json; enables fair test-only ablation columns")
+                        help="Path to cms_question_split.json; enables fair test-only analysis")
     parser.add_argument("--predictions_dir", type=str, default="approach2_outputs/cms")
     parser.add_argument("--demographics_csv", type=str,
                         default="approach2_outputs/cms/cms_demographics.csv")
@@ -527,6 +597,12 @@ def main():
     out_dir = Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     pred_dir = Path(args.predictions_dir)
+
+    # Create scope-specific output subdirectories
+    all_dir = out_dir / "descriptive_all_rows"
+    fair_dir = out_dir / "test_only_fair"
+    all_dir.mkdir(exist_ok=True)
+    fair_dir.mkdir(exist_ok=True)
 
     # Load ordinal flags (ordinal vs nominal per question)
     ordinal_flags = load_ordinal_flags(args.questions_json)
@@ -561,88 +637,133 @@ def main():
         print("  Fine-tuned results: run subpop-main/scripts/experiment/run_inference.py")
         print("  Will compute evaluation metrics on ground truth only.")
 
-    # === 1. Bootstrap CI ===
-    print(f"\n{'='*60}")
-    print("1. BOOTSTRAP CONFIDENCE INTERVALS")
-    print(f"{'='*60}")
-
-    for method_name, pred_path in prediction_files.items():
-        print(f"\n  Computing bootstrap CI for: {method_name}")
-        pred_df = load_distributions(pred_path)
-        ci_df = compute_bootstrap_ci(gt_df, pred_df, ordinal_flags=ordinal_flags, n_bootstrap=args.n_bootstrap, seed=args.seed)
-        ci_path = out_dir / f"bootstrap_ci_{method_name.replace(' ', '_')}.csv"
-        ci_df.to_csv(ci_path, index=False)
-        print(f"  Mean WD: {ci_df['wd_point'].mean():.4f} "
-              f"[{ci_df['wd_ci_lower'].mean():.4f}, {ci_df['wd_ci_upper'].mean():.4f}]")
-
-    # === 2. Per-Attribute WD ===
-    print(f"\n{'='*60}")
-    print("2. PER-ATTRIBUTE WD BREAKDOWN")
-    print(f"{'='*60}")
-
-    for method_name, pred_path in prediction_files.items():
-        pred_df = load_distributions(pred_path)
-        per_attr, per_group, detail = per_attribute_wd(gt_df, pred_df, ordinal_flags=ordinal_flags)
-        per_attr.to_csv(out_dir / f"per_attribute_wd_{method_name.replace(' ', '_')}.csv", index=False)
-        print(f"\n  {method_name}:")
-        for _, row in per_attr.iterrows():
-            print(f"    {row['attribute']:20s} WD={row['mean_wd']:.4f} (std={row['std_wd']:.4f}, n={int(row['n_pairs'])})")
-
-    # === 3. Entropy Analysis ===
-    print(f"\n{'='*60}")
-    print("3. ENTROPY ANALYSIS")
-    print(f"{'='*60}")
-
-    for method_name, pred_path in prediction_files.items():
-        pred_df = load_distributions(pred_path)
-        ent_df = entropy_analysis(gt_df, pred_df)
-        ent_df.to_csv(out_dir / f"entropy_{method_name.replace(' ', '_')}.csv", index=False)
-        mean_diff = ent_df["entropy_diff"].mean()
-        direction = "more peaked" if mean_diff < 0 else "more diverse"
-        print(f"  {method_name}: avg entropy diff = {mean_diff:.4f} (predictions are {direction})")
-
-    # === 4. Inter-Group Disagreement ===
-    print(f"\n{'='*60}")
-    print("4. INTER-GROUP DISAGREEMENT HEATMAPS")
-    print(f"{'='*60}")
-
-    heatmap_dir = out_dir / "disagreement_heatmaps"
-    heatmap_dir.mkdir(exist_ok=True)
-
-    # Ground truth disagreement — pass gt_df as ground_truth_df so keys get "_gt" suffix
-    gt_heatmaps = intergroup_disagreement(None, ground_truth_df=gt_df, ordinal_flags=ordinal_flags)
-    for key, heatmap in gt_heatmaps.items():
-        heatmap.to_csv(heatmap_dir / f"{key}.csv")
-        print(f"  {key}: {heatmap.shape[0]} groups, max disagreement = {heatmap.max().max():.4f}")
-
-    # Predicted disagreement
-    for method_name, pred_path in prediction_files.items():
-        pred_df = load_distributions(pred_path)
-        pred_heatmaps = intergroup_disagreement(pred_df, ordinal_flags=ordinal_flags)
-        for key, heatmap in pred_heatmaps.items():
-            safe_name = method_name.replace(" ", "_")
-            heatmap.to_csv(heatmap_dir / f"{key}_{safe_name}.csv")
-
-    # === 5. Ablation Table ===
-    print(f"\n{'='*60}")
-    print("5. ABLATION COMPARISON TABLE (SubPop Table 1)")
-    print(f"{'='*60}")
-
-    bounds_path = pred_dir / "statistical_bounds.csv"
-    bounds_csv_arg = str(bounds_path) if bounds_path.exists() else None
-
-    # Load test qkeys for fair comparison (zero-shot vs fine-tuned on same Qs)
+    # Load test qkeys for fair-scope analysis
     test_qkeys = None
     split_path = args.question_split_json or str(pred_dir / "cms_question_split.json")
     if Path(split_path).exists():
         with open(split_path) as f:
             split_data = json.load(f)
         test_qkeys = set(split_data.get("test", []))
-        print(f"  Loaded question split — test qkeys: {sorted(test_qkeys)}")
+        print(f"\n  Loaded question split — {len(test_qkeys)} test qkeys: {sorted(test_qkeys)}")
     else:
-        print("  NOTE: --question_split_json not found; skipping test-only ablation columns.")
+        print("\n  NOTE: cms_question_split.json not found; test_only_fair/ outputs will be skipped.")
 
-    # Pass 1: all questions (full zero-shot coverage)
+    # Coverage manifest rows
+    coverage_rows = []
+
+    # -------------------------------------------------------------------------
+    # Helper: run all per-method analyses for one scope
+    # -------------------------------------------------------------------------
+    def run_scope(scope_dir: Path, scope_label: str, qkey_filter: Optional[Set[str]]):
+        """
+        Run bootstrap CI, per-attribute WD, entropy, and population-weighted
+        analyses for all prediction files under the given qkey filter, writing
+        results to scope_dir.
+        """
+        scope_dir.mkdir(exist_ok=True)
+        heatmap_dir = scope_dir / "disagreement_heatmaps"
+        heatmap_dir.mkdir(exist_ok=True)
+
+        # Ground truth disagreement heatmaps (scoped)
+        gt_heatmaps = intergroup_disagreement(
+            None, ground_truth_df=gt_df,
+            ordinal_flags=ordinal_flags, filter_qkeys=qkey_filter,
+        )
+        for key, heatmap in gt_heatmaps.items():
+            heatmap.to_csv(heatmap_dir / f"{key}.csv")
+
+        for method_name, pred_path in prediction_files.items():
+            safe_name = method_name.replace(" ", "_")
+
+            try:
+                pred_df = load_distributions(pred_path)
+            except Exception as e:
+                print(f"  WARNING: could not load {pred_path}: {e}")
+                continue
+
+            # Build merge once for coverage stats
+            merged_for_cov = gt_df.merge(
+                pred_df, on=["qkey", "attribute", "group"],
+                suffixes=("_gt", "_pred"), how="inner",
+            )
+            merged_for_cov = _filter_by_qkeys(merged_for_cov, qkey_filter)
+            coverage_rows.append(_coverage_row(method_name, scope_label, merged_for_cov))
+
+            # ── Bootstrap CI ────────────────────────────────────────────────
+            ci_df = compute_bootstrap_ci(
+                gt_df, pred_df,
+                ordinal_flags=ordinal_flags,
+                n_bootstrap=args.n_bootstrap,
+                seed=args.seed,
+                filter_qkeys=qkey_filter,
+            )
+            ci_df.to_csv(scope_dir / f"bootstrap_ci_{safe_name}.csv", index=False)
+
+            # ── Per-attribute WD ─────────────────────────────────────────────
+            per_attr, per_group, detail = per_attribute_wd(
+                gt_df, pred_df,
+                ordinal_flags=ordinal_flags,
+                filter_qkeys=qkey_filter,
+            )
+            per_attr.to_csv(scope_dir / f"per_attribute_wd_{safe_name}.csv", index=False)
+
+            # ── Entropy ──────────────────────────────────────────────────────
+            ent_df = entropy_analysis(gt_df, pred_df, filter_qkeys=qkey_filter)
+            ent_df.to_csv(scope_dir / f"entropy_{safe_name}.csv", index=False)
+
+            # ── Predicted disagreement heatmaps ──────────────────────────────
+            pred_heatmaps = intergroup_disagreement(
+                pred_df, ordinal_flags=ordinal_flags, filter_qkeys=qkey_filter,
+            )
+            for key, heatmap in pred_heatmaps.items():
+                heatmap.to_csv(heatmap_dir / f"{key}_{safe_name}.csv")
+
+            # ── Population-weighted opinion ───────────────────────────────────
+            if Path(args.weights_csv).exists():
+                weights_df = pd.read_csv(args.weights_csv)
+                weighted = population_weighted_opinion(
+                    pred_df, weights_df, filter_qkeys=qkey_filter,
+                )
+                weighted.to_csv(scope_dir / f"population_weighted_{safe_name}.csv", index=False)
+
+        # Print quick summary for this scope
+        if prediction_files:
+            print(f"\n  [{scope_label}] Summary:")
+            for method_name, pred_path in prediction_files.items():
+                safe_name = method_name.replace(" ", "_")
+                ci_path = scope_dir / f"bootstrap_ci_{safe_name}.csv"
+                if ci_path.exists():
+                    ci_df = pd.read_csv(ci_path)
+                    if not ci_df.empty:
+                        mean_wd = ci_df["wd_point"].mean()
+                        ci_lo = ci_df["wd_ci_lower"].mean()
+                        ci_hi = ci_df["wd_ci_upper"].mean()
+                        n = len(ci_df)
+                        print(f"    {method_name:25s}  WD={mean_wd:.4f}  "
+                              f"95%CI=[{ci_lo:.4f}, {ci_hi:.4f}]  n={n}")
+
+    # ── Scope 1: all questions ──────────────────────────────────────────────
+    print(f"\n{'='*60}")
+    print("SCOPE: descriptive_all_rows  (all questions, all rows)")
+    print(f"{'='*60}")
+    run_scope(all_dir, "all_questions", qkey_filter=None)
+
+    # ── Scope 2: test questions only ────────────────────────────────────────
+    if test_qkeys:
+        print(f"\n{'='*60}")
+        print("SCOPE: test_only_fair  (test questions only — fair comparison)")
+        print(f"{'='*60}")
+        run_scope(fair_dir, "test_questions", qkey_filter=test_qkeys)
+
+    # ── Ablation table (both scopes combined in one CSV) ────────────────────
+    print(f"\n{'='*60}")
+    print("ABLATION COMPARISON TABLE (SubPop Table 1 style)")
+    print(f"{'='*60}")
+
+    bounds_path = pred_dir / "statistical_bounds.csv"
+    bounds_csv_arg = str(bounds_path) if bounds_path.exists() else None
+
+    # Pass 1: all questions
     ablation_all = build_ablation_table(
         gt_df, prediction_files,
         bounds_csv=bounds_csv_arg,
@@ -654,11 +775,11 @@ def main():
         for c in ablation_all.columns
     ]
 
-    # Pass 2: test questions only (fair apples-to-apples with fine-tuned)
+    # Pass 2: test questions only
     if test_qkeys:
         ablation_test = build_ablation_table(
             gt_df, prediction_files,
-            bounds_csv=None,           # bounds already in pass 1
+            bounds_csv=None,
             ordinal_flags=ordinal_flags,
             filter_qkeys=test_qkeys,
         )
@@ -666,7 +787,6 @@ def main():
             f"{c} (test Qs)" if c not in ("Uniform (upper)", "Bootstrap (lower)") else c
             for c in ablation_test.columns
         ]
-        # Drop duplicated bound columns from pass 2 before merging
         drop_cols = [c for c in ablation_test.columns if c in ("Uniform (upper)", "Bootstrap (lower)")]
         ablation_test = ablation_test.drop(columns=drop_cols, errors="ignore")
         ablation = pd.concat([ablation_all, ablation_test], axis=1)
@@ -676,37 +796,44 @@ def main():
     ablation.to_csv(out_dir / "ablation_table.csv")
     print(ablation.round(4).to_string())
 
-    # === 6. Population-Weighted Aggregates ===
-    print(f"\n{'='*60}")
-    print("6. POPULATION-WEIGHTED AGGREGATE OPINION")
-    print(f"{'='*60}")
+    # ── Method coverage manifest ────────────────────────────────────────────
+    if coverage_rows:
+        coverage_df = pd.DataFrame(coverage_rows)
+        # Also add ground truth row
+        gt_cov_all = _coverage_row("ground_truth", "all_questions", gt_df)
+        if test_qkeys:
+            gt_cov_test = _coverage_row("ground_truth", "test_questions",
+                                        gt_df[gt_df["qkey"].isin(test_qkeys)])
+            coverage_df = pd.concat(
+                [pd.DataFrame([gt_cov_all, gt_cov_test]), coverage_df],
+                ignore_index=True,
+            )
+        else:
+            coverage_df = pd.concat(
+                [pd.DataFrame([gt_cov_all]), coverage_df],
+                ignore_index=True,
+            )
+        coverage_df.to_csv(out_dir / "method_coverage.csv", index=False)
+        print(f"\nMethod coverage manifest saved to {out_dir}/method_coverage.csv")
+        print(coverage_df[["method", "scope", "n_rows", "n_qkeys", "n_attributes"]].to_string(index=False))
 
-    if Path(args.weights_csv).exists():
-        weights_df = pd.read_csv(args.weights_csv)
-        for method_name, pred_path in prediction_files.items():
-            pred_df = load_distributions(pred_path)
-            weighted = population_weighted_opinion(pred_df, weights_df)
-            safe_name = method_name.replace(" ", "_")
-            weighted.to_csv(out_dir / f"population_weighted_{safe_name}.csv", index=False)
-            print(f"\n  {method_name}:")
-            for _, row in weighted.iterrows():
-                print(f"    {row['qkey']}: mean_score={row['mean_opinion_score']:.2f}  "
-                      f"({row['question'][:50]}...)")
-    else:
-        print(f"  WARNING: {args.weights_csv} not found, skipping population-weighted analysis")
-
-    # === Summary ===
+    # ── Summary ─────────────────────────────────────────────────────────────
     print(f"\n{'='*60}")
     print("EVALUATION COMPLETE")
     print(f"{'='*60}")
     print(f"All outputs saved to {out_dir}/")
     print(f"\nKey files:")
-    print(f"  ablation_table.csv            - SubPop Table 1 style comparison")
-    print(f"  per_attribute_wd_*.csv        - Tables 9-10 style breakdown")
-    print(f"  bootstrap_ci_*.csv            - Figure 3 style CI")
-    print(f"  disagreement_heatmaps/        - Figure 4 style heatmaps")
-    print(f"  entropy_*.csv                 - diversity analysis")
-    print(f"  population_weighted_*.csv     - weighted aggregate opinions")
+    print(f"  ablation_table.csv                      — SubPop Table 1 (all Qs + test Qs columns)")
+    print(f"  method_coverage.csv                     — audit: n_rows/n_qkeys per method × scope")
+    print(f"  descriptive_all_rows/                   — all questions (full characterization)")
+    print(f"    bootstrap_ci_*.csv                    — WD with 95% CI")
+    print(f"    per_attribute_wd_*.csv                — breakdown by demographic attribute")
+    print(f"    entropy_*.csv                         — response diversity analysis")
+    print(f"    population_weighted_*.csv             — population-weighted aggregate opinion")
+    print(f"    disagreement_heatmaps/                — pairwise inter-group disagreement")
+    if test_qkeys:
+        print(f"  test_only_fair/                         — test questions only (fair comparison)")
+        print(f"    (same file structure as descriptive_all_rows/)")
 
 
 if __name__ == "__main__":
