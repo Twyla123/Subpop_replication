@@ -188,7 +188,8 @@ def train(
 
     Returns: results dictionary containing average training and validation perplexity and loss
     """
-    # Create a gradient scaler for fp16
+    # Create a gradient scaler for fp16 (None when not using fp16)
+    scaler = None
     if train_config.use_fp16 and train_config.enable_fsdp:
         scaler = ShardedGradScaler()
     elif train_config.use_fp16 and not train_config.enable_fsdp:
