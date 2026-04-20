@@ -188,6 +188,9 @@ def train(
 
     Returns: results dictionary containing average training and validation perplexity and loss
     """
+    # Counter for early stopping (reset to 0 whenever val loss improves)
+    epochs_without_improvement = 0
+
     # Create a gradient scaler for fp16 (None when not using fp16)
     scaler = None
     if train_config.use_fp16 and train_config.enable_fsdp:
@@ -439,13 +442,26 @@ def train(
         if train_config.run_validation:
             if eval_epoch_loss < best_val_loss:
                 best_val_loss = eval_epoch_loss
+                epochs_without_improvement = 0
                 if train_config.enable_fsdp:
                     if rank==0:
                         print(f"best eval loss on epoch {epoch+1} is {best_val_loss}")
                 else:
                         print(f"best eval loss on epoch {epoch+1} is {best_val_loss}")
+            else:
+                epochs_without_improvement += 1
             val_loss.append(float(eval_epoch_loss))
             val_prep.append(float(eval_ppl))
+            # ── Early stopping ───────────────────────────────────────────────
+            patience = getattr(train_config, "early_stopping_patience", 0)
+            if patience > 0 and epochs_without_improvement >= patience:
+                if not train_config.enable_fsdp or rank == 0:
+                    print(
+                        f"  Early stopping at epoch {epoch+1}: val loss has not "
+                        f"improved for {patience} consecutive epochs "
+                        f"(best val loss = {best_val_loss:.4f})."
+                    )
+                break
         if train_config.enable_fsdp:
             if rank==0:
                 print(f"Epoch {epoch+1}: train_perplexity={train_perplexity:.4f}, train_epoch_loss={train_epoch_loss:.4f}, epoch time {epoch_end_time}s")

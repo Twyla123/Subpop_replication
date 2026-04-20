@@ -373,10 +373,15 @@ def build_ablation_table(
     prediction_files: Dict[str, str],
     bounds_csv: Optional[str] = None,
     ordinal_flags: dict = None,
+    filter_qkeys: Optional[set] = None,
 ) -> pd.DataFrame:
     """
     Build SubPop Table 1-style ablation table.
     Rows = attributes, Columns = methods.
+
+    filter_qkeys: if provided, only compute WD on this subset of questions.
+                  Use this to restrict zero-shot to the same test questions
+                  that fine-tuned was evaluated on (fair comparison).
     """
     results = {}
 
@@ -387,6 +392,9 @@ def build_ablation_table(
                 pred_df, on=["qkey", "attribute", "group"],
                 suffixes=("_gt", "_pred"), how="inner",
             )
+            # Restrict to the requested question subset when asked
+            if filter_qkeys is not None:
+                merged = merged[merged["qkey"].isin(filter_qkeys)]
             method_wds = {}
             for _, row in merged.iterrows():
                 gt = parse_dist(row["responses_gt"])
@@ -503,6 +511,9 @@ def main():
     parser.add_argument("--questions_json", type=str,
                         default="approach2_outputs/cms/cms_questions.json",
                         help="Path to cms_questions.json (needed for ordinal vs nominal flag)")
+    parser.add_argument("--question_split_json", type=str,
+                        default=None,
+                        help="Path to cms_question_split.json; enables fair test-only ablation columns")
     parser.add_argument("--predictions_dir", type=str, default="approach2_outputs/cms")
     parser.add_argument("--demographics_csv", type=str,
                         default="approach2_outputs/cms/cms_demographics.csv")
@@ -618,11 +629,50 @@ def main():
     print(f"{'='*60}")
 
     bounds_path = pred_dir / "statistical_bounds.csv"
-    ablation = build_ablation_table(
+    bounds_csv_arg = str(bounds_path) if bounds_path.exists() else None
+
+    # Load test qkeys for fair comparison (zero-shot vs fine-tuned on same Qs)
+    test_qkeys = None
+    split_path = args.question_split_json or str(pred_dir / "cms_question_split.json")
+    if Path(split_path).exists():
+        with open(split_path) as f:
+            split_data = json.load(f)
+        test_qkeys = set(split_data.get("test", []))
+        print(f"  Loaded question split — test qkeys: {sorted(test_qkeys)}")
+    else:
+        print("  NOTE: --question_split_json not found; skipping test-only ablation columns.")
+
+    # Pass 1: all questions (full zero-shot coverage)
+    ablation_all = build_ablation_table(
         gt_df, prediction_files,
-        bounds_csv=str(bounds_path) if bounds_path.exists() else None,
+        bounds_csv=bounds_csv_arg,
         ordinal_flags=ordinal_flags,
+        filter_qkeys=None,
     )
+    ablation_all.columns = [
+        f"{c} (all Qs)" if c not in ("Uniform (upper)", "Bootstrap (lower)") else c
+        for c in ablation_all.columns
+    ]
+
+    # Pass 2: test questions only (fair apples-to-apples with fine-tuned)
+    if test_qkeys:
+        ablation_test = build_ablation_table(
+            gt_df, prediction_files,
+            bounds_csv=None,           # bounds already in pass 1
+            ordinal_flags=ordinal_flags,
+            filter_qkeys=test_qkeys,
+        )
+        ablation_test.columns = [
+            f"{c} (test Qs)" if c not in ("Uniform (upper)", "Bootstrap (lower)") else c
+            for c in ablation_test.columns
+        ]
+        # Drop duplicated bound columns from pass 2 before merging
+        drop_cols = [c for c in ablation_test.columns if c in ("Uniform (upper)", "Bootstrap (lower)")]
+        ablation_test = ablation_test.drop(columns=drop_cols, errors="ignore")
+        ablation = pd.concat([ablation_all, ablation_test], axis=1)
+    else:
+        ablation = ablation_all
+
     ablation.to_csv(out_dir / "ablation_table.csv")
     print(ablation.round(4).to_string())
 

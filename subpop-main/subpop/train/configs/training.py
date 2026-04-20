@@ -61,3 +61,4 @@ class train_config:
     group: str = "None" # only used when the finetuning is on a single subpopulation data
     model_nickname: str = "MODEL_NICKNAME" # model nickname, for example, llama-2-7b-base
     is_chat: bool = False # True if the base model is chat model
+    early_stopping_patience: int = 0 # 0 = disabled; N = stop after N epochs with no val improvement
