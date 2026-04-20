@@ -598,8 +598,8 @@ def main():
     heatmap_dir = out_dir / "disagreement_heatmaps"
     heatmap_dir.mkdir(exist_ok=True)
 
-    # Ground truth disagreement
-    gt_heatmaps = intergroup_disagreement(gt_df, ordinal_flags=ordinal_flags)
+    # Ground truth disagreement — pass gt_df as ground_truth_df so keys get "_gt" suffix
+    gt_heatmaps = intergroup_disagreement(None, ground_truth_df=gt_df, ordinal_flags=ordinal_flags)
     for key, heatmap in gt_heatmaps.items():
         heatmap.to_csv(heatmap_dir / f"{key}.csv")
         print(f"  {key}: {heatmap.shape[0]} groups, max disagreement = {heatmap.max().max():.4f}")

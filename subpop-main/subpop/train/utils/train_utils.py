@@ -194,7 +194,7 @@ def train(
         scaler = ShardedGradScaler()
     elif train_config.use_fp16 and not train_config.enable_fsdp:
         scaler = torch.cuda.amp.GradScaler()
-    if scaler_dict is not None:
+    if scaler_dict is not None and scaler is not None:
         scaler.load_state_dict(scaler_dict)
     if train_config.enable_fsdp:
         world_size = int(os.environ["WORLD_SIZE"])
