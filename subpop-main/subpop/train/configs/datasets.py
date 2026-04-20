@@ -66,6 +66,6 @@ class opnqa_single_demographic_dataset:
 class cms_dataset:
     dataset: str = "cms_dataset"
     file: str = "subpop/train/datasets/opinionqa_dataset.py:get_preprocessed_opinionqa_ce_or_wd_loss"
-    train_split: str = "approach2_outputs/cms/finetuning_data/cms_{steering_type}_train.csv"
-    valid_split: str = "approach2_outputs/cms/finetuning_data/cms_{steering_type}_val.csv"
-    test_split:  str = "approach2_outputs/cms/finetuning_data/cms_{steering_type}_test.csv"
+    train_split: str = "../approach2_outputs/cms/finetuning_data/cms_{steering_type}_train.csv"
+    valid_split: str = "../approach2_outputs/cms/finetuning_data/cms_{steering_type}_val.csv"
+    test_split:  str = "../approach2_outputs/cms/finetuning_data/cms_{steering_type}_test.csv"
