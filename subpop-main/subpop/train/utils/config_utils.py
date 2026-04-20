@@ -72,7 +72,7 @@ def generate_dataset_config(train_config, kwargs):
 
     update_config(dataset_config, **kwargs)
 
-    if dataset_config.dataset == 'opnqa_steering_dataset':
+    if dataset_config.dataset in ('opnqa_steering_dataset', 'cms_dataset'):
         dataset_path = train_config.dataset_path
         steering_type = train_config.steering_type
         dataset_config.train_split = dataset_config.train_split.format(dataset_path = dataset_path, steering_type = steering_type)
