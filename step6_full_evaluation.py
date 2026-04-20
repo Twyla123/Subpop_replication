@@ -100,8 +100,22 @@ def parse_ordinal(x, n_options: int = None):
 
 
 def load_distributions(csv_path: str) -> pd.DataFrame:
-    """Load and parse a distributions CSV."""
+    """Load and parse a distributions CSV.
+
+    Handles two column conventions:
+      - 'responses'  : output of step2_vllm_baselines.py (zero-shot files)
+      - 'llm_dist'   : output of run_inference.py (fine-tuned / LoRA files)
+    """
     df = pd.read_csv(csv_path)
+    # Normalise: copy whichever column exists into 'responses'
+    if "responses" not in df.columns:
+        if "llm_dist" in df.columns:
+            df["responses"] = df["llm_dist"]
+        else:
+            raise KeyError(
+                f"{csv_path!r} has neither 'responses' nor 'llm_dist' column. "
+                f"Columns found: {list(df.columns)}"
+            )
     df["responses_parsed"] = df["responses"].apply(parse_dist)
     if "ordinal" in df.columns:
         df["ordinal_parsed"] = df.apply(
