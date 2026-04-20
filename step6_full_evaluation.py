@@ -77,10 +77,26 @@ def compute_distance(gt: list, pred: list, ordinal: list, is_ordinal: bool) -> f
 
 
 def parse_dist(x):
-    """Parse a distribution from string or list."""
-    if isinstance(x, str):
+    """Parse a distribution from string or list.
+
+    Handles two string formats:
+      - Python list:  '[0.1, 0.2, 0.7]'   (from step2 zero-shot output)
+      - NumPy array:  '[0.1 0.2 0.7]'      (from run_inference.py llm_dist column)
+    """
+    if isinstance(x, (list, tuple)):
+        return list(x)
+    if not isinstance(x, str):
+        return list(x)
+    x = x.strip()
+    try:
         return ast.literal_eval(x)
-    return list(x)
+    except (ValueError, SyntaxError):
+        # NumPy format: brackets with space-separated floats, no commas
+        import re
+        nums = re.findall(r'[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?', x)
+        if nums:
+            return [float(n) for n in nums]
+        raise ValueError(f"Cannot parse distribution: {x!r}")
 
 
 def parse_ordinal(x, n_options: int = None):
