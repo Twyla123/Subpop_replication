@@ -1,0 +1,478 @@
+[
+  {
+    "qkey": "Q_COMMUTE_MODE",
+    "cms_col": "r_work_mode",
+    "question": "Currently, how do you typically travel to your primary workplace?",
+    "options": [
+      "Rail (subway, PATH, commuter rail)",
+      "Bus, shuttle, or vanpool",
+      "Household vehicle or motorcycle",
+      "Walk or jog",
+      "Work from home",
+      "Bicycle or e-bicycle",
+      "Uber/Lyft, taxi, or ferry/other"
+    ],
+    "filter_codes": [
+      995
+    ],
+    "is_ordinal": false,
+    "ordinal": null,
+    "theme": "commute"
+  },
+  {
+    "qkey": "Q_TELEWORK_FREQ",
+    "cms_col": "r_telework_freq",
+    "question": "How many days do you work from home or telework?",
+    "options": [
+      "5 or more days a week",
+      "4 days a week",
+      "2-3 days a week",
+      "1 day a week",
+      "1-3 days a month",
+      "Never"
+    ],
+    "filter_codes": [
+      995,
+      996
+    ],
+    "is_ordinal": true,
+    "ordinal": [
+      5.0,
+      4.0,
+      2.5,
+      1.0,
+      0.5,
+      0.0
+    ],
+    "theme": "commute"
+  },
+  {
+    "qkey": "Q_TNC_FREQ",
+    "cms_col": "tnc_freq",
+    "question": "How often do you use Uber, Lyft, or a similar app-based ride service?",
+    "options": [
+      "5 or more days a week",
+      "4 days a week",
+      "2-3 days a week",
+      "1 day a week",
+      "1-3 days a month",
+      "Less than monthly"
+    ],
+    "filter_codes": [
+      995
+    ],
+    "is_ordinal": true,
+    "ordinal": [
+      5.0,
+      4.0,
+      2.5,
+      1.0,
+      0.5,
+      0.1
+    ],
+    "theme": "shared_mobility"
+  },
+  {
+    "qkey": "Q_BIKE_FREQ",
+    "cms_col": "bike_freq",
+    "question": "How often do you use a bicycle outside?",
+    "options": [
+      "5 or more days a week",
+      "4 days a week",
+      "2-3 days a week",
+      "1 day a week",
+      "1-3 days a month",
+      "Less than monthly or never"
+    ],
+    "filter_codes": [
+      995,
+      996
+    ],
+    "is_ordinal": true,
+    "ordinal": [
+      5.0,
+      4.0,
+      2.5,
+      1.0,
+      0.5,
+      0.0
+    ],
+    "theme": "active_transport"
+  },
+  {
+    "qkey": "Q_NUM_VEHICLES",
+    "cms_col": "r_num_vehicles",
+    "question": "How many registered motor vehicles are in your household?",
+    "options": [
+      "0 (no vehicles in my household)",
+      "1 vehicle",
+      "2 vehicles",
+      "3 or more vehicles"
+    ],
+    "filter_codes": [],
+    "is_ordinal": true,
+    "ordinal": [
+      0.0,
+      1.0,
+      2.0,
+      3.0
+    ],
+    "theme": "auto_dependency"
+  },
+  {
+    "qkey": "Q_WFH_POLICY",
+    "cms_col": "wfh_policy",
+    "question": "How many days are you required by your employer to report to your worksite or office each week?",
+    "options": [
+      "5 or more days a week",
+      "4 days a week",
+      "2-3 days a week",
+      "1 day a week",
+      "1-3 days a month",
+      "Less than monthly or never required"
+    ],
+    "filter_codes": [
+      995,
+      996
+    ],
+    "is_ordinal": true,
+    "ordinal": [
+      5.0,
+      4.0,
+      2.5,
+      1.0,
+      0.5,
+      0.1
+    ],
+    "theme": "commute"
+  },
+  {
+    "qkey": "Q_EMPLOYMENT",
+    "cms_col": "employment",
+    "question": "What is your current employment status?",
+    "options": [
+      "Employed full-time (paid)",
+      "Employed part-time (paid)",
+      "Self-employed",
+      "Not employed and not looking for work (e.g., retired, stay-at-home parent)",
+      "Unemployed and looking for work",
+      "Unpaid volunteer or intern",
+      "Employed, but not currently working (e.g., on leave, furloughed)"
+    ],
+    "filter_codes": [],
+    "is_ordinal": false,
+    "ordinal": null,
+    "theme": "socioeconomic"
+  },
+  {
+    "qkey": "Q_EDUCATION",
+    "cms_col": "education",
+    "question": "What is the highest level of education you have completed?",
+    "options": [
+      "Less than high school",
+      "High school graduate or GED",
+      "Some college, but no degree",
+      "Vocational or technical training",
+      "Associate degree (2-year college)",
+      "Bachelor's degree (4-year college)",
+      "Graduate or post-graduate degree"
+    ],
+    "filter_codes": [
+      995,
+      997,
+      999
+    ],
+    "is_ordinal": true,
+    "ordinal": [
+      1.0,
+      2.0,
+      3.0,
+      3.0,
+      4.0,
+      5.0,
+      6.0
+    ],
+    "theme": "socioeconomic"
+  },
+  {
+    "qkey": "Q_STUDENT",
+    "cms_col": "student",
+    "question": "Which of the following best describes your student status?",
+    "options": [
+      "Not a student",
+      "Full-time student, attending some or all classes in-person",
+      "Part-time student, attending some or all classes in-person",
+      "Part-time student, online classes only",
+      "Full-time student, online classes only"
+    ],
+    "filter_codes": [
+      995
+    ],
+    "is_ordinal": false,
+    "ordinal": null,
+    "theme": "socioeconomic"
+  },
+  {
+    "qkey": "Q_JOB_TYPE",
+    "cms_col": "job_type",
+    "question": "Which of the following best describes where you typically work?",
+    "options": [
+      "Go to one fixed work location (outside of home)",
+      "Work location regularly varies (different offices or job sites)",
+      "Work only from home or remotely (telework or self-employed)",
+      "Drive, bike, or travel for work (e.g., driver, delivery, sales)",
+      "Hybrid \u2014 telework some days and go to a work location other days"
+    ],
+    "filter_codes": [
+      995,
+      996
+    ],
+    "is_ordinal": false,
+    "ordinal": null,
+    "theme": "commute"
+  },
+  {
+    "qkey": "Q_RESIDENCE_TYPE",
+    "cms_col": "residence_type",
+    "question": "What type of home do you currently live in?",
+    "options": [
+      "Single-family house (detached)",
+      "Rowhouse or townhouse (attached)",
+      "Building with 2-4 units (duplex, triplex, or quad)",
+      "Building with 5-49 apartments or condos",
+      "Building with 50 or more apartments or condos",
+      "Senior, age-restricted, or other housing"
+    ],
+    "filter_codes": [
+      995,
+      997
+    ],
+    "is_ordinal": false,
+    "ordinal": null,
+    "theme": "built_environment"
+  },
+  {
+    "qkey": "Q_PRIMARY_LANGUAGE",
+    "cms_col": "primary_language",
+    "question": "What is the primary language spoken in your household?",
+    "options": [
+      "English",
+      "Spanish",
+      "Chinese",
+      "Russian"
+    ],
+    "filter_codes": [
+      995,
+      997
+    ],
+    "is_ordinal": false,
+    "ordinal": null,
+    "theme": "equity"
+  },
+  {
+    "qkey": "Q_HOUSEHOLD_SIZE",
+    "cms_col": "r_num_people",
+    "question": "How many people, including yourself, live in your household?",
+    "options": [
+      "1 person",
+      "2 people",
+      "3 people",
+      "4 people",
+      "5 or more people"
+    ],
+    "filter_codes": [],
+    "is_ordinal": true,
+    "ordinal": [
+      1.0,
+      2.0,
+      3.0,
+      4.0,
+      5.0
+    ],
+    "theme": "household"
+  },
+  {
+    "qkey": "Q_NUM_BICYCLES",
+    "cms_col": "num_bicycles",
+    "question": "How many bicycles does your household have access to?",
+    "options": [
+      "0 (no bicycles in my household)",
+      "1 bicycle",
+      "2 bicycles",
+      "3 or more bicycles"
+    ],
+    "filter_codes": [
+      995
+    ],
+    "is_ordinal": true,
+    "ordinal": [
+      0.0,
+      1.0,
+      2.0,
+      3.0
+    ],
+    "theme": "active_transport"
+  },
+  {
+    "qkey": "Q_WORK_ZONE",
+    "cms_col": "work_cms_zone",
+    "question": "Which of the following best describes where your primary workplace is located?",
+    "options": [
+      "Manhattan Core (below 60th Street \u2014 Midtown, Financial District, Lower Manhattan)",
+      "Northern Manhattan (above 60th Street)",
+      "Bronx",
+      "Queens",
+      "Brooklyn",
+      "Staten Island or outside New York City"
+    ],
+    "filter_codes": [
+      995,
+      996
+    ],
+    "is_ordinal": false,
+    "ordinal": null,
+    "theme": "commute"
+  },
+  {
+    "qkey": "Q_NUM_KIDS",
+    "cms_col": "num_kids",
+    "question": "How many children under 18 live in your household?",
+    "options": [
+      "0 (no children)",
+      "1 child",
+      "2 children",
+      "3 or more children"
+    ],
+    "filter_codes": [],
+    "is_ordinal": true,
+    "ordinal": [
+      0.0,
+      1.0,
+      2.0,
+      3.0
+    ],
+    "theme": "household"
+  },
+  {
+    "qkey": "Q_INDUSTRY",
+    "cms_col": "industry",
+    "question": "Which of the following best describes the industry you work in?",
+    "options": [
+      "Healthcare or social services",
+      "Education",
+      "Finance, professional, or business services",
+      "Technology, media, arts, or entertainment",
+      "Government, non-profit, retail, hospitality, or other"
+    ],
+    "filter_codes": [
+      995,
+      997
+    ],
+    "is_ordinal": false,
+    "ordinal": null,
+    "theme": "socioeconomic"
+  },
+  {
+    "qkey": "Q_CITIBIKE_FREQ",
+    "cms_col": "citi_bike_freq",
+    "question": "How frequently do you use Citi Bike?",
+    "options": [
+      "I have never used Citi Bike",
+      "I use it almost every day",
+      "I use it at least once a week",
+      "I use it at least once a month",
+      "Less than monthly",
+      "I have used Citi Bike before, but not in the past 12 months"
+    ],
+    "filter_codes": [
+      995
+    ],
+    "is_ordinal": false,
+    "ordinal": null,
+    "theme": "active_transport"
+  },
+  {
+    "qkey": "Q_TRANSIT_SAFETY",
+    "cms_col": "harassment",
+    "question": "In the past 12 months, have you seen and/or experienced visual, verbal, or physical harassment or violence when traveling?",
+    "options": [
+      "I have seen harassment or violence when traveling",
+      "I have experienced harassment or violence when traveling",
+      "I have both seen and experienced harassment or violence when traveling",
+      "I have not seen or experienced harassment or violence when traveling"
+    ],
+    "filter_codes": [
+      995
+    ],
+    "is_ordinal": false,
+    "ordinal": null,
+    "theme": "transit_experience"
+  },
+  {
+    "qkey": "Q_VEHICLE_CHANGE",
+    "cms_col": "vehicle_change",
+    "question": "In the past two years my household has:",
+    "options": [
+      "Reduced the number of vehicles it has access to",
+      "Increased the number of vehicles it has access to",
+      "Not changed the number of vehicles it has access to"
+    ],
+    "filter_codes": [
+      995
+    ],
+    "is_ordinal": false,
+    "ordinal": null,
+    "theme": "auto_dependency"
+  },
+  {
+    "qkey": "Q_BIKE_CHANGE",
+    "cms_col": "bike_change",
+    "question": "In the past two years my household has:",
+    "options": [
+      "Reduced the number of bicycles it has access to",
+      "Increased the number of bicycles it has access to",
+      "Not changed the number of bicycles it has access to"
+    ],
+    "filter_codes": [
+      995
+    ],
+    "is_ordinal": false,
+    "ordinal": null,
+    "theme": "active_transport"
+  },
+  {
+    "qkey": "Q_HOUSING_TENURE",
+    "cms_col": "residence_rent_own",
+    "question": "Do you own or rent your home?",
+    "options": [
+      "Own or buying (paying a mortgage)",
+      "Rent",
+      "Other (provided by employer, family, or friend; or other arrangement)"
+    ],
+    "filter_codes": [
+      995,
+      997,
+      999
+    ],
+    "is_ordinal": false,
+    "ordinal": null,
+    "theme": "housing"
+  },
+  {
+    "qkey": "Q_EV_PURCHASE",
+    "cms_col": "ev_purchase",
+    "question": "Have you ever considered purchasing a fully electric vehicle?",
+    "options": [
+      "Yes, and I may purchase one in the next few years",
+      "Yes, but I am not likely to purchase one in the next few years",
+      "No, I have not considered purchasing a fully electric vehicle"
+    ],
+    "filter_codes": [
+      995,
+      996
+    ],
+    "is_ordinal": false,
+    "ordinal": null,
+    "theme": "auto_dependency"
+  }
+]

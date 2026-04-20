@@ -1,0 +1,9 @@
+attribute,group
+CREGION,"['Northeast', 'South']"
+EDUCATION,"['College graduate/some postgrad', 'Less than high school']"
+SEX,"['Male', 'Female']"
+POLIDEOLOGY,"['Liberal', 'Conservative', 'Moderate']"
+INCOME,"['$100,000 or more', 'Less than $30,000']"
+POLPARTY,"['Democrat', 'Republican']"
+RACE,"['Black', 'White', 'Asian', 'Hispanic']"
+RELIG,"['Protestant', 'Jewish', 'Hindu', 'Atheist', 'Muslim']"

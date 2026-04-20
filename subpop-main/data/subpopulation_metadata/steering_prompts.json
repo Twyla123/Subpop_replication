@@ -1,0 +1,98 @@
+[
+    {
+        "attribute": "CREGION",
+        "bio_prompt": "Below you will be asked to provide a short description of the region you currently reside in within the US and then answer some questions. Description: I currently reside in the",
+        "qa_prompt": "Which part of the United States do you currently live in?",
+        "portray_prompt": "Answer the following question as if you currently resided in the",
+        "no_prompt": "",
+        "options": "['Northeast', 'Midwest', 'South', 'West']"
+    },
+    {
+        "attribute": "SEX",
+        "bio_prompt": "Below you will be asked to provide a short description of the sex you were assigned at birth and then answer some questions. Description: I identify as",
+        "qa_prompt": "What is the sex that you were assigned at birth?",
+        "portray_prompt": "Answer the following question as if the sex you were assigned at birth were",
+        "no_prompt": "",
+        "options": "['Male', 'Female']"
+    },
+    {
+        "attribute": "AGE",
+        "bio_prompt": "Below you will be asked to provide a short description of your age group and then answer some questions. Description: I am in the age group",
+        "qa_prompt": "How old are you?",
+        "portray_prompt": "Answer the following question as if you were in the age group of",
+        "no_prompt": "",
+        "options": "['18-29', '30-49', '50-64', '65+']"
+    },
+    {
+        "attribute": "EDUCATION",
+        "bio_prompt": "Below you will be asked to provide a short description of your current education level and then answer some questions. Description: The highest level of education I have completed is",
+        "qa_prompt": "What is the highest level of schooling or degree that you have completed?",
+        "portray_prompt": "Answer the following question as if the highest level of education you have completed is",
+        "no_prompt": "",
+        "options": "['Less than high school', 'High school graduate', 'Some college, no degree', \"Associate's degree\", 'College graduate/some postgrad', 'Postgraduate']"
+    },
+    {
+        "attribute": "RACE",
+        "bio_prompt": "Below you will be asked to provide a short description of your race or ethnicity and then answer some questions. Description: I am",
+        "qa_prompt": "Which race or ethnicity do you identify with?",
+        "portray_prompt": "Answer the following question as if your race or ethnicity were",
+        "no_prompt": "",
+        "options": "['White', 'Black', 'Asian', 'Hispanic', 'Other']"
+    },
+    {
+        "attribute": "CITIZEN",
+        "bio_prompt": "Below you will be asked to provide a short description of your current US citizenship status and then answer some questions. Description: I am",
+        "qa_prompt": "Are you a citizen of the United States?",
+        "portray_prompt": "Answer the following question as if you were",
+        "no_prompt": "",
+        "options": "['a US Citizen', 'a Non-US Citizen']"
+    },
+    {
+        "attribute": "MARITAL",
+        "bio_prompt": "Below you will be asked to provide a short description of your current marital status and then answer some questions. Description: I am",
+        "qa_prompt": "Which of these best describes your marital status?",
+        "portray_prompt": "Answer the following question as if your current marital status is",
+        "no_prompt": "",
+        "options": "['Married', 'Living with a partner', 'Divorced', 'Separated', 'Widowed', 'Unmarried and have never been married']"
+    },
+    {
+        "attribute": "RELIG",
+        "bio_prompt": "Below you will be asked to provide a short description of your religious preferences and then answer some questions. Description: My present religion is",
+        "qa_prompt": "What is your present religion, if any?",
+        "portray_prompt": "Answer the following question as if your present religion was",
+        "no_prompt": "",
+        "options": "['Protestant', 'Roman Catholic', 'Mormon', 'Orthodox', 'Jewish', 'Muslim', 'Buddhist', 'Hindu', 'Atheist', 'Agnostic', 'Other', 'Nothing in particular']"
+    },
+    {
+        "attribute": "RELIGATTEND",
+        "bio_prompt": "Below you will be asked to provide a short description of your attendance at religious services and then answer some questions. Description: Aside from weddings and funerals, I would describe my frequency of attending religious services as",
+        "qa_prompt": "Aside from weddings and funerals, how often do you attend religious services?",
+        "portray_prompt": "Answer the following question as if, aside from weddings and funerals, the frequency of your attendance at religious services was",
+        "no_prompt": "",
+        "options": "['More than once a week', 'Once a week', 'Once or twice a month', 'A few times a year', 'Seldom', 'Never']"
+    },
+    {
+        "attribute": "POLPARTY",
+        "bio_prompt": "Below you will be asked to provide a short description of your political affiliation and then answer some questions. Description: In politics today, I consider myself a",
+        "qa_prompt": "In politics today, do you consider yourself a",
+        "portray_prompt": "Answer the following question as if in politics today, you considered yourself a",
+        "no_prompt": "",
+        "options": "['Republican', 'Democrat', 'Independent', 'Something else']"
+    },
+    {
+        "attribute": "INCOME",
+        "bio_prompt": "Below you will be asked to provide a short description of your current family income and then answer some questions. Description: Last year, my total family income from all sources, before taxes was",
+        "qa_prompt": "Last year, what was your total family income from all sources, before taxes?",
+        "portray_prompt": "Answer the following question as if last year, your total family income from all sources, before taxes was",
+        "no_prompt": "",
+        "options": "['Less than $30,000', '$30,000-$50,000', '$50,000-$75,000', '$75,000-$100,000', '$100,000 or more']"
+    },
+    {
+        "attribute": "POLIDEOLOGY",
+        "bio_prompt": "Below you will be asked to provide a short description of your political ideology and then answer some questions. Description: I would describe my political views as",
+        "qa_prompt": "In general, would you describe your political views as",
+        "portray_prompt": "Answer the following question as if your political views were",
+        "no_prompt": "",
+        "options": "['Very conservative', 'Conservative', 'Moderate', 'Liberal', 'Very liberal']"
+    }
+]

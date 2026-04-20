@@ -1,0 +1,54 @@
+# ── OS / editor ─────────────────────────────────────────────────────
+.DS_Store
+.vscode/
+.claude/
+*.swp
+
+# ── Python ───────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv/
+venv/
+
+# ── Large raw data files (keep on Drive, not in git) ─────────────────
+*.parquet
+*.zip
+*.pdf
+*.docx
+
+# ── Step 2 outputs (vLLM inference results) ──────────────────────────
+approach2_outputs/cms/distributions_*.csv
+approach2_outputs/cms/statistical_bounds.csv
+approach2_outputs/cms/results_*.csv
+
+# ── Step 3 outputs (fine-tuning CSVs, can be >100MB) ─────────────────
+approach2_outputs/cms/finetuning_data/
+
+# ── Step 6 outputs (evaluation) ──────────────────────────────────────
+approach2_outputs/cms/evaluation/
+
+# ── SubPop preprocessed cache files (auto-generated, large) ──────────
+*_preprocessed.json
+subpop-main/subpop/train/datasets/cms/
+
+# ── Model checkpoints (GB+, store on Drive only) ─────────────────────
+checkpoints/
+output_dir*/
+peft_checkpointing/
+*.safetensors
+*.bin
+*.pt
+
+# ── Jupyter checkpoints ──────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ── ── WHAT IS TRACKED IN GIT ──────────────────────────────────────
+# ✓  step*.py  (all pipeline scripts)
+# ✓  subpop-main/  (SubPop library code, ~12MB)
+# ✓  approach2_outputs/cms/cms_*.csv  (small metadata outputs)
+# ✓  approach2_outputs/cms/cms_*.json (questions, steering, split)
+# ✓  requirements*.txt
+# ✓  colab_gpu_steps.ipynb

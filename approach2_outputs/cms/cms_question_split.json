@@ -1,0 +1,31 @@
+{
+  "train": [
+    "Q_COMMUTE_MODE",
+    "Q_TELEWORK_FREQ",
+    "Q_WFH_POLICY",
+    "Q_JOB_TYPE",
+    "Q_TNC_FREQ",
+    "Q_BIKE_FREQ",
+    "Q_NUM_BICYCLES",
+    "Q_NUM_VEHICLES",
+    "Q_EMPLOYMENT",
+    "Q_EDUCATION",
+    "Q_STUDENT",
+    "Q_RESIDENCE_TYPE",
+    "Q_PRIMARY_LANGUAGE",
+    "Q_HOUSEHOLD_SIZE",
+    "Q_WORK_ZONE",
+    "Q_NUM_KIDS",
+    "Q_INDUSTRY"
+  ],
+  "val": [
+    "Q_CITIBIKE_FREQ",
+    "Q_TRANSIT_SAFETY",
+    "Q_VEHICLE_CHANGE"
+  ],
+  "test": [
+    "Q_BIKE_CHANGE",
+    "Q_HOUSING_TENURE",
+    "Q_EV_PURCHASE"
+  ]
+}

@@ -1,0 +1,100 @@
+attribute,group,steering_QA,steering_BIO,steering_PORTRAY
+AGE,18-24,"What is your age group?
+(A) 18-24
+(B) 25-44
+(C) 45-64
+(D) 65+
+Answer: (A) 18-24",I am 18-24 years old.,Portray someone who is 18-24 years old.
+AGE,25-44,"What is your age group?
+(A) 18-24
+(B) 25-44
+(C) 45-64
+(D) 65+
+Answer: (B) 25-44",I am 25-44 years old.,Portray someone who is 25-44 years old.
+AGE,45-64,"What is your age group?
+(A) 18-24
+(B) 25-44
+(C) 45-64
+(D) 65+
+Answer: (C) 45-64",I am 45-64 years old.,Portray someone who is 45-64 years old.
+AGE,65+,"What is your age group?
+(A) 18-24
+(B) 25-44
+(C) 45-64
+(D) 65+
+Answer: (D) 65+",I am 65+ years old.,Portray someone who is 65+ years old.
+GENDER,Female,"What is your gender?
+(A) Male
+(B) Female
+Answer: (B) Female",I am Female.,Portray a Female New Yorker.
+GENDER,Male,"What is your gender?
+(A) Male
+(B) Female
+Answer: (A) Male",I am Male.,Portray a Male New Yorker.
+INCOME,$100K-$200K,"What is your annual household income?
+(A) Under $50K
+(B) $50K-$100K
+(C) $100K-$200K
+(D) $200K+
+Answer: (C) $100K-$200K",My household income is $100K-$200K per year.,Portray a New Yorker with a household income of $100K-$200K.
+INCOME,$200K+,"What is your annual household income?
+(A) Under $50K
+(B) $50K-$100K
+(C) $100K-$200K
+(D) $200K+
+Answer: (D) $200K+",My household income is $200K+ per year.,Portray a New Yorker with a household income of $200K+.
+INCOME,$50K-$100K,"What is your annual household income?
+(A) Under $50K
+(B) $50K-$100K
+(C) $100K-$200K
+(D) $200K+
+Answer: (B) $50K-$100K",My household income is $50K-$100K per year.,Portray a New Yorker with a household income of $50K-$100K.
+INCOME,Under $50K,"What is your annual household income?
+(A) Under $50K
+(B) $50K-$100K
+(C) $100K-$200K
+(D) $200K+
+Answer: (A) Under $50K",My household income is Under $50K per year.,Portray a New Yorker with a household income of Under $50K.
+BOROUGH,Bronx,"Which NYC borough do you live in?
+(A) Bronx
+(B) Brooklyn
+(C) Manhattan
+(D) Queens
+(E) Staten Island
+Answer: (A) Bronx","I live in Bronx, New York City.","Portray a resident of Bronx, NYC."
+BOROUGH,Brooklyn,"Which NYC borough do you live in?
+(A) Bronx
+(B) Brooklyn
+(C) Manhattan
+(D) Queens
+(E) Staten Island
+Answer: (B) Brooklyn","I live in Brooklyn, New York City.","Portray a resident of Brooklyn, NYC."
+BOROUGH,Manhattan,"Which NYC borough do you live in?
+(A) Bronx
+(B) Brooklyn
+(C) Manhattan
+(D) Queens
+(E) Staten Island
+Answer: (C) Manhattan","I live in Manhattan, New York City.","Portray a resident of Manhattan, NYC."
+BOROUGH,Queens,"Which NYC borough do you live in?
+(A) Bronx
+(B) Brooklyn
+(C) Manhattan
+(D) Queens
+(E) Staten Island
+Answer: (D) Queens","I live in Queens, New York City.","Portray a resident of Queens, NYC."
+BOROUGH,Staten Island,"Which NYC borough do you live in?
+(A) Bronx
+(B) Brooklyn
+(C) Manhattan
+(D) Queens
+(E) Staten Island
+Answer: (E) Staten Island","I live in Staten Island, New York City.","Portray a resident of Staten Island, NYC."
+RACE,Non-White,"How do you identify racially?
+(A) White
+(B) Non-White
+Answer: (B) Non-White",I identify as Non-White.,Portray a Non-White New Yorker.
+RACE,White,"How do you identify racially?
+(A) White
+(B) Non-White
+Answer: (A) White",I identify as White.,Portray a White New Yorker.

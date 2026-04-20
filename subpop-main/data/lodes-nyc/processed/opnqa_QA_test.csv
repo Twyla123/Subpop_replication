@@ -1,0 +1,321 @@
+qkey,attribute,group,input_prompt,output_token,output_dist,ordinal,question
+Q3,commuter_profile,"Workers age 30 to 54, with high earnings, living in Manhattan and working in Manhattan.","Question: What is the commuter profile of this respondent?
+A. Workers age 30 to 54, with high earnings, living in Manhattan and working in Manhattan.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' D', ' A', ' B', ' B', ' D', ' D', ' E', ' A', ' C', ' A', ' B', ' C', ' A', ' B', ' D', ' C', ' B', ' C', ' D', ' A', ' D', ' D', ' B', ' B', ' E', ' B', ' A', ' A', ' E', ' C', ' D', ' D', ' C', ' E', ' C', ' C', ' E', ' D', ' E', ' C', ' D', ' A', ' B', ' B', ' A', ' B', ' A', ' B', ' D', ' C', ' C', ' B', ' B', ' E', ' D', ' D', ' B', ' D', ' B', ' C', ' E', ' D', ' C', ' D', ' E', ' D', ' B', ' A', ' B', ' B', ' B', ' E', ' E', ' B', ' D', ' C', ' E', ' C', ' B', ' B', ' C', ' B', ' C', ' E', ' C', ' B', ' E', ' C', ' A', ' A', ' A', ' D', ' D', ' C', ' A', ' C', ' E', ' C', ' E', ' E']","[0.13366503436612032, 0.21695976613613877, 0.2556410793289374, 0.2221048187202647, 0.1716293014485389, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 30 to 54, with high earnings, living in NY_outside_NYC and working in Manhattan.","Question: What is the commuter profile of this respondent?
+A. Workers age 30 to 54, with high earnings, living in NY_outside_NYC and working in Manhattan.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' A', ' D', ' B', ' C', ' D', ' D', ' C', ' C', ' A', ' C', ' C', ' E', ' C', ' D', ' C', ' B', ' E', ' D', ' C', ' A', ' C', ' C', ' D', ' C', ' C', ' C', ' C', ' A', ' A', ' E', ' E', ' B', ' E', ' C', ' A', ' E', ' C', ' E', ' D', ' A', ' D', ' D', ' E', ' B', ' C', ' D', ' B', ' E', ' D', ' A', ' C', ' C', ' B', ' C', ' E', ' C', ' A', ' C', ' D', ' E', ' D', ' A', ' E', ' C', ' A', ' A', ' A', ' D', ' B', ' D', ' A', ' C', ' C', ' A', ' A', ' E', ' E', ' A', ' D', ' E', ' E', ' E', ' B', ' D', ' C', ' E', ' D', ' E', ' E', ' C', ' D', ' A', ' B', ' E', ' C', ' D', ' C', ' B', ' C', ' E']","[0.13228919075830545, 0.21139752490942346, 0.2735687237065303, 0.21810800268692498, 0.16463655793881582, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 30 to 54, with high earnings, living in Brooklyn and working in Manhattan.","Question: What is the commuter profile of this respondent?
+A. Workers age 30 to 54, with high earnings, living in Brooklyn and working in Manhattan.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' C', ' C', ' E', ' B', ' B', ' A', ' A', ' A', ' B', ' C', ' E', ' D', ' C', ' C', ' D', ' B', ' A', ' E', ' D', ' A', ' A', ' A', ' E', ' A', ' D', ' E', ' A', ' C', ' C', ' E', ' B', ' B', ' B', ' A', ' D', ' D', ' C', ' A', ' D', ' D', ' D', ' B', ' E', ' D', ' C', ' C', ' B', ' C', ' D', ' D', ' C', ' D', ' E', ' A', ' B', ' B', ' A', ' D', ' D', ' C', ' E', ' C', ' B', ' A', ' B', ' E', ' D', ' A', ' C', ' A', ' D', ' A', ' B', ' D', ' E', ' D', ' B', ' D', ' B', ' A', ' B', ' D', ' D', ' B', ' E', ' E', ' B', ' E', ' B', ' A', ' C', ' E', ' C', ' C', ' C', ' B', ' B', ' C', ' C', ' E']","[0.12850523443930387, 0.2152057696225294, 0.25958770916861773, 0.223778592889719, 0.17292269387982992, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 30 to 54, with high earnings, living in Queens and working in Manhattan.","Question: What is the commuter profile of this respondent?
+A. Workers age 30 to 54, with high earnings, living in Queens and working in Manhattan.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' B', ' C', ' A', ' B', ' A', ' A', ' B', ' A', ' B', ' D', ' A', ' D', ' B', ' D', ' D', ' B', ' E', ' D', ' A', ' C', ' D', ' E', ' B', ' B', ' D', ' E', ' A', ' A', ' D', ' B', ' C', ' E', ' D', ' D', ' E', ' D', ' D', ' D', ' C', ' A', ' E', ' E', ' C', ' D', ' A', ' C', ' D', ' B', ' C', ' E', ' B', ' C', ' A', ' C', ' E', ' D', ' A', ' E', ' D', ' C', ' B', ' B', ' B', ' D', ' A', ' E', ' A', ' D', ' C', ' C', ' B', ' C', ' B', ' E', ' D', ' C', ' D', ' C', ' B', ' A', ' E', ' E', ' A', ' D', ' D', ' E', ' A', ' B', ' C', ' C', ' A', ' D', ' D', ' C', ' E', ' C', ' E', ' C', ' C', ' C']","[0.12929473982821865, 0.21993776127538056, 0.2591500151339032, 0.22166275451643191, 0.16995472924606564, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 29 or younger, with high earnings, living in Manhattan and working in Manhattan.","Question: What is the commuter profile of this respondent?
+A. Workers age 29 or younger, with high earnings, living in Manhattan and working in Manhattan.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' E', ' C', ' C', ' E', ' B', ' C', ' C', ' E', ' A', ' A', ' B', ' E', ' E', ' A', ' E', ' C', ' E', ' E', ' A', ' E', ' C', ' B', ' C', ' A', ' D', ' C', ' A', ' B', ' C', ' D', ' B', ' A', ' B', ' A', ' B', ' E', ' B', ' B', ' D', ' B', ' A', ' B', ' D', ' D', ' D', ' A', ' B', ' A', ' C', ' C', ' D', ' C', ' C', ' B', ' C', ' A', ' A', ' E', ' B', ' A', ' D', ' B', ' B', ' C', ' E', ' A', ' D', ' A', ' D', ' C', ' A', ' C', ' D', ' A', ' C', ' D', ' E', ' D', ' C', ' D', ' B', ' C', ' B', ' A', ' A', ' A', ' E', ' C', ' B', ' D', ' D', ' E', ' E', ' A', ' B', ' C', ' B', ' C', ' B', ' E']","[0.145119658958929, 0.21447295281212184, 0.23739991788952436, 0.2195590323177511, 0.18344843802167377, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 30 to 54, with high earnings, living in Brooklyn and working in Brooklyn.","Question: What is the commuter profile of this respondent?
+A. Workers age 30 to 54, with high earnings, living in Brooklyn and working in Brooklyn.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' C', ' C', ' C', ' B', ' C', ' C', ' A', ' C', ' A', ' A', ' B', ' E', ' C', ' C', ' E', ' E', ' C', ' B', ' C', ' C', ' E', ' A', ' C', ' D', ' C', ' C', ' D', ' B', ' E', ' E', ' A', ' B', ' C', ' C', ' C', ' B', ' D', ' E', ' E', ' E', ' B', ' D', ' D', ' C', ' D', ' B', ' D', ' B', ' C', ' B', ' C', ' A', ' B', ' D', ' B', ' D', ' D', ' C', ' D', ' B', ' C', ' E', ' E', ' C', ' C', ' E', ' C', ' D', ' A', ' B', ' D', ' C', ' D', ' C', ' E', ' A', ' B', ' D', ' C', ' D', ' C', ' D', ' D', ' B', ' A', ' B', ' C', ' E', ' E', ' D', ' B', ' E', ' A', ' B', ' D', ' B', ' C', ' B', ' A', ' A']","[0.1307529364860375, 0.21389752848292237, 0.26412819211276417, 0.2206873648926067, 0.17053397802566936, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 55 or older, with high earnings, living in NY_outside_NYC and working in Manhattan.","Question: What is the commuter profile of this respondent?
+A. Workers age 55 or older, with high earnings, living in NY_outside_NYC and working in Manhattan.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' C', ' A', ' D', ' B', ' E', ' B', ' D', ' B', ' E', ' E', ' A', ' D', ' B', ' C', ' E', ' B', ' B', ' A', ' A', ' C', ' B', ' A', ' D', ' B', ' C', ' B', ' E', ' B', ' D', ' E', ' C', ' B', ' B', ' D', ' B', ' C', ' D', ' D', ' B', ' C', ' B', ' B', ' C', ' A', ' A', ' B', ' B', ' C', ' B', ' C', ' D', ' D', ' C', ' E', ' A', ' C', ' D', ' C', ' C', ' B', ' D', ' B', ' C', ' D', ' D', ' E', ' B', ' B', ' B', ' D', ' C', ' D', ' C', ' C', ' E', ' C', ' C', ' D', ' E', ' E', ' C', ' A', ' A', ' A', ' A', ' D', ' C', ' A', ' D', ' C', ' C', ' E', ' A', ' C', ' C', ' C', ' B', ' D', ' E', ' E']","[0.13745004957555265, 0.2015571724312258, 0.2776567324289296, 0.21623928064069786, 0.16709676492359404, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 29 or younger, with high earnings, living in Brooklyn and working in Manhattan.","Question: What is the commuter profile of this respondent?
+A. Workers age 29 or younger, with high earnings, living in Brooklyn and working in Manhattan.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' A', ' C', ' A', ' D', ' C', ' A', ' A', ' D', ' B', ' D', ' D', ' C', ' E', ' D', ' C', ' C', ' B', ' A', ' C', ' C', ' D', ' B', ' C', ' E', ' D', ' D', ' D', ' E', ' B', ' D', ' A', ' B', ' D', ' B', ' C', ' B', ' B', ' C', ' D', ' D', ' C', ' C', ' E', ' D', ' C', ' C', ' B', ' B', ' A', ' E', ' E', ' A', ' D', ' C', ' D', ' C', ' B', ' A', ' B', ' C', ' D', ' B', ' C', ' E', ' A', ' C', ' E', ' D', ' E', ' D', ' D', ' B', ' C', ' C', ' E', ' D', ' C', ' E', ' D', ' D', ' B', ' B', ' D', ' C', ' B', ' E', ' E', ' D', ' E', ' D', ' C', ' A', ' C', ' E', ' C', ' D', ' C', ' A', ' C', ' B']","[0.1386703955147646, 0.21310550292219838, 0.24148017097631713, 0.2215946610754485, 0.1851492695112713, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 30 to 54, with mid earnings, living in Brooklyn and working in Brooklyn.","Question: What is the commuter profile of this respondent?
+A. Workers age 30 to 54, with mid earnings, living in Brooklyn and working in Brooklyn.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' C', ' B', ' D', ' B', ' C', ' E', ' A', ' B', ' D', ' A', ' B', ' D', ' E', ' B', ' B', ' E', ' B', ' C', ' C', ' D', ' E', ' E', ' D', ' D', ' D', ' D', ' C', ' B', ' B', ' E', ' D', ' A', ' E', ' B', ' D', ' C', ' B', ' B', ' C', ' C', ' D', ' D', ' D', ' E', ' D', ' E', ' C', ' E', ' D', ' D', ' B', ' C', ' C', ' A', ' C', ' C', ' A', ' A', ' C', ' C', ' E', ' E', ' D', ' D', ' B', ' D', ' A', ' B', ' C', ' B', ' A', ' C', ' E', ' A', ' B', ' E', ' C', ' C', ' C', ' D', ' C', ' C', ' C', ' D', ' A', ' C', ' D', ' A', ' B', ' C', ' D', ' C', ' C', ' B', ' C', ' E', ' A', ' A', ' B', ' A']","[0.12453710511989251, 0.21856942630502157, 0.26989721587960563, 0.22201139393643216, 0.16498485875904814, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 55 or older, with high earnings, living in Manhattan and working in Manhattan.","Question: What is the commuter profile of this respondent?
+A. Workers age 55 or older, with high earnings, living in Manhattan and working in Manhattan.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' B', ' C', ' B', ' D', ' B', ' C', ' E', ' C', ' E', ' D', ' C', ' D', ' C', ' C', ' E', ' C', ' E', ' E', ' A', ' B', ' C', ' D', ' B', ' D', ' C', ' D', ' E', ' D', ' B', ' D', ' C', ' E', ' C', ' E', ' E', ' D', ' D', ' D', ' C', ' B', ' E', ' C', ' A', ' C', ' C', ' B', ' E', ' A', ' E', ' C', ' B', ' C', ' C', ' A', ' D', ' D', ' E', ' D', ' D', ' E', ' E', ' D', ' C', ' C', ' D', ' E', ' D', ' E', ' A', ' C', ' A', ' C', ' C', ' C', ' E', ' B', ' D', ' C', ' B', ' E', ' A', ' C', ' C', ' C', ' E', ' C', ' E', ' B', ' C', ' B', ' D', ' C', ' D', ' A', ' C', ' E', ' A', ' D', ' D', ' D']","[0.14167781961857884, 0.21102848067655713, 0.2626291875133042, 0.2177272437325896, 0.1669372684589702, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 30 to 54, with high earnings, living in Bronx and working in Manhattan.","Question: What is the commuter profile of this respondent?
+A. Workers age 30 to 54, with high earnings, living in Bronx and working in Manhattan.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' E', ' A', ' D', ' C', ' E', ' C', ' E', ' B', ' E', ' C', ' B', ' C', ' D', ' A', ' C', ' A', ' A', ' B', ' B', ' B', ' D', ' C', ' E', ' E', ' E', ' E', ' C', ' D', ' E', ' C', ' B', ' C', ' C', ' B', ' A', ' B', ' D', ' D', ' D', ' C', ' A', ' A', ' D', ' C', ' C', ' B', ' A', ' B', ' B', ' C', ' B', ' C', ' C', ' C', ' D', ' D', ' B', ' E', ' E', ' D', ' C', ' E', ' D', ' B', ' D', ' E', ' D', ' E', ' C', ' D', ' A', ' D', ' B', ' D', ' E', ' C', ' A', ' A', ' C', ' B', ' D', ' D', ' C', ' D', ' B', ' C', ' A', ' C', ' D', ' B', ' D', ' E', ' B', ' B', ' B', ' E', ' A', ' D', ' B', ' D']","[0.1274894772807379, 0.21856781446371523, 0.25354310044566375, 0.22200975671231862, 0.17838985109756447, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 30 to 54, with high earnings, living in Queens and working in Queens.","Question: What is the commuter profile of this respondent?
+A. Workers age 30 to 54, with high earnings, living in Queens and working in Queens.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' D', ' E', ' C', ' D', ' E', ' C', ' D', ' D', ' E', ' A', ' B', ' E', ' D', ' B', ' D', ' B', ' C', ' C', ' B', ' B', ' C', ' D', ' B', ' D', ' E', ' A', ' B', ' A', ' D', ' C', ' C', ' B', ' D', ' D', ' C', ' D', ' B', ' B', ' E', ' B', ' B', ' A', ' D', ' D', ' A', ' C', ' C', ' B', ' B', ' C', ' B', ' E', ' B', ' C', ' D', ' D', ' C', ' C', ' E', ' B', ' B', ' B', ' D', ' C', ' C', ' A', ' A', ' D', ' B', ' C', ' B', ' B', ' B', ' E', ' D', ' C', ' B', ' E', ' C', ' B', ' B', ' E', ' B', ' C', ' A', ' E', ' B', ' C', ' D', ' C', ' C', ' B', ' D', ' B', ' D', ' E', ' E', ' D', ' C', ' B']","[0.13102921242110996, 0.21772499898616818, 0.26262647983226844, 0.21772499898616818, 0.17089430977428519, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 29 or younger, with high earnings, living in NY_outside_NYC and working in Manhattan.","Question: What is the commuter profile of this respondent?
+A. Workers age 29 or younger, with high earnings, living in NY_outside_NYC and working in Manhattan.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' E', ' A', ' C', ' C', ' E', ' C', ' C', ' C', ' C', ' E', ' E', ' D', ' A', ' E', ' C', ' C', ' C', ' C', ' E', ' B', ' B', ' E', ' B', ' B', ' C', ' E', ' C', ' A', ' B', ' B', ' A', ' E', ' D', ' A', ' B', ' E', ' D', ' C', ' C', ' E', ' B', ' D', ' A', ' C', ' B', ' B', ' C', ' C', ' E', ' C', ' A', ' E', ' E', ' E', ' B', ' C', ' D', ' A', ' A', ' C', ' B', ' C', ' B', ' E', ' C', ' B', ' B', ' B', ' D', ' D', ' D', ' E', ' C', ' C', ' C', ' A', ' C', ' C', ' E', ' C', ' A', ' C', ' B', ' D', ' E', ' C', ' D', ' C', ' B', ' D', ' D', ' C', ' E', ' D', ' D', ' A', ' E', ' A', ' B', ' A']","[0.14212884720514857, 0.2051869512489332, 0.2593806103120676, 0.2150340786401075, 0.17826951259374316, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 55 or older, with high earnings, living in Brooklyn and working in Manhattan.","Question: What is the commuter profile of this respondent?
+A. Workers age 55 or older, with high earnings, living in Brooklyn and working in Manhattan.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' A', ' E', ' B', ' D', ' E', ' D', ' B', ' C', ' D', ' E', ' D', ' C', ' C', ' C', ' D', ' C', ' C', ' D', ' D', ' A', ' B', ' D', ' C', ' E', ' A', ' B', ' C', ' D', ' B', ' D', ' C', ' B', ' E', ' A', ' E', ' B', ' C', ' B', ' C', ' E', ' B', ' C', ' C', ' B', ' A', ' D', ' C', ' C', ' C', ' A', ' D', ' E', ' B', ' D', ' D', ' B', ' B', ' A', ' C', ' C', ' C', ' C', ' C', ' A', ' B', ' C', ' C', ' B', ' B', ' E', ' D', ' D', ' C', ' C', ' D', ' C', ' D', ' A', ' D', ' B', ' B', ' C', ' E', ' C', ' D', ' B', ' E', ' B', ' C', ' D', ' D', ' C', ' D', ' A', ' E', ' C', ' C', ' B', ' C', ' D']","[0.13393338964690224, 0.21070679800007613, 0.2642855332910994, 0.219100402612157, 0.17197387644976528, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 29 or younger, with high earnings, living in Queens and working in Manhattan.","Question: What is the commuter profile of this respondent?
+A. Workers age 29 or younger, with high earnings, living in Queens and working in Manhattan.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' E', ' C', ' C', ' C', ' D', ' E', ' C', ' B', ' C', ' A', ' D', ' E', ' B', ' D', ' B', ' E', ' C', ' C', ' A', ' B', ' E', ' B', ' D', ' C', ' C', ' D', ' A', ' D', ' A', ' B', ' D', ' B', ' A', ' C', ' D', ' A', ' D', ' C', ' A', ' C', ' A', ' C', ' D', ' C', ' C', ' D', ' B', ' C', ' C', ' A', ' E', ' B', ' D', ' C', ' A', ' B', ' C', ' C', ' E', ' A', ' E', ' E', ' B', ' C', ' A', ' C', ' D', ' B', ' D', ' B', ' A', ' C', ' D', ' B', ' B', ' D', ' D', ' A', ' B', ' D', ' D', ' B', ' D', ' D', ' A', ' D', ' C', ' A', ' A', ' B', ' D', ' B', ' C', ' E', ' C', ' D', ' A', ' E', ' E', ' E']","[0.1404554284640786, 0.2158487008699951, 0.24268521773406282, 0.21924782331011047, 0.1817628296217531, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 30 to 54, with mid earnings, living in Queens and working in Queens.","Question: What is the commuter profile of this respondent?
+A. Workers age 30 to 54, with mid earnings, living in Queens and working in Queens.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' A', ' C', ' A', ' C', ' E', ' B', ' E', ' D', ' E', ' A', ' D', ' C', ' C', ' C', ' E', ' D', ' D', ' D', ' C', ' D', ' D', ' C', ' B', ' C', ' B', ' C', ' C', ' D', ' C', ' C', ' C', ' B', ' E', ' E', ' C', ' B', ' C', ' D', ' C', ' E', ' A', ' B', ' C', ' A', ' C', ' C', ' B', ' E', ' C', ' C', ' C', ' B', ' C', ' B', ' A', ' D', ' B', ' B', ' B', ' C', ' B', ' D', ' D', ' E', ' A', ' B', ' D', ' E', ' B', ' E', ' A', ' C', ' A', ' B', ' D', ' C', ' E', ' E', ' C', ' C', ' C', ' B', ' C', ' D', ' C', ' D', ' B', ' A', ' E', ' B', ' B', ' E', ' D', ' E', ' E', ' A', ' C', ' D', ' B', ' C']","[0.12603504550470288, 0.22119839355323187, 0.26890885876853937, 0.21947701399786568, 0.1643806881756602, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 55 or older, with high earnings, living in Queens and working in Manhattan.","Question: What is the commuter profile of this respondent?
+A. Workers age 55 or older, with high earnings, living in Queens and working in Manhattan.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' C', ' B', ' D', ' E', ' A', ' C', ' C', ' B', ' E', ' E', ' D', ' C', ' E', ' A', ' C', ' C', ' A', ' C', ' C', ' C', ' A', ' D', ' A', ' A', ' E', ' B', ' C', ' D', ' D', ' E', ' B', ' C', ' A', ' D', ' B', ' B', ' B', ' D', ' C', ' D', ' C', ' C', ' D', ' B', ' C', ' B', ' B', ' E', ' C', ' C', ' D', ' B', ' E', ' C', ' B', ' D', ' C', ' D', ' A', ' E', ' E', ' A', ' C', ' A', ' A', ' B', ' A', ' E', ' C', ' C', ' D', ' B', ' C', ' D', ' C', ' B', ' A', ' E', ' E', ' E', ' A', ' B', ' B', ' E', ' C', ' D', ' D', ' C', ' B', ' E', ' C', ' D', ' A', ' C', ' D', ' C', ' C', ' E', ' C', ' D']","[0.13470498160713226, 0.21358279705495406, 0.2658080856078155, 0.2169462367021047, 0.1689578990279935, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 30 to 54, with high earnings, living in NY_outside_NYC and working in Queens.","Question: What is the commuter profile of this respondent?
+A. Workers age 30 to 54, with high earnings, living in NY_outside_NYC and working in Queens.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' B', ' E', ' E', ' A', ' E', ' D', ' D', ' A', ' D', ' C', ' D', ' C', ' D', ' D', ' B', ' D', ' E', ' E', ' E', ' A', ' D', ' E', ' B', ' A', ' D', ' C', ' E', ' B', ' A', ' C', ' E', ' D', ' A', ' B', ' A', ' C', ' D', ' C', ' C', ' B', ' C', ' E', ' C', ' B', ' D', ' E', ' A', ' D', ' C', ' C', ' C', ' D', ' E', ' B', ' B', ' B', ' C', ' B', ' C', ' C', ' C', ' D', ' C', ' C', ' D', ' C', ' A', ' E', ' C', ' C', ' A', ' C', ' D', ' A', ' C', ' A', ' C', ' B', ' D', ' E', ' C', ' C', ' D', ' D', ' A', ' C', ' D', ' E', ' B', ' E', ' B', ' C', ' E', ' D', ' B', ' D', ' C', ' B', ' E', ' A']","[0.1323361148258849, 0.2114725093559086, 0.27797536944132856, 0.21480271680734064, 0.16341328956953732, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 30 to 54, with high earnings, living in Queens and working in NY_outside_NYC.","Question: What is the commuter profile of this respondent?
+A. Workers age 30 to 54, with high earnings, living in Queens and working in NY_outside_NYC.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' B', ' C', ' B', ' D', ' C', ' B', ' E', ' D', ' E', ' D', ' B', ' C', ' B', ' D', ' A', ' D', ' B', ' B', ' D', ' D', ' C', ' C', ' C', ' C', ' A', ' B', ' A', ' C', ' B', ' B', ' B', ' E', ' A', ' E', ' E', ' B', ' D', ' B', ' D', ' A', ' B', ' C', ' C', ' D', ' D', ' A', ' C', ' A', ' B', ' C', ' B', ' C', ' E', ' D', ' C', ' E', ' B', ' D', ' E', ' E', ' C', ' C', ' C', ' C', ' E', ' B', ' E', ' B', ' C', ' C', ' A', ' C', ' A', ' E', ' E', ' C', ' D', ' D', ' B', ' A', ' C', ' C', ' C', ' D', ' D', ' C', ' A', ' B', ' D', ' E', ' A', ' D', ' C', ' B', ' E', ' B', ' B', ' C', ' D', ' B']","[0.13188812626147683, 0.2107566256683546, 0.27487845960789875, 0.21575457501549858, 0.16672221344677127, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.
+Q3,commuter_profile,"Workers age 55 or older, with mid earnings, living in Brooklyn and working in Brooklyn.","Question: What is the commuter profile of this respondent?
+A. Workers age 55 or older, with mid earnings, living in Brooklyn and working in Brooklyn.
+B. N/A
+C. N/A
+D. N/A
+E. N/A
+Answer: A.
+
+Answer the following question keeping in mind your previous answers.
+Question: Commuting costs are a major concern for me.
+A. Strongly disagree
+B. Disagree
+C. Neutral
+D. Agree
+E. Strongly agree
+Answer:","[' C', ' C', ' D', ' B', ' B', ' D', ' C', ' C', ' C', ' B', ' B', ' D', ' E', ' D', ' D', ' B', ' C', ' B', ' D', ' B', ' B', ' E', ' B', ' E', ' C', ' D', ' D', ' B', ' D', ' B', ' C', ' B', ' A', ' C', ' A', ' C', ' E', ' E', ' C', ' A', ' C', ' A', ' B', ' D', ' C', ' A', ' C', ' C', ' C', ' B', ' C', ' A', ' D', ' D', ' D', ' C', ' E', ' C', ' B', ' C', ' E', ' B', ' D', ' E', ' E', ' C', ' C', ' E', ' D', ' D', ' B', ' C', ' D', ' B', ' B', ' E', ' C', ' C', ' C', ' B', ' B', ' A', ' C', ' B', ' E', ' E', ' C', ' A', ' C', ' B', ' C', ' A', ' C', ' A', ' B', ' B', ' C', ' E', ' C', ' D']","[0.13001031223503376, 0.2160319410956309, 0.27523183316138544, 0.21943394914942096, 0.15929196435852902, 0.0]","[1.0, 1.0, 1.0, 1.0, 1.0]",Commuting costs are a major concern for me.

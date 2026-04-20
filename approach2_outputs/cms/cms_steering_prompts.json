@@ -1,0 +1,97 @@
+{
+  "AGE": {
+    "18-24": {
+      "QA": "What is your age group?\n(A) 18-24\n(B) 25-44\n(C) 45-64\n(D) 65+\nAnswer: (A) 18-24",
+      "BIO": "I am 18-24 years old.",
+      "PORTRAY": "Portray someone who is 18-24 years old."
+    },
+    "25-44": {
+      "QA": "What is your age group?\n(A) 18-24\n(B) 25-44\n(C) 45-64\n(D) 65+\nAnswer: (B) 25-44",
+      "BIO": "I am 25-44 years old.",
+      "PORTRAY": "Portray someone who is 25-44 years old."
+    },
+    "45-64": {
+      "QA": "What is your age group?\n(A) 18-24\n(B) 25-44\n(C) 45-64\n(D) 65+\nAnswer: (C) 45-64",
+      "BIO": "I am 45-64 years old.",
+      "PORTRAY": "Portray someone who is 45-64 years old."
+    },
+    "65+": {
+      "QA": "What is your age group?\n(A) 18-24\n(B) 25-44\n(C) 45-64\n(D) 65+\nAnswer: (D) 65+",
+      "BIO": "I am 65+ years old.",
+      "PORTRAY": "Portray someone who is 65+ years old."
+    }
+  },
+  "GENDER": {
+    "Female": {
+      "QA": "What is your gender?\n(A) Male\n(B) Female\nAnswer: (B) Female",
+      "BIO": "I am Female.",
+      "PORTRAY": "Portray a Female New Yorker."
+    },
+    "Male": {
+      "QA": "What is your gender?\n(A) Male\n(B) Female\nAnswer: (A) Male",
+      "BIO": "I am Male.",
+      "PORTRAY": "Portray a Male New Yorker."
+    }
+  },
+  "INCOME": {
+    "$100K-$200K": {
+      "QA": "What is your annual household income?\n(A) Under $50K\n(B) $50K-$100K\n(C) $100K-$200K\n(D) $200K+\nAnswer: (C) $100K-$200K",
+      "BIO": "My household income is $100K-$200K per year.",
+      "PORTRAY": "Portray a New Yorker with a household income of $100K-$200K."
+    },
+    "$200K+": {
+      "QA": "What is your annual household income?\n(A) Under $50K\n(B) $50K-$100K\n(C) $100K-$200K\n(D) $200K+\nAnswer: (D) $200K+",
+      "BIO": "My household income is $200K+ per year.",
+      "PORTRAY": "Portray a New Yorker with a household income of $200K+."
+    },
+    "$50K-$100K": {
+      "QA": "What is your annual household income?\n(A) Under $50K\n(B) $50K-$100K\n(C) $100K-$200K\n(D) $200K+\nAnswer: (B) $50K-$100K",
+      "BIO": "My household income is $50K-$100K per year.",
+      "PORTRAY": "Portray a New Yorker with a household income of $50K-$100K."
+    },
+    "Under $50K": {
+      "QA": "What is your annual household income?\n(A) Under $50K\n(B) $50K-$100K\n(C) $100K-$200K\n(D) $200K+\nAnswer: (A) Under $50K",
+      "BIO": "My household income is Under $50K per year.",
+      "PORTRAY": "Portray a New Yorker with a household income of Under $50K."
+    }
+  },
+  "BOROUGH": {
+    "Bronx": {
+      "QA": "Which NYC borough do you live in?\n(A) Bronx\n(B) Brooklyn\n(C) Manhattan\n(D) Queens\n(E) Staten Island\nAnswer: (A) Bronx",
+      "BIO": "I live in Bronx, New York City.",
+      "PORTRAY": "Portray a resident of Bronx, NYC."
+    },
+    "Brooklyn": {
+      "QA": "Which NYC borough do you live in?\n(A) Bronx\n(B) Brooklyn\n(C) Manhattan\n(D) Queens\n(E) Staten Island\nAnswer: (B) Brooklyn",
+      "BIO": "I live in Brooklyn, New York City.",
+      "PORTRAY": "Portray a resident of Brooklyn, NYC."
+    },
+    "Manhattan": {
+      "QA": "Which NYC borough do you live in?\n(A) Bronx\n(B) Brooklyn\n(C) Manhattan\n(D) Queens\n(E) Staten Island\nAnswer: (C) Manhattan",
+      "BIO": "I live in Manhattan, New York City.",
+      "PORTRAY": "Portray a resident of Manhattan, NYC."
+    },
+    "Queens": {
+      "QA": "Which NYC borough do you live in?\n(A) Bronx\n(B) Brooklyn\n(C) Manhattan\n(D) Queens\n(E) Staten Island\nAnswer: (D) Queens",
+      "BIO": "I live in Queens, New York City.",
+      "PORTRAY": "Portray a resident of Queens, NYC."
+    },
+    "Staten Island": {
+      "QA": "Which NYC borough do you live in?\n(A) Bronx\n(B) Brooklyn\n(C) Manhattan\n(D) Queens\n(E) Staten Island\nAnswer: (E) Staten Island",
+      "BIO": "I live in Staten Island, New York City.",
+      "PORTRAY": "Portray a resident of Staten Island, NYC."
+    }
+  },
+  "RACE": {
+    "Non-White": {
+      "QA": "How do you identify racially?\n(A) White\n(B) Non-White\nAnswer: (B) Non-White",
+      "BIO": "I identify as Non-White.",
+      "PORTRAY": "Portray a Non-White New Yorker."
+    },
+    "White": {
+      "QA": "How do you identify racially?\n(A) White\n(B) Non-White\nAnswer: (A) White",
+      "BIO": "I identify as White.",
+      "PORTRAY": "Portray a White New Yorker."
+    }
+  }
+}

@@ -1,0 +1,12 @@
+# ─── LOCAL (CPU) requirements ────────────────────────────────────────
+# Install with: pip install -r requirements.txt
+# Runs: step1_cms_adapter.py, step3_prepare_finetuning_data.py, step6_full_evaluation.py
+
+pandas>=2.0.0
+numpy>=1.24.0
+tqdm>=4.65.0
+scipy>=1.10.0
+pyarrow>=12.0.0          # for reading .parquet files
+scikit-learn>=1.3.0      # optional, for embeddings in few-shot
+sentence-transformers>=2.2.0  # optional, for few-shot similarity
+openai>=1.0.0            # optional, for question refinement via GPT-4o

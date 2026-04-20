@@ -1,0 +1,2053 @@
+{
+    "natspac": {
+        "original_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount. a. Space exploration program.",
+        "refined_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount: Space exploration program.",
+        "option_list": [
+            "Too little",
+            "About right",
+            "Too much",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "natenvir": {
+        "original_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount. b. Improving and protecting the environment.",
+        "refined_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount: Improving and protecting the environment.",
+        "option_list": [
+            "Too little",
+            "About right",
+            "Too much",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "natheal": {
+        "original_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount. c. Improving and protecting the nation's health.",
+        "refined_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount: Improving and protecting the nation's health.",
+        "option_list": [
+            "Too little",
+            "About right",
+            "Too much",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "natcity": {
+        "original_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount. d. Solving the problems of the big cities.",
+        "refined_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount: Solving the problems of the big cities.",
+        "option_list": [
+            "Too little",
+            "About right",
+            "Too much",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "natdrug": {
+        "original_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount. f. Dealing with drug addiction.",
+        "refined_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount: Dealing with drug addiction.",
+        "option_list": [
+            "Too little",
+            "About right",
+            "Too much",
+            "Refused"
+        ],
+        "ordinal": [
+            2.0,
+            1.5,
+            1.0
+        ]
+    },
+    "nateduc": {
+        "original_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount. g. Improving the nation's education system.",
+        "refined_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount: Improving the nation's education system.",
+        "option_list": [
+            "Too little",
+            "About right",
+            "Too much",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "natrace": {
+        "original_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount. h. Improving the conditions of Blacks.",
+        "refined_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount: Improving the conditions of Blacks.",
+        "option_list": [
+            "Too little",
+            "About right",
+            "Too much",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "natarms": {
+        "original_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount. i. The military, armaments and defense.",
+        "refined_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount: The military, armaments and defense.",
+        "option_list": [
+            "Too little",
+            "About right",
+            "Too much",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "nataid": {
+        "original_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount. j. Foreign aid.",
+        "refined_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount: Foreign aid.",
+        "option_list": [
+            "Too little",
+            "About right",
+            "Too much",
+            "Refused"
+        ],
+        "ordinal": [
+            2.0,
+            3.0,
+            1.0
+        ]
+    },
+    "natfare": {
+        "original_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount. k. Welfare.",
+        "refined_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount: Welfare.",
+        "option_list": [
+            "Too little",
+            "About right",
+            "Too much",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "natroad": {
+        "original_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount. l. Highways and bridges.",
+        "refined_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount: Highways and bridges.",
+        "option_list": [
+            "Too little",
+            "About right",
+            "Too much",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "natsoc": {
+        "original_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount. m. Social Security.",
+        "refined_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount: Social Security.",
+        "option_list": [
+            "Too little",
+            "About right",
+            "Too much",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "natmass": {
+        "original_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount. n. Mass Transportation.",
+        "refined_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount: Mass Transportation.",
+        "option_list": [
+            "Too little",
+            "About right",
+            "Too much",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "natpark": {
+        "original_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount. o. Parks and recreation.",
+        "refined_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount: Parks and recreation.",
+        "option_list": [
+            "Too little",
+            "About right",
+            "Too much",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "natchld": {
+        "original_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount. p. Assistance for childcare.",
+        "refined_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount: Assistance for childcare.",
+        "option_list": [
+            "Too little",
+            "About right",
+            "Too much",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "natsci": {
+        "original_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount. q. Supporting scientific research.",
+        "refined_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount: Supporting scientific research.",
+        "option_list": [
+            "Too little",
+            "About right",
+            "Too much",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "natenrgy": {
+        "original_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount. First (READ ITEM A) . . . are we spending too much, too little, or about the right amount on (ITEM)? Developing alternative energy sources",
+        "refined_qbody": "We are faced with many problems in this country, none of which can be solved easily or inexpensively. I'm going to name some of these problems, and for each one I'd like you to tell me whether you think we're spending too much money on it, too little money, or about the right amount: Developing alternative energy sources.",
+        "option_list": [
+            "Too little",
+            "About right",
+            "Too much",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "uswary": {
+        "original_qbody": "Do you expect the United States to fight in another world war within the next ten years?",
+        "refined_qbody": "Do you expect the United States to fight in another world war within the next ten years?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "prayer": {
+        "original_qbody": "The United States Supreme Court has ruled that no state or local government may require the reading of the Lor's Prayer or Bible verses in public schools. What are your views on this - do you approve or disapprove of the court ruling?",
+        "refined_qbody": "The United States Supreme Court has ruled that no state or local government may require the reading of the Lor's Prayer or Bible verses in public schools. What are your views on this - do you approve or disapprove of the court ruling?",
+        "option_list": [
+            "Approve",
+            "Disapprove",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "courts": {
+        "original_qbody": "In general, do you think the courts in this area deal too harshly or not harshly enough with criminals?",
+        "refined_qbody": "In general, do you think the courts in this area deal too harshly or not harshly enough with criminals?",
+        "option_list": [
+            "Too harshly",
+            "Not harshly enough",
+            "About right",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            3.0,
+            2.0
+        ]
+    },
+    "discaffw": {
+        "original_qbody": "What do you think the chances are these days that a woman won't get a job or promotion while an equally or less qualified man gets one instead?",
+        "refined_qbody": "What do you think the chances are these days that a woman won't get a job or promotion while an equally or less qualified man gets one instead?",
+        "option_list": [
+            "Very likely",
+            "Somewhat likely",
+            "Not very likely",
+            "Very unlikely",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ]
+    },
+    "discaffm": {
+        "original_qbody": "What do you think the chances are these days that a man won't get a job or a promotion while an equally or less qualified woman gets one instead?",
+        "refined_qbody": "What do you think the chances are these days that a man won't get a job or a promotion while an equally or less qualified woman gets one instead?",
+        "option_list": [
+            "Very likely",
+            "Somewhat likely",
+            "Not very likely",
+            "Very unlikely",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ]
+    },
+    "fehire": {
+        "original_qbody": "Now I'm going to read several statements. As I read each one, please tell me whether you strongly agree, agree, neither agree nor disagree, disagree, or strongly disagree: Because of past discrimination, employers should make special efforts to hire and promote qualified women.",
+        "refined_qbody": "Please tell me whether you strongly agree, agree, neither agree nor disagree, disagree, or strongly disagree: Because of past discrimination, employers should make special efforts to hire and promote qualified women.",
+        "option_list": [
+            "Strongly agree",
+            "Agree",
+            "Neither agree nor disagree",
+            "Disagree",
+            "Strongly disagree",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0
+        ]
+    },
+    "fechld": {
+        "original_qbody": "Now I'm going to read several more statements. As I read each one, please tell me whether you strongly agree, agree, disagree, or strongly disagree with it. a. A working mother can establish just as warm and secure a relationship with her children as a mother who does not work.",
+        "refined_qbody": "Please tell me whether you strongly agree, agree, disagree, or strongly disagree: A working mother can establish just as warm and secure a relationship with her children as a mother who does not work.",
+        "option_list": [
+            "Strongly agree",
+            "Agree",
+            "Disagree",
+            "Strongly disagree",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ]
+    },
+    "fepresch": {
+        "original_qbody": "Now I'm going to read several more statements. As I read each one, please tell me whether you strongly agree, agree, disagree, or strongly disagree with it. c. A preschool child is likely to suffer if his or her mother works.",
+        "refined_qbody": "Please tell me whether you strongly agree, agree, disagree, or strongly disagree: A preschool child is likely to suffer if his or her mother works.",
+        "option_list": [
+            "Strongly agree",
+            "Agree",
+            "Disagree",
+            "Strongly disagree",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ]
+    },
+    "fefam": {
+        "original_qbody": "Now I'm going to read several more statements. As I read each one, please tell me whether you strongly agree, agree, disagree, or strongly disagree with it. d. It is much better for everyone involved if the man is the achiever outside the home and the woman takes care of the home and family.",
+        "refined_qbody": "Please tell me whether you strongly agree, agree, disagree, or strongly disagree: It is much better for everyone involved if the man is the achiever outside the home and the woman takes care of the home and family.",
+        "option_list": [
+            "Strongly agree",
+            "Agree",
+            "Disagree",
+            "Strongly disagree",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ]
+    },
+    "fepol": {
+        "original_qbody": "Tell me if you agree or disagree with this statement: Most men are better suited emotionally for politics than are most women.",
+        "refined_qbody": "Tell me if you agree or disagree with this statement: Most men are better suited emotionally for politics than are most women.",
+        "option_list": [
+            "Agree",
+            "Disagree",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "incom16": {
+        "original_qbody": "Thinking about the time when you were 16 years old, compared with American families in general then, would you say your family income was far below average, below average, average, above average, or far above average?",
+        "refined_qbody": "Thinking about the time when you were 16 years old, compared with American families in general then, would you say your family income was far below average, below average, average, above average, or far above average?",
+        "option_list": [
+            "Far below average",
+            "Below average",
+            "Average",
+            "Above average",
+            "Far above average",
+            "Lived in institution",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0,
+            -1.0
+        ]
+    },
+    "dwelown16": {
+        "original_qbody": "When you were 16 years old, did your family own your own home, pay rent, or something else?",
+        "refined_qbody": "When you were 16 years old, did your family own your own home, pay rent, or something else?",
+        "option_list": [
+            "Owned or was buying",
+            "Paid rent",
+            "Other",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "mawrkgrw": {
+        "original_qbody": "Did your mother ever work for pay for as long as a year, while you were growing up?",
+        "refined_qbody": "Did your mother ever work for pay for as long as a year, while you were growing up?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "marital": {
+        "original_qbody": "Are you currently - married, widowed, divorced, separated, or have you never been married?",
+        "refined_qbody": "Are you currently - married, widowed, divorced, separated, or have you never been married?",
+        "option_list": [
+            "Married",
+            "Widowed",
+            "Divorced",
+            "Separated",
+            "Never married",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0
+        ]
+    },
+    "wrkgovt1": {
+        "original_qbody": "Are/were you employed by the government? (Please consider federal, state, or local government.)",
+        "refined_qbody": "Are/were you employed by the government? (Please consider federal, state, or local government.)",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "wrkgovt2": {
+        "original_qbody": "Are/were you employed by a private employer (including non-profit organizations)?",
+        "refined_qbody": "Are/were you employed by a private employer (including non-profit organizations)?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "wksub1": {
+        "original_qbody": "Do you (does your (SPOUSE or PARTNER) have a supervisor on (your/his/her) job to whom you are (he/she/is) directly responsible?",
+        "refined_qbody": "Do you (does your (SPOUSE or PARTNER) have a supervisor on (your/his/her) job to whom you are (he/she/is) directly responsible?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "conarmy": {
+        "original_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? m. Military",
+        "refined_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? Military",
+        "option_list": [
+            "A great deal",
+            "Only some",
+            "Hardly any",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "conbus": {
+        "original_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? b. Major companies.",
+        "refined_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? Major companies.",
+        "option_list": [
+            "A great deal",
+            "Only some",
+            "Hardly any",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "conclerg": {
+        "original_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? c. Organized religion.",
+        "refined_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? Organized religion.",
+        "option_list": [
+            "A great deal",
+            "Only some",
+            "Hardly any",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "coneduc": {
+        "original_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? d. Education.",
+        "refined_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? Education.",
+        "option_list": [
+            "A great deal",
+            "Only some",
+            "Hardly any",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "confed": {
+        "original_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? e. Executive branch of the federal government.",
+        "refined_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? Executive branch of the federal government.",
+        "option_list": [
+            "A great deal",
+            "Only some",
+            "Hardly any",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "confinan": {
+        "original_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? a. Banks and financial institutions.",
+        "refined_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? Banks and financial institutions.",
+        "option_list": [
+            "A great deal",
+            "Only some",
+            "Hardly any",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "conjudge": {
+        "original_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? j. U.S. Supreme Court.",
+        "refined_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? U.S. Supreme Court.",
+        "option_list": [
+            "A great deal",
+            "Only some",
+            "Hardly any",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "conlabor": {
+        "original_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? f. Organized labor.",
+        "refined_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? Organized labor.",
+        "option_list": [
+            "A great deal",
+            "Only some",
+            "Hardly any",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "conlegis": {
+        "original_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? l. Congress",
+        "refined_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? Congress",
+        "option_list": [
+            "A great deal",
+            "Only some",
+            "Hardly any",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "conmedic": {
+        "original_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? h. Medicine.",
+        "refined_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? Medicine.",
+        "option_list": [
+            "A great deal",
+            "Only some",
+            "Hardly any",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "conpress": {
+        "original_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? g. Press.",
+        "refined_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? Press.",
+        "option_list": [
+            "A great deal",
+            "Only some",
+            "Hardly any",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "consci": {
+        "original_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? k. Scientific community.",
+        "refined_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? Scientific community.",
+        "option_list": [
+            "A great deal",
+            "Only some",
+            "Hardly any",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "contv": {
+        "original_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? i. Television.",
+        "refined_qbody": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? Television.",
+        "option_list": [
+            "A great deal",
+            "Only some",
+            "Hardly any",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "vetyears": {
+        "original_qbody": "Have you ever been on active duty for military training or service for two consecutive months or more? IF YES: What was your total time on active duty?",
+        "refined_qbody": "Have you ever been on active duty for military training or service for two consecutive months or more? If yes, what was your total time on active duty?",
+        "option_list": [
+            "No active duty",
+            "Yes, less than 2 years",
+            "Yes, 2-4 years",
+            "Yes, more than 4 years",
+            "Some, don't know how long",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            -1.0
+        ]
+    },
+    "joblose": {
+        "original_qbody": "Thinking about the next 12 months, how likely do you think it is that you will lose your job or be laid off?",
+        "refined_qbody": "Thinking about the next 12 months, how likely do you think it is that you will lose your job or be laid off?",
+        "option_list": [
+            "Very likely",
+            "Fairly likely",
+            "Not too likely",
+            "Not likely",
+            "Leaving labor force",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            -1.0
+        ]
+    },
+    "jobfind": {
+        "original_qbody": "About how easy would it be for you to find a job with another employer with approximately the same income and fringe benefits you now have?",
+        "refined_qbody": "About how easy would it be for you to find a job with another employer with approximately the same income and fringe benefits you now have?",
+        "option_list": [
+            "Very easy",
+            "Somewhat easy",
+            "Not easy",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "happy": {
+        "original_qbody": "Taken all together, how would you say things are these days - would you say that you are very happy, pretty happy, or not too happy?",
+        "refined_qbody": "Taken all together, how would you say things are these days - would you say that you are very happy, pretty happy, or not too happy?",
+        "option_list": [
+            "Very happy",
+            "Pretty happy",
+            "Not too happy",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "satjob": {
+        "original_qbody": "On the whole, how satisfied are you with the work you do?",
+        "refined_qbody": "On the whole, how satisfied are you with the work you do?",
+        "option_list": [
+            "Very satisfied",
+            "Moderately satisfied",
+            "A little dissatisfied",
+            "Very dissatisfied",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ]
+    },
+    "unemp": {
+        "original_qbody": "At any time during the last ten years, have you been unemployed and looking for work for as long as a month?",
+        "refined_qbody": "At any time during the last ten years, have you been unemployed and looking for work for as long as a month?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "union1": {
+        "original_qbody": "Do you (or your spouse or partner) belong to a labor union? (Who?)",
+        "refined_qbody": "Do you (or your spouse or partner) belong to a labor union? (Who?)",
+        "option_list": [
+            "Yes, respondent belongs",
+            "Yes, spouse or partner belongs",
+            "Yes, both belong",
+            "No, neither belong",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ]
+    },
+    "spkath": {
+        "original_qbody": "There are always some people whose ideas are considered bad or dangerous by other people. For instance, somebody who is against churches and religion... a. If such a person wanted to make a speech in your (city/town/community) against churches and religion, should he be allowed to speak, or not?",
+        "refined_qbody": "There are always some people whose ideas are considered bad or dangerous by other people. For instance, somebody who is against churches and religion... a. If such a person wanted to make a speech in your (city/town/community) against churches and religion, should he be allowed to speak, or not?",
+        "option_list": [
+            "Yes, allowed to speak",
+            "Not allowed",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "colath": {
+        "original_qbody": "There are always some people whose ideas are considered bad or dangerous by other people. For instance, somebody who is against churches and religion... b. Should such a person be allowed to teach in a college or university, or not?",
+        "refined_qbody": "There are always some people whose ideas are considered bad or dangerous by other people. For instance, somebody who is against churches and religion... Should such a person be allowed to teach in a college or university, or not?",
+        "option_list": [
+            "Yes, allowed to teach",
+            "Not allowed",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "spkrac": {
+        "original_qbody": "Or consider a person who believes that Blacks are genetically inferior. a. If such a person wanted to make a speech in your community claiming that Blacks are inferior, should he be allowed to speak, or not?",
+        "refined_qbody": "Consider a person who believes that Blacks are genetically inferior. If such a person wanted to make a speech in your community claiming that Blacks are inferior, should he be allowed to speak, or not?",
+        "option_list": [
+            "Yes, allowed to speak",
+            "Not allowed",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "colrac": {
+        "original_qbody": "Or consider a person who believes that Blacks are genetically inferior. b. Should such a person be allowed to teach in a college or university, or not?",
+        "refined_qbody": "Or consider a person who believes that Blacks are genetically inferior. b. Should such a person be allowed to teach in a college or university, or not?",
+        "option_list": [
+            "Yes, allowed to teach",
+            "Not allowed",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "librac": {
+        "original_qbody": "Or consider a person who believes that Blacks are genetically inferior. c. If some people in your community suggested that a book he wrote which said Blacks are inferior should be taken out of your public library, would you favor removing this book, or not?",
+        "refined_qbody": "Consider a person who believes that Blacks are genetically inferior. If some people in your community suggested that a book he wrote which said Blacks are inferior should be taken out of your public library, would you favor removing this book, or not?",
+        "option_list": [
+            "Remove",
+            "Not remove",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "spkcom": {
+        "original_qbody": "Now, I should like to ask you some questions about a man who admits he is a Communist: a. Suppose this admitted Communist wanted to make a speech in your community. Should he be allowed to speak, or not?",
+        "refined_qbody": "Now, I should like to ask you some questions about a man who admits he is a Communist. Suppose this admitted Communist wanted to make a speech in your community. Should he be allowed to speak, or not?",
+        "option_list": [
+            "Yes, allowed to speak",
+            "Not allowed",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "colcom": {
+        "original_qbody": "Now, I should like to ask you some questions about a man who admits he is a Communist: b. Suppose he is teaching in a college. Should he be fired, or not?",
+        "refined_qbody": "Now, I should like to ask you some questions about a man who admits he is a Communist. Suppose he is teaching in a college. Should he be fired, or not?",
+        "option_list": [
+            "Yes, fired",
+            "Not fired",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "libcom": {
+        "original_qbody": "Now, I should like to ask you some questions about a man who admits he is a Communist: c. Suppose he wrote a book which is in your public library. Somebody in your community suggests that the book should be removed from the library. Would you favor removing it, or not?",
+        "refined_qbody": "Now, I should like to ask you some questions about a man who admits he is a Communist. Suppose he wrote a book which is in your public library. Somebody in your community suggests that the book should be removed from the library. Would you favor removing it, or not?",
+        "option_list": [
+            "Remove",
+            "Not remove",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "cappun": {
+        "original_qbody": "Do you favor or oppose the death enalty for persons convicted of murder?",
+        "refined_qbody": "Do you favor or oppose the death enalty for persons convicted of murder?",
+        "option_list": [
+            "Favor",
+            "Oppose",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "polhitok": {
+        "original_qbody": "Are there any situations you can imagine in which you would approve of a policeman striking an adult male citizen?",
+        "refined_qbody": "Are there any situations you can imagine in which you would approve of a policeman striking an adult male citizen?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "polabuse": {
+        "original_qbody": "If yes or not sure: Would you approve of a policeman striking a citizen who: a. Had said vulgar and obscene things to the policeman?",
+        "refined_qbody": "Would you approve of a policeman striking a citizen who had said vulgar and obscene things to the policeman?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "polattak": {
+        "original_qbody": "If yes or not sure: Would you approve of a policeman striking a citizen who: d. Was attacking the policeman with his fists?",
+        "refined_qbody": "Would you approve of a policeman striking a citizen who was attacking the policeman with his fists?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "grass": {
+        "original_qbody": "Do you think the use of marijuana should be made legal or not?",
+        "refined_qbody": "Do you think the use of marijuana should be made legal or not?",
+        "option_list": [
+            "Should be legal",
+            "Should not be legal",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "gunlaw": {
+        "original_qbody": "Would you favor or oppose a law which would require a person to obtain a police permit before he or she could buy a gun?",
+        "refined_qbody": "Would you favor or oppose a law which would require a person to obtain a police permit before he or she could buy a gun?",
+        "option_list": [
+            "Favor",
+            "Oppose",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "owngun": {
+        "original_qbody": "Do you happen to have in your home (or garage) any guns or revolvers?",
+        "refined_qbody": "Do you happen to have in your home (or garage) any guns or revolvers?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "hunt1": {
+        "original_qbody": "Do you (or does your (husband/wife/partner)) go hunting?",
+        "refined_qbody": "Do you (or does your (husband/wife/partner)) go hunting?",
+        "option_list": [
+            "Yes, respondent does",
+            "Yes, spouse or partner does",
+            "Yes, both do",
+            "No, neither r nor spouse or partner does",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ]
+    },
+    "class": {
+        "original_qbody": "If you were asked to use one of four names for your social class, which would you say you belong in: the lower class, the working class, the middle class, or the upper class?",
+        "refined_qbody": "If you were asked to use one of four names for your social class, which would you say you belong in: the lower class, the working class, the middle class, or the upper class?",
+        "option_list": [
+            "Lower class",
+            "Working class",
+            "Middle class",
+            "Upper class",
+            "No class",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            -1.0
+        ]
+    },
+    "satfin": {
+        "original_qbody": "We are interested in how people are getting along financially these days. So far as you and your family are concerned, would you say that you are pretty well satisfied with your present financial situation, more or less satisfied, or not satisfied at all?",
+        "refined_qbody": "We are interested in how people are getting along financially these days. So far as you and your family are concerned, would you say that you are pretty well satisfied with your present financial situation, more or less satisfied, or not satisfied at all?",
+        "option_list": [
+            "Pretty well satisfied",
+            "More or less satisfied",
+            "Not satisfied at all",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "finalter": {
+        "original_qbody": "During the last few years, has your financial situation been getting better, worse, or has it stayed the same?",
+        "refined_qbody": "During the last few years, has your financial situation been getting better, worse, or has it stayed the same?",
+        "option_list": [
+            "Better",
+            "Worse",
+            "Stayed same",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            3.0,
+            2.0
+        ]
+    },
+    "finrela": {
+        "original_qbody": "Compared with American families in general, would you say your family income is far below average, below average, average, above average, or far above average?",
+        "refined_qbody": "Compared with American families in general, would you say your family income is far below average, below average, average, above average, or far above average?",
+        "option_list": [
+            "Far below average",
+            "Below average",
+            "Average",
+            "Above average",
+            "Far above average",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0
+        ]
+    },
+    "racdif1": {
+        "original_qbody": "On the average (negroes/blacks/African-Americans) have worse jobs, income, and housing than white people. Do you think these differences are: a. Mainly due to discrimination?",
+        "refined_qbody": "On the average (negroes/blacks/African-Americans) have worse jobs, income, and housing than white people. Do you think these differences are mainly due to discrimination?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "racdif2": {
+        "original_qbody": "On the average (negroes/blacks/African-Americans) have worse jobs, income, and housing than white people. Do you think these differences are: b. Because most (negroes/blacks/African-Americans) have less in-born ability to learn?",
+        "refined_qbody": "On the average (negroes/blacks/African-Americans) have worse jobs, income, and housing than white people. Do you think these differences are because most (negroes/blacks/African-Americans) have less in-born ability to learn?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "racdif3": {
+        "original_qbody": "On the average (negroes/blacks/African-Americans) have worse jobs, income, and housing than white people. Do you think these differences are: c. Because most (negroes/blacks/African-Americans) don't have the chance for education that it takes to rise out of poverty?",
+        "refined_qbody": "On the average (negroes/blacks/African-Americans) have worse jobs, income, and housing than white people. Do you think these differences are because most (negroes/blacks/African-Americans) don't have the chance for education that it takes to rise out of poverty?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "racdif4": {
+        "original_qbody": "On the average (negroes/blacks/African-Americans) have worse jobs, income, and housing than white people. Do you think these differences are: d. Because most (negroes/blacks/African-Americans) just don't have the motivation or willpower to pull themselves up out of poverty?",
+        "refined_qbody": "On the average (negroes/blacks/African-Americans) have worse jobs, income, and housing than white people. Do you think these differences are because most (negroes/blacks/African-Americans) just don't have the motivation or willpower to pull themselves up out of poverty?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "wlthwhts": {
+        "original_qbody": "Now I have some questions about different groups in our society. I'm going to show you a seven-point scale on which the characteristics of people in a group can be rated. A score of 1 means that you think almost all of the people in that group are \"rich.\" A score of 7 means that you think almost everyone in the group are \"poor.\" A score of 4 means you think that the group is not towards one end or another, and of course you may choose any number in between that comes closest to where you think people in that group stand. 1. Whites",
+        "refined_qbody": "Now I have some questions about different groups in our society. I'm going to show you a seven-point scale on which the characteristics of people in a group can be rated. A score of 1 means that you think almost all of the people in that group are \"rich.\" A score of 7 means that you think almost everyone in the group are \"poor.\" A score of 4 means you think that the group is not towards one end or another, and of course you may choose any number in between that comes closest to where you think people in that group stand. Group: Whites",
+        "option_list": [
+            "1 - rich",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7 - poor",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0,
+            6.0,
+            7.0
+        ]
+    },
+    "wlthblks": {
+        "original_qbody": "Now I have some questions about different groups in our society. I'm going to show you a seven-point scale on which the characteristics of people in a group can be rated. A score of 1 means that you think almost all of the people in that group are \"rich.\" A score of 7 means that you think almost everyone in the group are \"poor.\" A score of 4 means you think that the group is not towards one end or another, and of course you may choose any number in between that comes closest to where you think people in that group stand. 3. Blacks",
+        "refined_qbody": "Now I have some questions about different groups in our society. I'm going to show you a seven-point scale on which the characteristics of people in a group can be rated. A score of 1 means that you think almost all of the people in that group are \"rich.\" A score of 7 means that you think almost everyone in the group are \"poor.\" A score of 4 means you think that the group is not towards one end or another, and of course you may choose any number in between that comes closest to where you think people in that group stand. Group: Blacks",
+        "option_list": [
+            "1 - rich",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7 - poor",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0,
+            6.0,
+            7.0
+        ]
+    },
+    "wlthhsps": {
+        "original_qbody": "Now I have some questions about different groups in our society. I'm going to show you a seven-point scale on which the characteristics of people in a group can be rated. A score of 1 means that you think almost all of the people in that group are \"rich.\" A score of 7 means that you think almost everyone in the group are \"poor.\" A score of 4 means you think that the group is not towards one end or another, and of course you may choose any number in between that comes closest to where you think people in that group stand. 5. Hispanic Americans",
+        "refined_qbody": "Now I have some questions about different groups in our society. I'm going to show you a seven-point scale on which the characteristics of people in a group can be rated. A score of 1 means that you think almost all of the people in that group are \"rich.\" A score of 7 means that you think almost everyone in the group are \"poor.\" A score of 4 means you think that the group is not towards one end or another, and of course you may choose any number in between that comes closest to where you think people in that group stand. Group: Hispanic Americans",
+        "option_list": [
+            "1 - rich",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7 - poor",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0,
+            6.0,
+            7.0
+        ]
+    },
+    "racwork": {
+        "original_qbody": "Are the people who work where you work all white, mostly white, about half and half, mostly black, or all black?",
+        "refined_qbody": "Are the people who work where you work all white, mostly white, about half and half, mostly black, or all black?",
+        "option_list": [
+            "All white",
+            "Mostly white",
+            "About half and half",
+            "Mostly black",
+            "All black",
+            "Works alone",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0,
+            -1.0
+        ]
+    },
+    "letin1a": {
+        "original_qbody": "Do you think the number of immigrants to America nowadays should be...",
+        "refined_qbody": "Do you think the number of immigrants to America nowadays should be...",
+        "option_list": [
+            "Increased a lot",
+            "Increased a little",
+            "Remain the same as it is",
+            "Reduced a little",
+            "Reduced a lot",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0
+        ]
+    },
+    "getahead": {
+        "original_qbody": "Some people say that people get ahead by their own hard work; others say that lucky breaks or help from other people are more important. Which do you think is most important?",
+        "refined_qbody": "Some people say that people get ahead by their own hard work; others say that lucky breaks or help from other people are more important. Which do you think is most important?",
+        "option_list": [
+            "Hard work most important",
+            "Hard work, luck equally important",
+            "Luck most important",
+            "Other",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ]
+    },
+    "aged": {
+        "original_qbody": "As you know, many older people share a home with their grown children. Do you think this is generally a good idea or a bad idea?",
+        "refined_qbody": "As you know, many older people share a home with their grown children. Do you think this is generally a good idea or a bad idea?",
+        "option_list": [
+            "A good idea",
+            "A bad idea",
+            "Depends",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            1.5
+        ]
+    },
+    "parsol": {
+        "original_qbody": "Compared to your parents when they were the age you are now, do you think your own standard of living now is much better, somewhat better, about the same, somewhat worse, or much worse than theirs was?",
+        "refined_qbody": "Compared to your parents when they were the age you are now, do you think your own standard of living now is much better, somewhat better, about the same, somewhat worse, or much worse than theirs was?",
+        "option_list": [
+            "Much better",
+            "Somewhat better",
+            "About the same",
+            "Somewhat worse",
+            "Much worse",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0
+        ]
+    },
+    "kidssol": {
+        "original_qbody": "When your children are at the age you are now, do you think their standard of living will be much better, somewhat better, about the same, somewhat worse, or much worse that your is now?",
+        "refined_qbody": "When your children are at the age you are now, do you think their standard of living will be much better, somewhat better, about the same, somewhat worse, or much worse that your is now?",
+        "option_list": [
+            "Much better",
+            "Somewhat better",
+            "About the same",
+            "Somewhat worse",
+            "Much worse",
+            "No children",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0,
+            -1.0
+        ]
+    },
+    "spanking": {
+        "original_qbody": "Do you strongly agree, agree, disagree, or strongly disagree that it is sometimes necessary to discipline a child with a good, hard, spanking?",
+        "refined_qbody": "Do you strongly agree, agree, disagree, or strongly disagree that it is sometimes necessary to discipline a child with a good, hard, spanking?",
+        "option_list": [
+            "Strongly agree",
+            "Agree",
+            "Disagree",
+            "Strongly disagree",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ]
+    },
+    "divlaw": {
+        "original_qbody": "Should divorce in this country be easier or more difficult to obtain than it is now?",
+        "refined_qbody": "Should divorce in this country be easier or more difficult to obtain than it is now?",
+        "option_list": [
+            "Easier",
+            "More difficult",
+            "Stay as is",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            1.5
+        ]
+    },
+    "sexeduc": {
+        "original_qbody": "Would you be for or against sex education in the public schools?",
+        "refined_qbody": "Would you be for or against sex education in the public schools?",
+        "option_list": [
+            "Favor",
+            "Oppose",
+            "Depends on age/grade (vol.)",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            -1.0
+        ]
+    },
+    "pillok": {
+        "original_qbody": "Do you strongly agree, agree, or strongly disagree that methods of birth control should be available to teenagers between the ages of 14 and 16 if their parents do not approve?",
+        "refined_qbody": "Do you strongly agree, agree, or strongly disagree that methods of birth control should be available to teenagers between the ages of 14 and 16 if their parents do not approve?",
+        "option_list": [
+            "Strongly agree",
+            "Agree",
+            "Disagree",
+            "Strongly disagree",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ]
+    },
+    "xmarsex": {
+        "original_qbody": "What is yoru opinion about a married person having sexual relations with someone other than the marriage partner?",
+        "refined_qbody": "What is yoru opinion about a married person having sexual relations with someone other than the marriage partner?",
+        "option_list": [
+            "Always wrong",
+            "Almost always wrong",
+            "Wrong only sometimes",
+            "Not wrong at all",
+            "Other",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            -1.0
+        ]
+    },
+    "homosex": {
+        "original_qbody": "What about sexual relations between two adults of the same sex?",
+        "refined_qbody": "What about sexual relations between two adults of the same sex?",
+        "option_list": [
+            "Always wrong",
+            "Almost always wrong",
+            "Wrong only sometimes",
+            "Not wrong at all",
+            "Other",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            -1.0
+        ]
+    },
+    "marhomo": {
+        "original_qbody": "Do you agree or disagree? j. Homosexual couples should have the right to marry one another.",
+        "refined_qbody": "Do you agree or disagree? Homosexual couples should have the right to marry one another.",
+        "option_list": [
+            "Strongly agree",
+            "Agree",
+            "Neither agree nor disagree",
+            "Disagree",
+            "Strongly disagree",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0
+        ]
+    },
+    "discaff": {
+        "original_qbody": "What do you think the chances are these days that a white person won't get a job or promotion while an equally or less qualified black person gets one instead?",
+        "refined_qbody": "What do you think the chances are these days that a white person won't get a job or promotion while an equally or less qualified black person gets one instead?",
+        "option_list": [
+            "Very likely",
+            "Somewhat likely",
+            "Not very likely",
+            "Very unlikely",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ]
+    },
+    "abdefect": {
+        "original_qbody": "Please tell me whether or not you think it should be possible for a pregnant woman to obtaina legal abortion if: a. There is a strong chance of serious defect in the baby?",
+        "refined_qbody": "Please tell me whether or not you think it should be possible for a pregnant woman to obtaina legal abortion if there is a strong chance of serious defect in the baby?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "abnomore": {
+        "original_qbody": "Please tell me whether or not you think it should be possible for a pregnant woman to obtaina legal abortion if: b. She is married and does not want any more children?",
+        "refined_qbody": "Please tell me whether or not you think it should be possible for a pregnant woman to obtaina legal abortion if she is married and does not want any more children?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "abhlth": {
+        "original_qbody": "Please tell me whether or not you think it should be possible for a pregnant woman to obtaina legal abortion if: c. The woman's own health is seriously endangered by the pregnancy?",
+        "refined_qbody": "Please tell me whether or not you think it should be possible for a pregnant woman to obtaina legal abortion if the woman's own health is seriously endangered by the pregnancy?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "abpoor": {
+        "original_qbody": "Please tell me whether or not you think it should be possible for a pregnant woman to obtaina legal abortion if: d. The family has a very low income and cannot afford any more children?",
+        "refined_qbody": "Please tell me whether or not you think it should be possible for a pregnant woman to obtaina legal abortion if the family has a very low income and cannot afford any more children?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "abrape": {
+        "original_qbody": "Please tell me whether or not you think it should be possible for a pregnant woman to obtaina legal abortion if: e. She became pregnant as a result of rape?",
+        "refined_qbody": "Please tell me whether or not you think it should be possible for a pregnant woman to obtaina legal abortion if she became pregnant as a result of rape?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "absingle": {
+        "original_qbody": "Please tell me whether or not you think it should be possible for a pregnant woman to obtaina legal abortion if: f. She is not married and does not want to marry the man?",
+        "refined_qbody": "Please tell me whether or not you think it should be possible for a pregnant woman to obtaina legal abortion if she is not married and does not want to marry the man?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "abany": {
+        "original_qbody": "Please tell me whether or not you think it should be possible for a pregnant woman to obtaina legal abortion if: g. The woman wants it for any reason?",
+        "refined_qbody": "Please tell me whether or not you think it should be possible for a pregnant woman to obtaina legal abortion if the woman wants it for any reason?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "letdie1": {
+        "original_qbody": "When a person has a disease that cannot be cured, do you think doctors should be allowed by law to end the patient's life by some painless means if the patient and his family request it?",
+        "refined_qbody": "When a person has a disease that cannot be cured, do you think doctors should be allowed by law to end the patient's life by some painless means if the patient and his family request it?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "suicide1": {
+        "original_qbody": "Do you think a person has the right to end his or her own life if this person: a. Has an incurable disease?",
+        "refined_qbody": "Do you think a person has the right to end his or her own life if this person has an incurable disease?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "suicide2": {
+        "original_qbody": "Do you think a person has the right to end his or her own life if this person: b. Has gone bankrupt?",
+        "refined_qbody": "Do you think a person has the right to end his or her own life if this person has gone bankrupt?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "suicide3": {
+        "original_qbody": "Do you think a person has the right to end his or her own life if this person: c. Has dishonored his or her family?",
+        "refined_qbody": "Do you think a person has the right to end his or her own life if this person has dishonored his or her family?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "suicide4": {
+        "original_qbody": "Do you think a person has the right to end his or her own life if this person: d. Is tired of living and ready to die?",
+        "refined_qbody": "Do you think a person has the right to end his or her own life if this person is tired of living and ready to die?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "pornlaw": {
+        "original_qbody": "Which of these statements comes closest to your feelings about pornography laws: 1. There should be laws against the distribution of pornography whatever the age. 2. There should be laws against the distribution of pornography to persons under 18. 3. There should be no laws forbidding the distribution of pornography.",
+        "refined_qbody": "Which of these statements comes closest to your feelings about pornography laws?",
+        "option_list": [
+            "There should be laws against the distribution of pornography whatever the age",
+            "There should be laws against the distribution of pornography to persons under 18",
+            "There should be no laws forbidding the distribution of pornography",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "fair": {
+        "original_qbody": "Do you think most people would try to take advantage of you if they got a chance, or would they try to be fair?",
+        "refined_qbody": "Do you think most people would try to take advantage of you if they got a chance, or would they try to be fair?",
+        "option_list": [
+            "Would take advantage of you",
+            "Would try to be fair",
+            "Depends",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            -1.0
+        ]
+    },
+    "helpful": {
+        "original_qbody": "Would you say that most of the time people try to be helpful, or that they are mostly just looking out for themselves?",
+        "refined_qbody": "Would you say that most of the time people try to be helpful, or that they are mostly just looking out for themselves?",
+        "option_list": [
+            "Try to be helpful",
+            "Looking out for themselves",
+            "Depends",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            -1.0
+        ]
+    },
+    "trust": {
+        "original_qbody": "Generally speaking, would you say that most people can be trusted or that you can't be too careful in life?",
+        "refined_qbody": "Generally speaking, would you say that most people can be trusted or that you can't be too careful in dealing with people?",
+        "option_list": [
+            "Can trust",
+            "Can't be too careful",
+            "Depends",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            1.5
+        ]
+    },
+    "tax": {
+        "original_qbody": "Do you consider the amount of federal income tax which you have to pay as too high, about right, or too low?",
+        "refined_qbody": "Do you consider the amount of federal income tax which you have to pay as too high, about right, or too low?",
+        "option_list": [
+            "Too high",
+            "About right",
+            "Too low",
+            "R pays no income tax (vol.)",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            -1.0
+        ]
+    },
+    "vote16": {
+        "original_qbody": "In 2016, you remember that Clinton ran for President on the Democratic ticket against Trump for the Republicans. Do you remember for sure whether or not you voted in that election?",
+        "refined_qbody": "In 2016, you remember that Clinton ran for President on the Democratic ticket against Trump for the Republicans. Do you remember for sure whether or not you voted in that election?",
+        "option_list": [
+            "Voted",
+            "Did not vote",
+            "Ineligible",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "pres16": {
+        "original_qbody": "Did you vote for Clinton or Trump",
+        "refined_qbody": "Did you vote for Clinton or Trump?",
+        "option_list": [
+            "Clinton",
+            "Trump",
+            "Other candidate",
+            "Didn't vote for president",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            -1.0,
+            -1.0
+        ]
+    },
+    "if16who": {
+        "original_qbody": "Who would you have voted for, for president, if you had voted?",
+        "refined_qbody": "Who would you have voted for, for president, if you had voted?",
+        "option_list": [
+            "Clinton",
+            "Trump",
+            "Other",
+            "Don't know/can't remember",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            -1.0,
+            -1.0
+        ]
+    },
+    "news": {
+        "original_qbody": "How often do you read the newspaper - every day, a few times a week, once a week, less than once a week, or never?",
+        "refined_qbody": "How often do you read the newspaper - every day, a few times a week, once a week, less than once a week, or never?",
+        "option_list": [
+            "Every day",
+            "A few times a week",
+            "Once a week",
+            "Less than once a week",
+            "Never",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0
+        ]
+    },
+    "attend": {
+        "original_qbody": "How often do you attend religious services?",
+        "refined_qbody": "How often do you attend religious services?",
+        "option_list": [
+            "Never",
+            "Less than once a year",
+            "About once or twice a year",
+            "Several times a year",
+            "About once a month",
+            "2-3 times a month",
+            "Nearly every week",
+            "Every week",
+            "Several times a week",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0,
+            6.0,
+            7.0,
+            8.0,
+            9.0
+        ]
+    },
+    "pray": {
+        "original_qbody": "About how often do you pray?",
+        "refined_qbody": "About how often do you pray?",
+        "option_list": [
+            "Several times a day",
+            "Once a day",
+            "Several times a week",
+            "Once a week",
+            "Less than once a week",
+            "Never",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0,
+            6.0
+        ]
+    },
+    "postlife": {
+        "original_qbody": "Do you believe there is a life after death?",
+        "refined_qbody": "Do you believe there is a life after death?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "bible": {
+        "original_qbody": "Which of these statements comes closest to describing your feelings about teh Bible? 1. The Bible is the actual word of God and is to be taken literally, word for word. 2. The Bible is the inspired word of God but not everything in it should be taken literally, word for word. 3. The Bible is an ancient book of fables, legends, history, and moral precepts recorded by men.",
+        "refined_qbody": "Which of these statements comes closest to describing your feelings about the Bible? 1. The Bible is the actual word of God and is to be taken literally, word for word. 2. The Bible is the inspired word of God but not everything in it should be taken literally, word for word. 3. The Bible is an ancient book of fables, legends, history, and moral precepts recorded by men.",
+        "option_list": [
+            "Word of god",
+            "Inspired word",
+            "Ancient book",
+            "Other (vol)",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ]
+    },
+    "reborn": {
+        "original_qbody": "Would you say you have been \"born again\" or have had a \"born again\" experience - that is, a turning point in your life when you committed yourself to Christ?",
+        "refined_qbody": "Would you say you have been \"born again\" or have had a \"born again\" experience - that is, a turning point in your life when you committed yourself to Christ?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "savesoul": {
+        "original_qbody": "Have you ever tried to encourage someone to believe in Jesus Christ or to accep Jesus Christ as his or her savior?",
+        "refined_qbody": "Have you ever tried to encourage someone to believe in Jesus Christ or to accept Jesus Christ as his or her savior?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "relpersn": {
+        "original_qbody": "To what extent do you consider yourself a religious person? Are you . . .",
+        "refined_qbody": "To what extent do you consider yourself a religious person?",
+        "option_list": [
+            "Very religious",
+            "Moderately religious",
+            "Slightly religious",
+            "Not religious at all",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ]
+    },
+    "sprtprsn": {
+        "original_qbody": "To what extent do you consider yourself a spiritual person? Are you . . .",
+        "refined_qbody": "To what extent do you consider yourself a spiritual person?",
+        "option_list": [
+            "Very spiritual",
+            "Moderately spirtual",
+            "Slightly spiritual",
+            "Not spiritual at all",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ]
+    },
+    "born": {
+        "original_qbody": "Were you born in this country?",
+        "refined_qbody": "Were you born in this country?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "granborn": {
+        "original_qbody": "Were all of your four grandparents born in this country? a. How many were born outside the United States?",
+        "refined_qbody": "Were all of your four grandparents born in this country? How many were born outside the United States?",
+        "option_list": [
+            "None",
+            "One",
+            "Two",
+            "Three",
+            "Four",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0
+        ]
+    },
+    "dwelown": {
+        "original_qbody": "(Do you/Does your family) own your (home/apartment), pay rent, or what?",
+        "refined_qbody": "(Do you/Does your family) own your (home/apartment), pay rent, or what?",
+        "option_list": [
+            "Own or is buying",
+            "Pays rent",
+            "Other",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "othlang": {
+        "original_qbody": "Can you speak a language other than English?",
+        "refined_qbody": "Can you speak a language other than English?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "health": {
+        "original_qbody": "Would you say your own health, in general, is excellent, good, fair, or poor?",
+        "refined_qbody": "Would you say your own health, in general, is excellent, good, fair, or poor?",
+        "option_list": [
+            "Excellent",
+            "Good",
+            "Fair",
+            "Poor",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ]
+    },
+    "webmob": {
+        "original_qbody": "Do you have access to the Internet or World Wide Web in your home through a Internet-enabled mobile device like a smart phone, PDA, or BlackBerry?",
+        "refined_qbody": "Do you have access to the Internet or World Wide Web in your home through a Internet-enabled mobile device like a smart phone, PDA, or BlackBerry?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "xmovie": {
+        "original_qbody": "Have you seen an x-rated movie in the last year?",
+        "refined_qbody": "Have you seen an x-rated movie in the last year?",
+        "option_list": [
+            "Yes",
+            "No",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    },
+    "life": {
+        "original_qbody": "In general, do you find life exciting, pretty routine, or dull?",
+        "refined_qbody": "In general, do you find life exciting, pretty routine, or dull?",
+        "option_list": [
+            "Exciting",
+            "Routine",
+            "Dull",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0,
+            3.0
+        ]
+    },
+    "richwork": {
+        "original_qbody": "If you were to get enough money to live as comfortably as you would like for the rest of your life, would you continue to work or would you stop working?",
+        "refined_qbody": "If you were to get enough money to live as comfortably as you would like for the rest of your life, would you continue to work or would you stop working?",
+        "option_list": [
+            "Continue to work",
+            "Stop working",
+            "Refused"
+        ],
+        "ordinal": [
+            1.0,
+            2.0
+        ]
+    }
+}

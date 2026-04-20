@@ -1,0 +1,22 @@
+# ─── COLAB (GPU) requirements ────────────────────────────────────────
+# Install inside Colab with: pip install -r requirements_colab.txt
+# Runs: step2_vllm_baselines.py (zero-shot), step4-5 (LoRA fine-tuning)
+
+# GPU inference (step2)
+vllm>=0.4.0
+
+# Fine-tuning (step4-5)
+torch>=2.1.0
+transformers>=4.40.0
+peft>=0.10.0
+accelerate>=0.29.0
+bitsandbytes>=0.43.0     # 4-bit quantization
+datasets>=2.18.0
+fire>=0.6.0              # SubPop uses python-fire for CLI
+tqdm>=4.65.0
+pandas>=2.0.0
+numpy>=1.24.0
+scipy>=1.10.0
+
+# Optional: experiment tracking
+# wandb>=0.16.0

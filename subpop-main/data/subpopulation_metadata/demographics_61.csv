@@ -1,0 +1,13 @@
+attribute,group
+CREGION,"['Northeast', 'Midwest', 'South', 'West']"
+SEX,"['Male', 'Female']"
+AGE,"['18-29', '30-49', '50-64', '65+']"
+EDUCATION,"['Less than high school', 'High school graduate', 'Some college, no degree', ""Associate's degree"", 'College graduate/some postgrad', 'Postgraduate']"
+RACE,"['White', 'Black', 'Asian', 'Hispanic', 'Other']"
+CITIZEN,"['a US Citizen', 'a Non-US Citizen']"
+MARITAL,"['Married', 'Living with a partner', 'Divorced', 'Separated', 'Widowed', 'Unmarried and have never been married']"
+RELIG,"['Protestant', 'Roman Catholic', 'Mormon', 'Orthodox', 'Jewish', 'Muslim', 'Buddhist', 'Hindu', 'Atheist', 'Agnostic', 'Other', 'Nothing in particular']"
+RELIGATTEND,"['More than once a week', 'Once a week', 'Once or twice a month', 'A few times a year', 'Seldom', 'Never']"
+POLPARTY,"['Republican', 'Democrat', 'Independent', 'Something else']"
+INCOME,"['Less than $30,000', '$30,000-$50,000', '$50,000-$75,000', '$75,000-$100,000', '$100,000 or more']"
+POLIDEOLOGY,"['Very conservative', 'Conservative', 'Moderate', 'Liberal', 'Very liberal']"
