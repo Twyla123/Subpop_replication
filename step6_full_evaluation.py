@@ -478,12 +478,17 @@ def population_weighted_opinion(
     predictions_df: pd.DataFrame,
     weights_df: pd.DataFrame,
     filter_qkeys: Optional[Set[str]] = None,
+    ordinal_flags: dict = None,
 ) -> pd.DataFrame:
     """
     Compute population-weighted aggregate opinion per question.
     Uses PUMS PWGTP weights for proper population representation.
 
     filter_qkeys: if provided, restrict to this set of question keys.
+    ordinal_flags: {qkey: is_ordinal}. mean_opinion_score is set to NaN for
+                   nominal questions because option indices carry no numerical
+                   meaning there (e.g. commute mode option 1 vs option 3 is
+                   not a meaningful numeric difference).
     """
     merged = predictions_df.merge(
         weights_df,
@@ -496,6 +501,7 @@ def population_weighted_opinion(
     for qkey in merged["qkey"].unique():
         q_df = merged[merged["qkey"] == qkey]
         question = q_df.iloc[0].get("question", qkey)
+        is_ordinal = (ordinal_flags or {}).get(qkey, True)
 
         # Determine number of options from first valid distribution
         first_dist = parse_dist(q_df.iloc[0]["responses"])
@@ -517,15 +523,21 @@ def population_weighted_opinion(
         if total_weight > 0:
             weighted_dist /= total_weight
 
-        # Mean score on a 1-to-n_options ordinal scale
-        mean_score = sum((i + 1) * p for i, p in enumerate(weighted_dist))
+        # Mean score only meaningful for ordinal (Likert) questions.
+        # Nominal questions (e.g. commute mode) get NaN — option indices
+        # 1,2,3,... have no numeric interpretation there.
+        if is_ordinal:
+            mean_score = sum((i + 1) * p for i, p in enumerate(weighted_dist))
+        else:
+            mean_score = float("nan")
 
         record = {
             "qkey": qkey,
             "question": question,
+            "is_ordinal": is_ordinal,
             "n_options": n_options,
             "weighted_distribution": str(weighted_dist.tolist()),
-            "mean_opinion_score": mean_score,
+            "mean_opinion_score": mean_score,  # NaN for nominal questions
         }
         # Generic per-option columns: option_1, option_2, ..., option_n
         for i, p in enumerate(weighted_dist):
@@ -722,7 +734,9 @@ def main():
             if Path(args.weights_csv).exists():
                 weights_df = pd.read_csv(args.weights_csv)
                 weighted = population_weighted_opinion(
-                    pred_df, weights_df, filter_qkeys=qkey_filter,
+                    pred_df, weights_df,
+                    filter_qkeys=qkey_filter,
+                    ordinal_flags=ordinal_flags,
                 )
                 weighted.to_csv(scope_dir / f"population_weighted_{safe_name}.csv", index=False)
 
@@ -739,8 +753,9 @@ def main():
                         ci_lo = ci_df["wd_ci_lower"].mean()
                         ci_hi = ci_df["wd_ci_upper"].mean()
                         n = len(ci_df)
-                        print(f"    {method_name:25s}  WD={mean_wd:.4f}  "
-                              f"95%CI=[{ci_lo:.4f}, {ci_hi:.4f}]  n={n}")
+                        print(f"    {method_name:25s}  dist={mean_wd:.4f}  "
+                              f"95%CI=[{ci_lo:.4f}, {ci_hi:.4f}]  n={n}"
+                              f"  (WD for ordinal Qs, TVD for nominal Qs)")
 
     # ── Scope 1: all questions ──────────────────────────────────────────────
     print(f"\n{'='*60}")

@@ -77,15 +77,22 @@ Runs SubPop's LoRA fine-tuning from `subpop-main/`. Run from the repo root:
 ```bash
 cd subpop-main
 python scripts/experiment/run_finetune.py \
-    --model_name meta-llama/Llama-3.1-8B \
-    --dataset cms_dataset \
-    --steering_type QA \
-    --output_dir ../approach2_outputs/cms/checkpoints \
-    --num_epochs 50 \
-    --batch_size_training 4 \
+    --model_name              meta-llama/Llama-3.1-8B \
+    --dataset                 cms_dataset \
+    --steering_type           QA \
+    --output_dir              ../approach2_outputs/cms/checkpoints_QA/ \
+    --num_epochs              50 \
+    --early_stopping_patience 5 \
+    --batch_size_training     4 \
+    --lr                      2e-4 \
     --use_peft \
-    --quantization
+    --quantization \
+    --loss_function_type      ce \
+    --enable_fsdp=False \
+    --use_wandb=False
 ```
+Repeat with `--steering_type BIO --output_dir ../approach2_outputs/cms/checkpoints_BIO/` for the BIO variant.
+
 The `cms_dataset` config is registered in `subpop-main/subpop/train/configs/datasets.py` and points to the CSVs generated in step 3.
 
 ### Step 5 — Fine-tuned inference
@@ -118,13 +125,23 @@ mv approach2_outputs/cms/cms_QA_test_cms_QA.csv \
 ### Step 6 — Evaluate (CPU, ~1 min)
 ```bash
 python step6_full_evaluation.py \
-    --ground_truth_csv approach2_outputs/cms/cms_survey_distributions.csv \
-    --questions_json   approach2_outputs/cms/cms_questions.json \
-    --predictions_dir  approach2_outputs/cms \
-    --weights_csv      approach2_outputs/cms/cms_subgroup_weights.csv \
-    --output_dir       approach2_outputs/cms/evaluation
+    --ground_truth_csv    approach2_outputs/cms/cms_survey_distributions.csv \
+    --questions_json      approach2_outputs/cms/cms_questions.json \
+    --question_split_json approach2_outputs/cms/cms_question_split.json \
+    --predictions_dir     approach2_outputs/cms \
+    --weights_csv         approach2_outputs/cms/cms_subgroup_weights.csv \
+    --output_dir          approach2_outputs/cms/evaluation
 ```
-**Outputs**: ablation table, per-attribute WD/TVD, bootstrap CIs, entropy analysis, disagreement heatmaps, population-weighted opinions.
+**Outputs** (under `approach2_outputs/cms/evaluation/`):
+
+| File / Directory | Contents |
+|---|---|
+| `ablation_table.csv` | SubPop Table 1-style comparison with `(all Qs)` and `(test Qs)` columns |
+| `method_coverage.csv` | Audit manifest — n_rows / n_qkeys / n_attributes per method × scope |
+| `descriptive_all_rows/` | All 23 questions: bootstrap CIs, per-attribute WD, entropy, disagreement heatmaps, population-weighted opinions |
+| `test_only_fair/` | Test questions only (same 3 Qs for all methods — apples-to-apples comparison) |
+
+> The `(test Qs)` ablation columns and `test_only_fair/` outputs are only generated when `--question_split_json` is provided.
 
 ---
 
@@ -191,8 +208,21 @@ cd subpop-main && pip install -e . && cd ..
 **Colab (GPU — steps 2, 4, 5):**
 
 Open `colab_run.ipynb` directly in Colab:
-**File → Open notebook → GitHub → `https://github.com/Twyla123/Subpop_replication`**
+**File → Open notebook → GitHub → `https://github.com/Twyla123/Subpop_Replication_`**
 
-Then: **Runtime → Change runtime type → L4 GPU**, run cells 1–9 in order.
+Then: **Runtime → Change runtime type → L4 GPU**, run cells in order:
 
-The notebook handles cloning, dependency install, HF login, all pipeline steps, and saves results back to Google Drive automatically. Cell 10 (optional) repeats the run with Mistral-7B for a model comparison.
+| Cells | What happens |
+|---|---|
+| 1–3 | Mount Drive, install deps, HF login |
+| 4 | Zero-shot baselines (QA + BIO + PORTRAY) |
+| 5 | Prepare fine-tuning data |
+| 6 | Fine-tune QA model (~30 min) |
+| 7 | QA inference |
+| 7a | Fine-tune BIO model (~30 min) — recommended for comparison |
+| 7b | BIO inference |
+| 8 | Evaluation (writes `descriptive_all_rows/` + `test_only_fair/`) |
+| 9 | Save all results to Google Drive |
+| 10 | (Optional) Mistral-7B comparison run |
+
+The notebook handles cloning, dependency install, HF login, all pipeline steps, and saves results back to Google Drive automatically.
