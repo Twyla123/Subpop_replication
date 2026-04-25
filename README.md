@@ -15,9 +15,9 @@ Ground truth comes from 2,966 CMS 2022 diary respondents. The model is evaluated
 ## Dataset
 
 - **Source**: NYC Citywide Mobility Survey (CMS) 2022
-- **Questions**: 23 MCQ behavioral questions (17 train / 3 val / 3 test)
+- **Questions**: 25 MCQ behavioral questions (19 train / 3 val / 3 test)
 - **Demographic attributes**: AGE, GENDER, INCOME, BOROUGH, RACE (17 subgroups total)
-- **Distributions**: 391 (question × subgroup) pairs, each a probability vector over 3–7 options
+- **Distributions**: 425 (question × subgroup) pairs, each a probability vector over 2–7 options
 
 ---
 
@@ -35,7 +35,7 @@ step1  →  step3  →  [subpop-main training]  →  step6
 python step1_cms_adapter.py --cms_csv /path/to/CMS_merged.csv
 ```
 **Outputs** (in `approach2_outputs/cms/`):
-- `cms_survey_distributions.csv` — ground truth distributions (391 rows)
+- `cms_survey_distributions.csv` — ground truth distributions (425 rows)
 - `cms_questions.json` — question bank with ordinal flags
 - `cms_steering_prompts.json` — QA / BIO / PORTRAY steering prompts
 - `cms_demographics.csv` — 17 (attribute, group) pairs

@@ -52,3 +52,4 @@ peft_checkpointing/
 # ✓  approach2_outputs/cms/cms_*.json (questions, steering, split)
 # ✓  requirements*.txt
 # ✓  colab_gpu_steps.ipynb
+output_colab/

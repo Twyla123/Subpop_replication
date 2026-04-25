@@ -165,7 +165,7 @@ CMS_DEMOGRAPHICS: Dict[str, dict] = {
 
 CMS_QUESTIONS: List[dict] = [
     # =========================================================
-    # TRAIN questions (7)  — model sees these during fine-tuning
+    # TRAIN questions — model sees these during fine-tuning
     # =========================================================
 
     # ── Q1: Typical commute mode  [Questionnaire §5.5 WORK_MODE]
@@ -345,6 +345,54 @@ CMS_QUESTIONS: List[dict] = [
         "filter_codes": [995, 996],   # 995/996 = not a worker / N/A
         "is_ordinal": True,
         "ordinal": [5.0, 4.0, 2.5, 1.0, 0.5, 0.1],
+        "theme": "commute",
+    },
+
+    # ── Q7b: Commute frequency  [Questionnaire WORK commute frequency]
+    #   Useful transport-behavior addition with strong coverage among workers.
+    {
+        "qkey": "Q_COMMUTE_FREQ",
+        "cms_col": "commute_freq",
+        "question": "How often do you commute to your workplace?",
+        "options": [
+            "5 or more days a week",
+            "4 days a week",
+            "2-3 days a week",
+            "1 day a week",
+            "1-3 days a month",
+            "Less than monthly",
+        ],
+        "code_map": {
+            1: "5 or more days a week",
+            2: "4 days a week",
+            3: "2-3 days a week",
+            4: "1 day a week",
+            5: "1-3 days a month",
+            6: "Less than monthly",
+        },
+        "filter_codes": [995, 996],
+        "is_ordinal": True,
+        "ordinal": [5.0, 4.0, 2.5, 1.0, 0.5, 0.1],
+        "theme": "commute",
+    },
+
+    # ── Q7c: Workplace in NYC region  [Questionnaire WORK_IN_REGION]
+    #   Added as a simple geography/exposure question with decent worker coverage.
+    {
+        "qkey": "Q_WORK_IN_REGION",
+        "cms_col": "work_in_region",
+        "question": "Is your primary workplace located in the New York City region?",
+        "options": [
+            "Yes, in the New York City region",
+            "No, outside the New York City region",
+        ],
+        "code_map": {
+            1: "Yes, in the New York City region",
+            0: "No, outside the New York City region",
+        },
+        "filter_codes": [995, 996],
+        "is_ordinal": False,
+        "ordinal": None,
         "theme": "commute",
     },
 
@@ -1125,7 +1173,7 @@ def main():
 
     # ------------------------------------------------------------------
     # F. Build question train/val/test split (required by step3)
-    #    23 questions: 17 train / 3 val / 3 test  (74 / 13 / 13 %)
+    #    25 questions: 19 train / 3 val / 3 test
     #
     #    Split logic (theme-stratified):
     #      train (15) → commute (4) + shared_mobility (1) + active_transport (2)
@@ -1145,6 +1193,8 @@ def main():
         "Q_COMMUTE_MODE",
         "Q_TELEWORK_FREQ",
         "Q_WFH_POLICY",
+        "Q_COMMUTE_FREQ",
+        "Q_WORK_IN_REGION",
         "Q_JOB_TYPE",
         # shared mobility
         "Q_TNC_FREQ",
