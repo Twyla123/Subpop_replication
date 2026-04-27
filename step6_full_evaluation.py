@@ -637,6 +637,7 @@ def main():
         ("results_finetuned_QA.csv", "Fine-tuned QA"),
         ("results_finetuned_BIO.csv", "Fine-tuned BIO"),
         ("results_finetuned_PORTRAY.csv", "Fine-tuned PORTRAY"),
+        ("results_finetuned_ALL.csv", "Fine-tuned ALL"),
     ]:
         path = pred_dir / pattern
         if path.exists():

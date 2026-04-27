@@ -18,10 +18,12 @@ DATASET_PREPROC = {
     "opnqa_steering_dataset": get_custom_dataset,
     "opnqa_single_demographic_dataset": get_custom_dataset,
     "cms_dataset": get_custom_dataset,
+    "subpop_pretrain_dataset": get_custom_dataset,
 }
 DATALOADER_COLLATE_FUNC = {
     "custom_dataset": get_data_collator,
     "opnqa_steering_dataset": custom_collator_no_labels,
     "opnqa_single_demographic_dataset": custom_collator_no_labels,
     "cms_dataset": custom_collator_no_labels,
+    "subpop_pretrain_dataset": custom_collator_no_labels,
 }
