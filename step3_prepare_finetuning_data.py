@@ -39,7 +39,7 @@ import json
 import random
 import sys
 from pathlib import Path
-from typing import List, Optional
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -67,19 +67,6 @@ OPTION_LETTERS = ["A", "B", "C", "D", "E", "F", "G"]  # supports up to 7 options
 def build_survey_mcq(question: str, options: list) -> str:
     """Build the survey question MCQ block with question-specific options."""
     return generate_mcq(question_body=question, options=options, add_answer_forcing=True)
-
-
-# =========================================================================
-# SUBGROUP CODING (from SubPop's code_subgroup)
-# =========================================================================
-
-def code_subgroup(attribute: str, subgroup: str) -> str:
-    """Handle special subgroup coding for matching."""
-    if attribute == "CITIZEN":
-        return "Yes" if subgroup == "a US Citizen" else "No"
-    elif attribute == "MARITAL":
-        return "Never been married" if subgroup == "Unmarried and have never been married" else subgroup
-    return subgroup
 
 
 # =========================================================================
@@ -145,7 +132,6 @@ def prepare_data_for_format(
         if attribute not in steering_prompts: continue
         if group not in steering_prompts[attribute]: continue
         steering_text = steering_prompts[attribute][group][prompt_format]
-        group_coded   = code_subgroup(attribute, group)
         is_holdout    = (attribute, group) in holdout_set
 
         for split_name, split_dist, split_rows in [("train", train_dist, train_rows),
@@ -153,10 +139,9 @@ def prepare_data_for_format(
                                                     ("test",  test_dist,  test_rows)]:
             if is_holdout and split_name == "train": continue
             mask = ((split_dist["attribute"] == attribute) &
-                    (split_dist["group"].apply(lambda g: code_subgroup(attribute, g)) == group_coded))
+                    (split_dist["group"] == group))
             for _, dist_row in split_dist[mask].iterrows():
                 responses    = ast.literal_eval(dist_row["responses"]) if isinstance(dist_row["responses"], str) else dist_row["responses"]
-                refusal_rate = float(dist_row.get("refusal_rate", 0.0))
                 options      = ast.literal_eval(dist_row["options"])   if isinstance(dist_row["options"], str)    else dist_row["options"]
                 n_options    = len(options)
                 survey_mcq   = build_survey_mcq(dist_row["question"], options)

@@ -37,7 +37,7 @@ import json
 import sys
 from itertools import combinations
 from pathlib import Path
-from typing import List, Dict, Optional, Set
+from typing import Dict, Optional, Set
 
 import numpy as np
 import pandas as pd
@@ -46,7 +46,7 @@ import pandas as pd
 SUBPOP_ROOT = Path(__file__).parent / "subpop-main"
 sys.path.insert(0, str(SUBPOP_ROOT))
 
-from subpop.utils.survey_utils import ordinal_emd, get_entropy, list_normalize
+from subpop.utils.survey_utils import ordinal_emd
 
 
 # =========================================================================
@@ -231,7 +231,7 @@ def per_attribute_wd(
     predictions_df: pd.DataFrame,
     ordinal_flags: dict = None,
     filter_qkeys: Optional[Set[str]] = None,
-) -> tuple:
+) -> pd.DataFrame:
     """
     Compute mean WD per attribute (SubPop Tables 9-10).
     Shows which demographic dimensions the model captures best/worst.
@@ -254,28 +254,15 @@ def per_attribute_wd(
         ordinal = parse_ordinal(row.get("ordinal_gt"), n_options=n_options)
         is_ord = (ordinal_flags or {}).get(row["qkey"], True)
         wd = compute_distance(gt, pred, ordinal, is_ord)
-        rows.append({
-            "attribute": row["attribute"],
-            "group": row["group"],
-            "qkey": row["qkey"],
-            "wd": wd,
-        })
+        rows.append({"attribute": row["attribute"], "wd": wd})
 
     detail_df = pd.DataFrame(rows)
-
     if detail_df.empty:
-        empty = pd.DataFrame(columns=["attribute", "mean_wd", "std_wd", "n_pairs"])
-        empty_grp = pd.DataFrame(columns=["attribute", "group", "mean_wd", "n_pairs"])
-        return empty, empty_grp, detail_df
+        return pd.DataFrame(columns=["attribute", "mean_wd", "std_wd", "n_pairs"])
 
-    # Aggregate: mean WD per attribute, per group, and overall
     per_attr = detail_df.groupby("attribute")["wd"].agg(["mean", "std", "count"]).reset_index()
     per_attr.columns = ["attribute", "mean_wd", "std_wd", "n_pairs"]
-
-    per_group = detail_df.groupby(["attribute", "group"])["wd"].agg(["mean", "count"]).reset_index()
-    per_group.columns = ["attribute", "group", "mean_wd", "n_pairs"]
-
-    return per_attr, per_group, detail_df
+    return per_attr
 
 
 # =========================================================================
@@ -664,6 +651,9 @@ def main():
     # Coverage manifest rows
     coverage_rows = []
 
+    # Load weights once (used in every scope × method iteration)
+    weights_df = pd.read_csv(args.weights_csv) if Path(args.weights_csv).exists() else None
+
     # -------------------------------------------------------------------------
     # Helper: run all per-method analyses for one scope
     # -------------------------------------------------------------------------
@@ -713,7 +703,7 @@ def main():
             ci_df.to_csv(scope_dir / f"bootstrap_ci_{safe_name}.csv", index=False)
 
             # ── Per-attribute WD ─────────────────────────────────────────────
-            per_attr, per_group, detail = per_attribute_wd(
+            per_attr = per_attribute_wd(
                 gt_df, pred_df,
                 ordinal_flags=ordinal_flags,
                 filter_qkeys=qkey_filter,
@@ -732,8 +722,7 @@ def main():
                 heatmap.to_csv(heatmap_dir / f"{key}_{safe_name}.csv")
 
             # ── Population-weighted opinion ───────────────────────────────────
-            if Path(args.weights_csv).exists():
-                weights_df = pd.read_csv(args.weights_csv)
+            if weights_df is not None:
                 weighted = population_weighted_opinion(
                     pred_df, weights_df,
                     filter_qkeys=qkey_filter,

@@ -24,7 +24,7 @@ Usage:
         --cms_csv ../CMS/CMS_merged.csv \
         --output_dir approach2_outputs/cms
 
-NOTE: 23 questions total — 17 train / 3 val / 3 test.
+NOTE: 25 questions total — 19 train / 3 val / 3 test.
       5 demographic attributes: AGE, GENDER, INCOME, BOROUGH, RACE (17 subgroups).
       Covers commute, mobility, socioeconomic, built-environment, and equity themes.
       Subgroup weights are computed from CMS person_weight (no PUMS needed).
@@ -33,9 +33,8 @@ NOTE: 23 questions total — 17 train / 3 val / 3 test.
 import argparse
 import json
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List
 
-import numpy as np
 import pandas as pd
 
 

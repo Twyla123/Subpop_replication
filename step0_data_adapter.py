@@ -57,10 +57,8 @@ Usage:
 
 import argparse
 import json
-import ast
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 
 
@@ -286,8 +284,8 @@ STEERING_PROMPTS = [
 
 def _bin_race(df: pd.DataFrame) -> pd.Series:
     """Combine RAC1P + HISP into 5 SubPop race/ethnicity groups."""
-    race = df["RAC1P"].astype(int)
-    hisp = df["HISP"].astype(int)
+    race = pd.to_numeric(df["RAC1P"], errors="coerce")
+    hisp = pd.to_numeric(df["HISP"], errors="coerce")
 
     result = pd.Series("Other", index=df.index)
     result[race == 1] = "White"
@@ -303,7 +301,7 @@ def _bin_race(df: pd.DataFrame) -> pd.Series:
 
 def _bin_education(df: pd.DataFrame) -> pd.Series:
     """Map SCHL (25 codes) → 6 SubPop education groups."""
-    schl = df["SCHL"].astype(int)
+    schl = pd.to_numeric(df["SCHL"], errors="coerce")
     result = pd.Series("Less than high school", index=df.index)
 
     # SCHL codes (2024 ACS):
@@ -325,7 +323,7 @@ def _bin_education(df: pd.DataFrame) -> pd.Series:
 
 def _bin_vehicles(df: pd.DataFrame) -> pd.Series:
     """Map VEH → 3 groups. VEH=-1 means GQ (group quarters) → treat as 'No vehicle'."""
-    veh = df["VEH"].astype(int)
+    veh = pd.to_numeric(df["VEH"], errors="coerce")
     result = pd.Series("No vehicle", index=df.index)
     result[veh == 1] = "1 vehicle"
     result[veh >= 2] = "2+ vehicles"
@@ -334,7 +332,7 @@ def _bin_vehicles(df: pd.DataFrame) -> pd.Series:
 
 def _bin_household_size(df: pd.DataFrame) -> pd.Series:
     """Map NP (number of persons in household) → 4 groups."""
-    np_col = df["NP"].astype(int)
+    np_col = pd.to_numeric(df["NP"], errors="coerce")
     result = pd.Series("Lives alone", index=df.index)
     result[np_col == 2] = "2 people"
     result[np_col.between(3, 4)] = "3-4 people"
@@ -343,9 +341,14 @@ def _bin_household_size(df: pd.DataFrame) -> pd.Series:
 
 
 def _bin_commute_mode(df: pd.DataFrame) -> pd.Series:
-    """Map JWTR → 5 commute mode groups (only if column exists)."""
-    jwtr = df["JWTR"].astype(int)
-    result = pd.Series("Other", index=df.index)
+    """Map JWTR → 5 commute mode groups (only if column exists).
+
+    Unmapped codes (e.g. motorcycle=7, taxicab=11) are left as NaN so they
+    are excluded from subgroup counts rather than creating a spurious 'Other'
+    group that does not appear in the COMMUTE_MODE groups list.
+    """
+    jwtr = pd.to_numeric(df["JWTR"], errors="coerce")
+    result = pd.Series(pd.NA, index=df.index, dtype="object")
     result[jwtr == 1] = "Drive alone"           # Car, truck, van - drove alone
     result[jwtr == 2] = "Carpool"                # Car, truck, van - carpooled
     result[jwtr.isin([3, 4, 5, 6])] = "Public transit"  # Bus, streetcar, subway, railroad
@@ -434,6 +437,12 @@ def process_pums(pums_path: str, active_attributes: list[str]) -> pd.DataFrame:
         rows.append(group_weights)
         print(f"  {attr_name}: {len(group_weights)} groups, {group_weights['count'].sum():,} records")
 
+    if not rows:
+        raise ValueError(
+            "No valid PUMS subgroup rows were generated. Check that the requested "
+            "attributes exist in the parquet file and contain non-missing values."
+        )
+
     result = pd.concat(rows, ignore_index=True)
     return result[["attribute", "group", "weight", "count", "pop_share"]]
 
@@ -514,6 +523,12 @@ def main():
         )
 
     # ---- Combine and write outputs ----
+    if not all_subgroups:
+        raise ValueError(
+            f"No subgroup data was generated for source={args.source!r}. "
+            "Check the input files and selected source mode."
+        )
+
     subgroup_df = pd.concat(all_subgroups, ignore_index=True)
 
     write_subgroup_weights(subgroup_df, out_dir / "subgroup_weights.csv")

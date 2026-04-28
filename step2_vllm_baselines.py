@@ -37,9 +37,8 @@ import argparse
 import ast
 import json
 import sys
-from itertools import combinations
 from pathlib import Path
-from typing import List, Dict, Optional
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -50,7 +49,7 @@ import pandas as pd
 SUBPOP_ROOT = Path(__file__).parent / "subpop-main"
 sys.path.insert(0, str(SUBPOP_ROOT))
 
-from subpop.utils.survey_utils import generate_mcq, ordinal_emd, list_normalize
+from subpop.utils.survey_utils import generate_mcq, ordinal_emd
 
 
 # =========================================================================
@@ -58,7 +57,6 @@ from subpop.utils.survey_utils import generate_mcq, ordinal_emd, list_normalize
 # =========================================================================
 
 OPTION_LETTERS = ["A", "B", "C", "D", "E", "F", "G"]
-ORDINAL_VALUES = [1.0, 2.0, 3.0, 4.0, 5.0]  # fallback only
 
 
 # =========================================================================
@@ -222,7 +220,7 @@ def run_zero_shot(
 
     print(f"  Built {len(prompt_records)} prompts for {prompt_format} format")
     model_name = resolve_model(model_name)  # falls back to Mistral if Llama access pending
-    sampling_params = SamplingParams(max_tokens=1, temperature=1.0, logprobs=20)
+    sampling_params = SamplingParams(max_tokens=1, temperature=1.0, logprobs=128)  # 128 needed to capture all option tokens (A–G); 20 silently misses C+ and biases toward A/B
     llm = LLM(model=model_name, tensor_parallel_size=tp_size, dtype="float16",
               max_model_len=2048, gpu_memory_utilization=0.90, enforce_eager=True, disable_log_stats=True)
     tokenizer = llm.get_tokenizer()
