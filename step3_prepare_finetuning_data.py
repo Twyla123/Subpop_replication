@@ -1,17 +1,12 @@
 """
 step3_prepare_finetuning_data.py
 
-Phase 5 of the upgraded pipeline: prepare multi-format fine-tuning data
-with per-attribute steering (matching SubPop's methodology).
+Prepares multi-format fine-tuning data for the CMS dataset, following SubPop's
+methodology (scripts/data_generation/prepare_finetuning_data.py).
 
-CRITICAL UPGRADES over old Step3_lodes_prepare_finetuning_data.py:
-  1. Per-attribute steering (AGE, SEX, RACE, ...) instead of composite "commuter_profile"
-  2. All 3 prompt formats (QA, BIO, PORTRAY) + ALL combined
-  3. Demographic hold-out for generalization testing
-  4. Question-based train/val/test split with theme stratification
-
-This script closely mirrors SubPop's scripts/data_generation/prepare_finetuning_data.py
-but adapted for congestion pricing data.
+Generates per-attribute steering prompts (AGE, GENDER, RACE, INCOME, BOROUGH)
+across 3 formats (QA, BIO, PORTRAY) with an ALL combined variant, using a question-based
+train/val/test split. Supports demographic hold-out for generalization testing.
 
 Outputs (under OUT_DIR):
     cms_QA_{train,val,test}.csv
@@ -29,21 +24,27 @@ Usage:
 
     # With demographic hold-out:
     python step3_prepare_finetuning_data.py \
-        --holdout_groups "AGE:18-29" "COMMUTE_MODE:Public transit" \
+        --holdout_groups "AGE:18-24" "BOROUGH:Bronx" \
         ...
+Note:
+  The current CE / WD fine-tuning path consumes `output_dist`, not
+  `output_token`. The `output_token` column is still written as an empty
+  placeholder so the CSV schema stays aligned with the upstream SubPop tooling.
 """
 
 import argparse
 import ast
 import json
-import random
 import sys
 from pathlib import Path
-from typing import List, Optional
+from typing import Optional
 
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
+
+
+DEFAULT_CMS_DIR = "approach2_outputs/cms"
 
 # Add SubPop to path
 SUBPOP_ROOT = Path(__file__).parent / "subpop-main"
@@ -60,47 +61,12 @@ OPTION_LETTERS = ["A", "B", "C", "D", "E", "F", "G"]  # supports up to 7 options
 
 
 # =========================================================================
-# PROMPT BUILDERS (all 3 SubPop formats)
-# Mirrors SubPop's prepare_finetuning_data.py lines 115-151
+# PROMPT BUILDER
 # =========================================================================
 
 def build_survey_mcq(question: str, options: list) -> str:
     """Build the survey question MCQ block with question-specific options."""
     return generate_mcq(question_body=question, options=options, add_answer_forcing=True)
-
-
-# =========================================================================
-# SUBGROUP CODING (from SubPop's code_subgroup)
-# =========================================================================
-
-def code_subgroup(attribute: str, subgroup: str) -> str:
-    """Handle special subgroup coding for matching."""
-    if attribute == "CITIZEN":
-        return "Yes" if subgroup == "a US Citizen" else "No"
-    elif attribute == "MARITAL":
-        return "Never been married" if subgroup == "Unmarried and have never been married" else subgroup
-    return subgroup
-
-
-# =========================================================================
-# OUTPUT TOKEN SAMPLING
-# =========================================================================
-
-def sample_output_tokens(distribution: list, n_augment: int = 100, seed: int = None) -> list:
-    """
-    Sample n_augment answer letters from the response distribution.
-    Converts soft probability distribution → discrete tokens for CE loss.
-    """
-    if seed is not None:
-        random.seed(seed)
-
-    dist = list(distribution)
-    total = sum(dist)
-    if total <= 0:
-        dist = [1.0 / len(dist)] * len(dist)
-
-    indices = random.choices(range(len(dist)), weights=dist, k=n_augment)
-    return [f" {OPTION_LETTERS[i]}" for i in indices]
 
 
 # =========================================================================
@@ -116,18 +82,13 @@ def prepare_data_for_format(
     test_qkeys: list,
     prompt_format: str,
     holdout_groups: Optional[list] = None,
-    n_augment: int = 100,
     seed: int = 42,
 ) -> tuple:
     """
     Generate train/val/test DataFrames for one prompt format.
-
-    This mirrors SubPop's prepare_data() function but with:
-    - Configurable prompt format
-    - Holdout group support
-    - Congestion pricing specific data
+    Supports holdout groups for generalization testing.
     """
-    random.seed(seed); np.random.seed(seed)
+    np.random.seed(seed)
     holdout_set = set()
     if holdout_groups:
         for hg in holdout_groups:
@@ -142,10 +103,13 @@ def prepare_data_for_format(
     for _, demo_row in tqdm(demographics_df.iterrows(), total=len(demographics_df), desc=f"  {prompt_format}"):
         attribute = demo_row["attribute"]
         group     = demo_row["group"]
-        if attribute not in steering_prompts: continue
-        if group not in steering_prompts[attribute]: continue
+        if attribute not in steering_prompts:
+            raise KeyError(f"No steering prompts found for attribute '{attribute}'. "
+                           "Check cms_steering_prompts.json.")
+        if group not in steering_prompts[attribute]:
+            raise KeyError(f"No steering prompt found for {attribute}='{group}'. "
+                           "Check cms_steering_prompts.json.")
         steering_text = steering_prompts[attribute][group][prompt_format]
-        group_coded   = code_subgroup(attribute, group)
         is_holdout    = (attribute, group) in holdout_set
 
         for split_name, split_dist, split_rows in [("train", train_dist, train_rows),
@@ -153,10 +117,9 @@ def prepare_data_for_format(
                                                     ("test",  test_dist,  test_rows)]:
             if is_holdout and split_name == "train": continue
             mask = ((split_dist["attribute"] == attribute) &
-                    (split_dist["group"].apply(lambda g: code_subgroup(attribute, g)) == group_coded))
+                    (split_dist["group"] == group))
             for _, dist_row in split_dist[mask].iterrows():
                 responses    = ast.literal_eval(dist_row["responses"]) if isinstance(dist_row["responses"], str) else dist_row["responses"]
-                refusal_rate = float(dist_row.get("refusal_rate", 0.0))
                 options      = ast.literal_eval(dist_row["options"])   if isinstance(dist_row["options"], str)    else dist_row["options"]
                 n_options    = len(options)
                 survey_mcq   = build_survey_mcq(dist_row["question"], options)
@@ -166,11 +129,12 @@ def prepare_data_for_format(
                     input_prompt = steering_text + "\n\n" + survey_mcq
                 # CMS has no refusal option — output_dist is exactly the n_options distribution
                 output_dist   = responses[:n_options]
-                output_tokens = sample_output_tokens(output_dist, n_augment=n_augment, seed=seed + row_counter)
                 row_counter += 1
-                ordinal = dist_row.get("ordinal", str(list(range(1, n_options + 1))))
+                if "ordinal" not in dist_row:
+                    raise KeyError("Missing 'ordinal' column in distributions data.")
+                ordinal = dist_row["ordinal"]
                 split_rows.append({"qkey": dist_row["qkey"], "attribute": attribute, "group": group,
-                                    "input_prompt": input_prompt, "output_token": str(output_tokens),
+                                    "input_prompt": input_prompt, "output_token": "[]",
                                     "output_dist": str(output_dist), "ordinal": ordinal,
                                     "question": dist_row["question"]})
     return pd.DataFrame(train_rows), pd.DataFrame(val_rows), pd.DataFrame(test_rows)
@@ -185,21 +149,20 @@ def main():
         description="Prepare multi-format fine-tuning data (SubPop-style)"
     )
     parser.add_argument("--distributions_csv", type=str,
-                        default="approach2_outputs/cms/cms_survey_distributions.csv",
+                        default=f"{DEFAULT_CMS_DIR}/cms_survey_distributions.csv",
                         help="Ground truth distributions (from step1_cms_adapter)")
     parser.add_argument("--demographics_csv", type=str,
-                        default="approach2_outputs/cms/cms_demographics.csv")
+                        default=f"{DEFAULT_CMS_DIR}/cms_demographics.csv")
     parser.add_argument("--steering_json", type=str,
-                        default="approach2_outputs/cms/cms_steering_prompts.json")
+                        default=f"{DEFAULT_CMS_DIR}/cms_steering_prompts.json")
     parser.add_argument("--question_split_json", type=str,
-                        default="approach2_outputs/cms/cms_question_split.json")
-    parser.add_argument("--output_dir", type=str, default="approach2_outputs/cms/finetuning_data")
+                        default=f"{DEFAULT_CMS_DIR}/cms_question_split.json")
+    parser.add_argument("--output_dir", type=str, default=f"{DEFAULT_CMS_DIR}/finetuning_data")
     parser.add_argument("--holdout_groups", nargs="*", default=None,
                         help="Groups to hold out from training (format: 'ATTR:group')")
     parser.add_argument("--formats", nargs="+",
                         default=["QA", "BIO", "PORTRAY", "ALL"],
                         choices=["QA", "BIO", "PORTRAY", "ALL"])
-    parser.add_argument("--n_augment", type=int, default=100)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--no_shuffle", action="store_true")
     args = parser.parse_args()
@@ -245,7 +208,6 @@ def main():
                     test_qkeys=test_qkeys,
                     prompt_format=sub_fmt,
                     holdout_groups=args.holdout_groups,
-                    n_augment=args.n_augment,
                     seed=args.seed,
                 )
                 all_train.append(train_df)
@@ -265,11 +227,10 @@ def main():
                 test_qkeys=test_qkeys,
                 prompt_format=fmt,
                 holdout_groups=args.holdout_groups,
-                n_augment=args.n_augment,
                 seed=args.seed,
             )
 
-        # Shuffle if requested
+        # Shuffle unless disabled.
         if not args.no_shuffle:
             train_df = train_df.sample(frac=1, random_state=args.seed).reset_index(drop=True)
             val_df = val_df.sample(frac=1, random_state=args.seed).reset_index(drop=True)
@@ -296,9 +257,9 @@ def main():
             test_set = set(test_df["qkey"].unique()) if len(test_df) > 0 else set()
             val_set = set(val_df["qkey"].unique()) if len(val_df) > 0 else set()
             if train_set & test_set:
-                print(f"  WARNING: qkey leakage between train and test!")
+                raise ValueError(f"qkey leakage between train and test: {sorted(train_set & test_set)}")
             if train_set & val_set:
-                print(f"  WARNING: qkey leakage between train and val!")
+                raise ValueError(f"qkey leakage between train and val: {sorted(train_set & val_set)}")
 
             # Check holdout groups
             if args.holdout_groups and len(train_df) > 0:
@@ -306,9 +267,8 @@ def main():
                     attr, group = hg.split(":", 1)
                     leak = train_df[(train_df["attribute"] == attr) & (train_df["group"] == group)]
                     if len(leak) > 0:
-                        print(f"  WARNING: holdout group {hg} found in training data!")
-                    else:
-                        print(f"  Holdout {hg}: correctly excluded from training")
+                        raise ValueError(f"Holdout group {hg} found in training data.")
+                    print(f"  Holdout {hg}: correctly excluded from training")
 
             # Show sample prompt
             if len(train_df) > 0:
@@ -320,7 +280,7 @@ def main():
     print(f"\n{'='*60}")
     print(f"All formats saved to {out_dir}/")
     print(f"{'='*60}")
-    print("(run LoRA fine-tuning on a GPU — see subpop-main for training scripts)")
+    print("Fine-tuning: subpop-main/scripts/experiment/run_finetune.py")
 
 
 if __name__ == "__main__":

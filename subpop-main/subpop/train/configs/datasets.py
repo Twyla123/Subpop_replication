@@ -81,4 +81,4 @@ class subpop_pretrain_dataset:
     file: str = "subpop/train/datasets/opinionqa_dataset.py:get_preprocessed_opinionqa_ce_or_wd_loss"
     train_split: str = "data/subpop-pretrain/processed/opnqa_{steering_type}_train.csv"
     valid_split: str = "data/subpop-pretrain/processed/opnqa_{steering_type}_val.csv"
-    test_split:  str = "data/subpop-pretrain/processed/opnqa_{steering_type}_test.csv"
+    test_split:  str = "data/subpop-pretrain/processed/opnqa_{steering_type}_val.csv"  # no test split; reuse val

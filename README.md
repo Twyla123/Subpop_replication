@@ -15,9 +15,9 @@ Ground truth comes from 2,966 CMS 2022 diary respondents. The model is evaluated
 ## Dataset
 
 - **Source**: NYC Citywide Mobility Survey (CMS) 2022
-- **Questions**: 25 MCQ behavioral questions (19 train / 3 val / 3 test)
+- **Questions**: 23 MCQ behavioral questions (17 train / 3 val / 3 test)
 - **Demographic attributes**: AGE, GENDER, INCOME, BOROUGH, RACE (17 subgroups total)
-- **Distributions**: 425 (question × subgroup) pairs, each a probability vector over 2–7 options
+- **Distributions**: 391 (question × subgroup) pairs, each a probability vector over 2–7 options
 
 ---
 
@@ -35,7 +35,7 @@ step1  →  step3  →  [subpop-main training]  →  step6
 python step1_cms_adapter.py --cms_csv /path/to/CMS_merged.csv
 ```
 **Outputs** (in `approach2_outputs/cms/`):
-- `cms_survey_distributions.csv` — ground truth distributions (425 rows)
+- `cms_survey_distributions.csv` — ground truth distributions (391 rows)
 - `cms_questions.json` — question bank with ordinal flags
 - `cms_steering_prompts.json` — QA / BIO / PORTRAY steering prompts
 - `cms_demographics.csv` — 17 (attribute, group) pairs
@@ -86,7 +86,6 @@ python scripts/experiment/run_finetune.py \
     --batch_size_training     4 \
     --lr                      2e-4 \
     --use_peft \
-    --quantization \
     --loss_function_type      ce \
     --enable_fsdp=False \
     --use_wandb=False
@@ -149,10 +148,11 @@ python step6_full_evaluation.py \
 
 | Model | Role | HF access |
 |---|---|---|
-| `meta-llama/Llama-3.1-8B` | **Primary** — all main results | Gated (approved) |
-| `mistralai/Mistral-7B-v0.1` | Optional comparison run (Cell 10 in `colab_run.ipynb`) | Public |
+| `meta-llama/Llama-3.1-8B` | Original Llama run and QA baseline | Gated (approved) |
+| `Qwen/Qwen2.5-7B` | Fresh submission audit run | Public |
+| `mistralai/Mistral-7B-v0.1` | Archived optional comparison branch (currently disabled in notebook) | Public |
 
-The pipeline auto-detects access via `resolve_model()` in `step2_vllm_baselines.py` — if Llama access is ever lost it falls back to Mistral automatically.
+The Colab notebook controls active models through `ACTIVE_MODELS`, with outputs separated under `approach2_outputs_YYYYMMDD/cms/{model_tag}/`.
 
 ---
 
@@ -193,7 +193,24 @@ Not tracked in git (large or GPU-generated):
 - `approach2_outputs/cms/checkpoints_*/` — LoRA checkpoints (GB+)
 - `approach2_outputs/cms/distributions_*.csv` — step 2 inference results
 - `approach2_outputs/cms/results_finetuned_*.csv` — step 5 inference results
-- `approach2_outputs/cms_mistral/` — optional Mistral comparison outputs (same layout)
+- `run*_*/` — historical run snapshots; archived outside this code repo under the parent-level `results_archive/`
+- `approach2_outputs/cms_mistral/` — legacy Mistral comparison outputs (branch currently disabled)
+
+## Submission Audit
+
+Before submission, run:
+
+```bash
+python audit/validate_cms_artifacts.py
+```
+
+After a fresh Colab run, validate the selected model output root:
+
+```bash
+python audit/validate_pipeline_outputs.py --model qwen --output-root approach2_outputs_YYYYMMDD --sequential-formats QA BIO PORTRAY
+```
+
+See `SUBMISSION_AUDIT.md` for the submission target, stale-result caveats, and fresh-run configuration.
 
 ---
 
@@ -208,21 +225,18 @@ cd subpop-main && pip install -e . && cd ..
 **Colab (GPU — steps 2, 4, 5):**
 
 Open `colab_run.ipynb` directly in Colab:
-**File → Open notebook → GitHub → `https://github.com/Twyla123/Subpop_Replication_`**
+**File → Open notebook → GitHub → `https://github.com/Twyla123/Subpop_replication`**
 
 Then: **Runtime → Change runtime type → L4 GPU**, run cells in order:
 
 | Cells | What happens |
 |---|---|
 | 1–3 | Mount Drive, install deps, HF login |
+| 3b–3c | Optional SubPop pretraining download + warmup run |
 | 4 | Zero-shot baselines (QA + BIO + PORTRAY) |
 | 5 | Prepare fine-tuning data |
-| 6 | Fine-tune QA model (~30 min) |
-| 7 | QA inference |
-| 7a | Fine-tune BIO model (~30 min) — recommended for comparison |
-| 7b | BIO inference |
+| 6–8 | Fine-tune and run QA / BIO / PORTRAY checkpoints, plus optional sequential QA / BIO / PORTRAY |
 | 8 | Evaluation (writes `descriptive_all_rows/` + `test_only_fair/`) |
-| 9 | Save all results to Google Drive |
-| 10 | (Optional) Mistral-7B comparison run |
+| During each stage | Save checkpoints and canonical outputs to Google Drive |
 
-The notebook handles cloning, dependency install, HF login, all pipeline steps, and saves results back to Google Drive automatically.
+The notebook handles cloning, dependency install, HF login, all pipeline steps, and saves results back to Google Drive automatically after each major step. The archived Mistral branch is intentionally disabled and is not part of the main resumable pipeline.

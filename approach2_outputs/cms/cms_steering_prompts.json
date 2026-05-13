@@ -2,96 +2,96 @@
   "AGE": {
     "18-24": {
       "QA": "What is your age group?\n(A) 18-24\n(B) 25-44\n(C) 45-64\n(D) 65+\nAnswer: (A) 18-24",
-      "BIO": "I am 18-24 years old.",
-      "PORTRAY": "Portray someone who is 18-24 years old."
+      "BIO": "Below you will be asked to provide a short description of your age group and then answer some questions. Description: I am in the age group 18-24.",
+      "PORTRAY": "Answer the following question as if you were in the age group of 18-24."
     },
     "25-44": {
       "QA": "What is your age group?\n(A) 18-24\n(B) 25-44\n(C) 45-64\n(D) 65+\nAnswer: (B) 25-44",
-      "BIO": "I am 25-44 years old.",
-      "PORTRAY": "Portray someone who is 25-44 years old."
+      "BIO": "Below you will be asked to provide a short description of your age group and then answer some questions. Description: I am in the age group 25-44.",
+      "PORTRAY": "Answer the following question as if you were in the age group of 25-44."
     },
     "45-64": {
       "QA": "What is your age group?\n(A) 18-24\n(B) 25-44\n(C) 45-64\n(D) 65+\nAnswer: (C) 45-64",
-      "BIO": "I am 45-64 years old.",
-      "PORTRAY": "Portray someone who is 45-64 years old."
+      "BIO": "Below you will be asked to provide a short description of your age group and then answer some questions. Description: I am in the age group 45-64.",
+      "PORTRAY": "Answer the following question as if you were in the age group of 45-64."
     },
     "65+": {
       "QA": "What is your age group?\n(A) 18-24\n(B) 25-44\n(C) 45-64\n(D) 65+\nAnswer: (D) 65+",
-      "BIO": "I am 65+ years old.",
-      "PORTRAY": "Portray someone who is 65+ years old."
+      "BIO": "Below you will be asked to provide a short description of your age group and then answer some questions. Description: I am in the age group 65+.",
+      "PORTRAY": "Answer the following question as if you were in the age group of 65+."
     }
   },
   "GENDER": {
     "Female": {
       "QA": "What is your gender?\n(A) Male\n(B) Female\nAnswer: (B) Female",
-      "BIO": "I am Female.",
-      "PORTRAY": "Portray a Female New Yorker."
+      "BIO": "Below you will be asked to provide a short description of your gender and then answer some questions. Description: I identify as Female.",
+      "PORTRAY": "Answer the following question as if you identified as Female."
     },
     "Male": {
       "QA": "What is your gender?\n(A) Male\n(B) Female\nAnswer: (A) Male",
-      "BIO": "I am Male.",
-      "PORTRAY": "Portray a Male New Yorker."
+      "BIO": "Below you will be asked to provide a short description of your gender and then answer some questions. Description: I identify as Male.",
+      "PORTRAY": "Answer the following question as if you identified as Male."
     }
   },
   "INCOME": {
     "$100K-$200K": {
       "QA": "What is your annual household income?\n(A) Under $50K\n(B) $50K-$100K\n(C) $100K-$200K\n(D) $200K+\nAnswer: (C) $100K-$200K",
-      "BIO": "My household income is $100K-$200K per year.",
-      "PORTRAY": "Portray a New Yorker with a household income of $100K-$200K."
+      "BIO": "Below you will be asked to provide a short description of your household income level and then answer some questions. Description: My annual household income is $100K-$200K.",
+      "PORTRAY": "Answer the following question as if your annual household income were $100K-$200K."
     },
     "$200K+": {
       "QA": "What is your annual household income?\n(A) Under $50K\n(B) $50K-$100K\n(C) $100K-$200K\n(D) $200K+\nAnswer: (D) $200K+",
-      "BIO": "My household income is $200K+ per year.",
-      "PORTRAY": "Portray a New Yorker with a household income of $200K+."
+      "BIO": "Below you will be asked to provide a short description of your household income level and then answer some questions. Description: My annual household income is $200K or more.",
+      "PORTRAY": "Answer the following question as if your annual household income were $200K or more."
     },
     "$50K-$100K": {
       "QA": "What is your annual household income?\n(A) Under $50K\n(B) $50K-$100K\n(C) $100K-$200K\n(D) $200K+\nAnswer: (B) $50K-$100K",
-      "BIO": "My household income is $50K-$100K per year.",
-      "PORTRAY": "Portray a New Yorker with a household income of $50K-$100K."
+      "BIO": "Below you will be asked to provide a short description of your household income level and then answer some questions. Description: My annual household income is $50K-$100K.",
+      "PORTRAY": "Answer the following question as if your annual household income were $50K-$100K."
     },
     "Under $50K": {
       "QA": "What is your annual household income?\n(A) Under $50K\n(B) $50K-$100K\n(C) $100K-$200K\n(D) $200K+\nAnswer: (A) Under $50K",
-      "BIO": "My household income is Under $50K per year.",
-      "PORTRAY": "Portray a New Yorker with a household income of Under $50K."
+      "BIO": "Below you will be asked to provide a short description of your household income level and then answer some questions. Description: My annual household income is under $50K.",
+      "PORTRAY": "Answer the following question as if your annual household income were under $50K."
     }
   },
   "BOROUGH": {
     "Bronx": {
       "QA": "Which NYC borough do you live in?\n(A) Bronx\n(B) Brooklyn\n(C) Manhattan\n(D) Queens\n(E) Staten Island\nAnswer: (A) Bronx",
-      "BIO": "I live in Bronx, New York City.",
-      "PORTRAY": "Portray a resident of Bronx, NYC."
+      "BIO": "Below you will be asked to provide a short description of your NYC borough of residence and then answer some questions. Description: I currently reside in the Bronx, New York City.",
+      "PORTRAY": "Answer the following question as if you currently resided in the Bronx, New York City."
     },
     "Brooklyn": {
       "QA": "Which NYC borough do you live in?\n(A) Bronx\n(B) Brooklyn\n(C) Manhattan\n(D) Queens\n(E) Staten Island\nAnswer: (B) Brooklyn",
-      "BIO": "I live in Brooklyn, New York City.",
-      "PORTRAY": "Portray a resident of Brooklyn, NYC."
+      "BIO": "Below you will be asked to provide a short description of your NYC borough of residence and then answer some questions. Description: I currently reside in Brooklyn, New York City.",
+      "PORTRAY": "Answer the following question as if you currently resided in Brooklyn, New York City."
     },
     "Manhattan": {
       "QA": "Which NYC borough do you live in?\n(A) Bronx\n(B) Brooklyn\n(C) Manhattan\n(D) Queens\n(E) Staten Island\nAnswer: (C) Manhattan",
-      "BIO": "I live in Manhattan, New York City.",
-      "PORTRAY": "Portray a resident of Manhattan, NYC."
+      "BIO": "Below you will be asked to provide a short description of your NYC borough of residence and then answer some questions. Description: I currently reside in Manhattan, New York City.",
+      "PORTRAY": "Answer the following question as if you currently resided in Manhattan, New York City."
     },
     "Queens": {
       "QA": "Which NYC borough do you live in?\n(A) Bronx\n(B) Brooklyn\n(C) Manhattan\n(D) Queens\n(E) Staten Island\nAnswer: (D) Queens",
-      "BIO": "I live in Queens, New York City.",
-      "PORTRAY": "Portray a resident of Queens, NYC."
+      "BIO": "Below you will be asked to provide a short description of your NYC borough of residence and then answer some questions. Description: I currently reside in Queens, New York City.",
+      "PORTRAY": "Answer the following question as if you currently resided in Queens, New York City."
     },
     "Staten Island": {
       "QA": "Which NYC borough do you live in?\n(A) Bronx\n(B) Brooklyn\n(C) Manhattan\n(D) Queens\n(E) Staten Island\nAnswer: (E) Staten Island",
-      "BIO": "I live in Staten Island, New York City.",
-      "PORTRAY": "Portray a resident of Staten Island, NYC."
+      "BIO": "Below you will be asked to provide a short description of your NYC borough of residence and then answer some questions. Description: I currently reside in Staten Island, New York City.",
+      "PORTRAY": "Answer the following question as if you currently resided in Staten Island, New York City."
     }
   },
   "RACE": {
     "Non-White": {
       "QA": "How do you identify racially?\n(A) White\n(B) Non-White\nAnswer: (B) Non-White",
-      "BIO": "I identify as Non-White.",
-      "PORTRAY": "Portray a Non-White New Yorker."
+      "BIO": "Below you will be asked to provide a short description of your racial/ethnic background and then answer some questions. Description: I identify as Non-White.",
+      "PORTRAY": "Answer the following question as if you identified as Non-White."
     },
     "White": {
       "QA": "How do you identify racially?\n(A) White\n(B) Non-White\nAnswer: (A) White",
-      "BIO": "I identify as White.",
-      "PORTRAY": "Portray a White New Yorker."
+      "BIO": "Below you will be asked to provide a short description of your racial/ethnic background and then answer some questions. Description: I identify as White.",
+      "PORTRAY": "Answer the following question as if you identified as White."
     }
   }
 }

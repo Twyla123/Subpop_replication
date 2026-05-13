@@ -2,14 +2,13 @@
 step1_cms_adapter.py
 
 Adapts the NYC Citywide Mobility Survey (CMS) 2022 data into the SubPop
-pipeline format.  Replaces step1b (question definitions) + step1c (survey
-processing) for the CMS use-case.
+pipeline format.
 
 Pipeline position:
-    step0_data_adapter.py   → subgroup_weights / demographics (PUMS-based)
     [THIS FILE]             → CMS-based questions + empirical distributions
     step2_vllm_baselines.py → zero-shot LLM predictions
-    step3 / step6           → fine-tuning prep + evaluation (unchanged)
+    step3_prepare_finetuning_data.py → fine-tuning CSV generation
+    step6_full_evaluation.py         → evaluation
 
 Outputs (under --output_dir):
     cms_questions.json              travel-behavior question bank
@@ -33,10 +32,12 @@ NOTE: 23 questions total — 17 train / 3 val / 3 test.
 import argparse
 import json
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List
 
-import numpy as np
 import pandas as pd
+
+
+DEFAULT_CMS_OUTPUT_DIR = "approach2_outputs/cms"
 
 
 # =========================================================================
@@ -52,7 +53,7 @@ CMS_DEMOGRAPHICS: Dict[str, dict] = {
         # Use raw 'age' decade-code column for 4 meaningful groups.
         # CMS age codes: 4=18-24, 5=25-34, 6=35-44, 7=45-54, 8=55-64,
         #                9=65-74, 10=75-84, 11=85+
-        # Collapsed into 4 groups matching the user guide description.
+        # Collapsed into 4 groups per the CMS 2022 User Guide.
         "cms_col": "age",
         "valid_codes": [4, 5, 6, 7, 8, 9, 10, 11],
         "code_map": {
@@ -67,8 +68,8 @@ CMS_DEMOGRAPHICS: Dict[str, dict] = {
         },
         "steering_question": "What is your age group?",
         "steering_options": ["18-24", "25-44", "45-64", "65+"],
-        "bio_template": "I am {group} years old.",
-        "portray_template": "Portray someone who is {group} years old.",
+        "bio_template": "Below you will be asked to provide a short description of your age group and then answer some questions. Description: I am in the age group {group}.",
+        "portray_template": "Answer the following question as if you were in the age group of {group}.",
     },
     "GENDER": {
         "cms_col": "gender",
@@ -76,8 +77,8 @@ CMS_DEMOGRAPHICS: Dict[str, dict] = {
         "code_map": {1: "Male", 2: "Female"},
         "steering_question": "What is your gender?",
         "steering_options": ["Male", "Female"],
-        "bio_template": "I am {group}.",
-        "portray_template": "Portray a {group} New Yorker.",
+        "bio_template": "Below you will be asked to provide a short description of your gender and then answer some questions. Description: I identify as {group}.",
+        "portray_template": "Answer the following question as if you identified as {group}.",
     },
     "INCOME": {
         "cms_col": "income_broad",
@@ -104,8 +105,15 @@ CMS_DEMOGRAPHICS: Dict[str, dict] = {
         },
         "steering_question": "What is your annual household income?",
         "steering_options": ["Under $50K", "$50K-$100K", "$100K-$200K", "$200K+"],
-        "bio_template": "My household income is {group} per year.",
-        "portray_template": "Portray a New Yorker with a household income of {group}.",
+        # Display map: lowercase "under" mid-sentence; "$200K+" → "$200K or more" for natural phrasing
+        "group_display_map": {
+            "Under $50K":   "under $50K",
+            "$50K-$100K":  "$50K-$100K",
+            "$100K-$200K": "$100K-$200K",
+            "$200K+":      "$200K or more",
+        },
+        "bio_template": "Below you will be asked to provide a short description of your household income level and then answer some questions. Description: My annual household income is {group}.",
+        "portray_template": "Answer the following question as if your annual household income were {group}.",
     },
     "BOROUGH": {
         "cms_col": "home_county",
@@ -117,16 +125,24 @@ CMS_DEMOGRAPHICS: Dict[str, dict] = {
             36081: "Queens",
             36085: "Staten Island",
         },
+        # "the Bronx" requires the definite article; other boroughs do not.
+        "group_display_map": {
+            "Bronx":         "the Bronx",
+            "Brooklyn":      "Brooklyn",
+            "Manhattan":     "Manhattan",
+            "Queens":        "Queens",
+            "Staten Island": "Staten Island",
+        },
         "steering_question": "Which NYC borough do you live in?",
         "steering_options": ["Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island"],
-        "bio_template": "I live in {group}, New York City.",
-        "portray_template": "Portray a resident of {group}, NYC.",
+        "bio_template": "Below you will be asked to provide a short description of your NYC borough of residence and then answer some questions. Description: I currently reside in {group}, New York City.",
+        "portray_template": "Answer the following question as if you currently resided in {group}, New York City.",
     },
     "RACE": {
         "cms_col": "r_race",
-        # CMS codes: 5=White, 2=Asian, 3=Black, 1=Am.Indian, 4=Pac.Islander,
-        #            6=Other, 7=Two or more  (per typical HHTS coding)
-        # User guide summarises as White / Non-White; we keep both levels.
+        # CMS codes: 1=Am.Indian, 2=Asian, 3=Black, 4=Pac.Islander,
+        #            5=White, 6=Other, 7=Two or more  (CMS 2022 codebook §1)
+        # Collapsed to White / Non-White following CMS User Guide reporting convention.
         "valid_codes": [1, 2, 3, 4, 5, 6, 7],
         "code_map": {
             1: "Non-White",   # American Indian / Alaska Native
@@ -139,8 +155,8 @@ CMS_DEMOGRAPHICS: Dict[str, dict] = {
         },
         "steering_question": "How do you identify racially?",
         "steering_options": ["White", "Non-White"],
-        "bio_template": "I identify as {group}.",
-        "portray_template": "Portray a {group} New Yorker.",
+        "bio_template": "Below you will be asked to provide a short description of your racial/ethnic background and then answer some questions. Description: I identify as {group}.",
+        "portray_template": "Answer the following question as if you identified as {group}.",
     },
 }
 
@@ -148,8 +164,8 @@ CMS_DEMOGRAPHICS: Dict[str, dict] = {
 # =========================================================================
 # 2.  QUESTION DEFINITIONS
 #
-#     These are PLACEHOLDER questions derived from available CMS behavioral
-#     variables.  Replace / extend once the final question list is confirmed.
+#     23 questions total — 17 train / 3 val / 3 test.
+#     Covers commute, mobility, socioeconomic, built-environment, and equity themes.
 #
 #     Schema per question:
 #       qkey          unique key, passed through to all downstream files
@@ -200,7 +216,7 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "commute",
     },
 
-    # ── Q3: Telework frequency  [Questionnaire §5.4 TELEWORK_FREQ]
+    # ── Q2: Telework frequency  [Questionnaire §5.4 TELEWORK_FREQ]
     {
         "qkey": "Q_TELEWORK_FREQ",
         "cms_col": "r_telework_freq",
@@ -231,7 +247,7 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "commute",
     },
 
-    # ── Q4: Rideshare (TNC) frequency  [Questionnaire §6.3 TNC_FREQ]
+    # ── Q3: Rideshare (TNC) frequency  [Questionnaire §6.3 TNC_FREQ]
     {
         "qkey": "Q_TNC_FREQ",
         "cms_col": "tnc_freq",
@@ -262,7 +278,7 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "shared_mobility",
     },
 
-    # ── Q5: Biking frequency  [Questionnaire §9.4 BIKE_FREQ]
+    # ── Q4: Biking frequency  [Questionnaire §9.4 BIKE_FREQ]
     {
         "qkey": "Q_BIKE_FREQ",
         "cms_col": "bike_freq",
@@ -293,7 +309,7 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "active_transport",
     },
 
-    # ── Q6: Household vehicle count  [Questionnaire §2.4 NUM_VEHICLES]
+    # ── Q5: Household vehicle count  [Questionnaire §2.4 NUM_VEHICLES]
     {
         "qkey": "Q_NUM_VEHICLES",
         "cms_col": "r_num_vehicles",
@@ -317,7 +333,7 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "auto_dependency",
     },
 
-    # ── Q7: Employer WFH requirement  [Questionnaire §2.13 WFH_POLICY]
+    # ── Q6: Employer WFH requirement  [Questionnaire §2.13 WFH_POLICY]
     {
         "qkey": "Q_WFH_POLICY",
         "cms_col": "wfh_policy",
@@ -348,55 +364,7 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "commute",
     },
 
-    # ── Q7b: Commute frequency  [Questionnaire WORK commute frequency]
-    #   Useful transport-behavior addition with strong coverage among workers.
-    {
-        "qkey": "Q_COMMUTE_FREQ",
-        "cms_col": "commute_freq",
-        "question": "How often do you commute to your workplace?",
-        "options": [
-            "5 or more days a week",
-            "4 days a week",
-            "2-3 days a week",
-            "1 day a week",
-            "1-3 days a month",
-            "Less than monthly",
-        ],
-        "code_map": {
-            1: "5 or more days a week",
-            2: "4 days a week",
-            3: "2-3 days a week",
-            4: "1 day a week",
-            5: "1-3 days a month",
-            6: "Less than monthly",
-        },
-        "filter_codes": [995, 996],
-        "is_ordinal": True,
-        "ordinal": [5.0, 4.0, 2.5, 1.0, 0.5, 0.1],
-        "theme": "commute",
-    },
-
-    # ── Q7c: Workplace in NYC region  [Questionnaire WORK_IN_REGION]
-    #   Added as a simple geography/exposure question with decent worker coverage.
-    {
-        "qkey": "Q_WORK_IN_REGION",
-        "cms_col": "work_in_region",
-        "question": "Is your primary workplace located in the New York City region?",
-        "options": [
-            "Yes, in the New York City region",
-            "No, outside the New York City region",
-        ],
-        "code_map": {
-            1: "Yes, in the New York City region",
-            0: "No, outside the New York City region",
-        },
-        "filter_codes": [995, 996],
-        "is_ordinal": False,
-        "ordinal": None,
-        "theme": "commute",
-    },
-
-    # ── Q8: Employment status  [Questionnaire §2.1 EMPLOYMENT]
+    # ── Q7: Employment status  [Questionnaire §2.1 EMPLOYMENT]
     {
         "qkey": "Q_EMPLOYMENT",
         "cms_col": "employment",
@@ -425,7 +393,7 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "socioeconomic",
     },
 
-    # ── Q9: Education level  [Questionnaire §1 EDUCATION]
+    # ── Q8: Education level  [Questionnaire §1 EDUCATION]
     {
         "qkey": "Q_EDUCATION",
         "cms_col": "education",
@@ -450,11 +418,11 @@ CMS_QUESTIONS: List[dict] = [
         },
         "filter_codes": [995, 997, 999],
         "is_ordinal": True,
-        "ordinal": [1.0, 2.0, 3.0, 3.0, 4.0, 5.0, 6.0],
+        "ordinal": [1.0, 2.0, 3.0, 3.0, 4.0, 5.0, 6.0],   # "some college" ≈ "vocational training" → tied at 3.0
         "theme": "socioeconomic",
     },
 
-    # ── Q10: Student status  [Questionnaire §2 STUDENT]
+    # ── Q9: Student status  [Questionnaire §2 STUDENT]
     {
         "qkey": "Q_STUDENT",
         "cms_col": "student",
@@ -479,7 +447,7 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "socioeconomic",
     },
 
-    # ── Q11: Job location type  [Questionnaire §2 JOB_TYPE]
+    # ── Q10: Job location type  [Questionnaire §2 JOB_TYPE]
     {
         "qkey": "Q_JOB_TYPE",
         "cms_col": "job_type",
@@ -504,7 +472,7 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "commute",
     },
 
-    # ── Q12: Residence type  [Questionnaire §8 RESIDENCE_TYPE]
+    # ── Q11: Residence type  [Questionnaire §8 RESIDENCE_TYPE]
     {
         "qkey": "Q_RESIDENCE_TYPE",
         "cms_col": "residence_type",
@@ -533,7 +501,7 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "built_environment",
     },
 
-    # ── Q13: Primary household language  [Questionnaire §1 PRIMARY_LANGUAGE]
+    # ── Q12: Primary household language  [Questionnaire §1 PRIMARY_LANGUAGE]
     {
         "qkey": "Q_PRIMARY_LANGUAGE",
         "cms_col": "primary_language",
@@ -546,7 +514,7 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "equity",
     },
 
-    # ── Q14: Household size  [Questionnaire §1 R_NUM_PEOPLE]
+    # ── Q13: Household size  [Questionnaire §1 R_NUM_PEOPLE]
     {
         "qkey": "Q_HOUSEHOLD_SIZE",
         "cms_col": "r_num_people",
@@ -559,7 +527,7 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "household",
     },
 
-    # ── Q15: Household bicycle count  [Questionnaire §9 NUM_BICYCLES — grouped]
+    # ── Q14: Household bicycle count  [Questionnaire §9 NUM_BICYCLES — grouped]
     {
         "qkey": "Q_NUM_BICYCLES",
         "cms_col": "num_bicycles",
@@ -587,7 +555,7 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "active_transport",
     },
 
-    # ── Q16: Workplace zone  [Derived from §2 work address — WORK_CMS_ZONE, collapsed]
+    # ── Q15: Workplace zone  [Derived from §2 work address — WORK_CMS_ZONE, collapsed]
     #   Zone 4 = Manhattan Core (below 60th St) = the congestion pricing toll zone.
     #   Zones collapsed: 1+2→Bronx, 3→N.Manhattan, 5+6+7→Queens, 8+9→Brooklyn, 10+11→SI/outside
     {
@@ -621,9 +589,9 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "commute",
     },
 
-    # ── Q17: Number of children in household  [Questionnaire §1 NUM_KIDS]
-    #   100% coverage. Families with children are NYC's most car-dependent group
-    #   (school drop-off, car seats, activities) — key congestion pricing signal.
+    # ── Q16: Number of children in household  [Questionnaire §1 NUM_KIDS]
+    #   100% coverage. Household composition variable linked to vehicle ownership
+    #   and trip-chaining behavior relevant to congestion pricing analysis.
     {
         "qkey": "Q_NUM_KIDS",
         "cms_col": "num_kids",
@@ -649,11 +617,11 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "household",
     },
 
-    # ── Q18: Industry sector  [Questionnaire §2 INDUSTRY — collapsed 17→5]
+    # ── Q17: Industry sector  [Questionnaire §2 INDUSTRY — collapsed 17→5]
     #   66% coverage (workers only — non-workers filtered by code 995/997).
     #   17 raw codes collapsed to 5 groups ordered by WFH potential:
     #     Healthcare → must commute; Tech/Media/Arts → highest WFH potential.
-    #   This is the ONLY variable capturing telework potential by occupation type.
+    #   Only CMS variable capturing telework potential by occupation type.
     {
         "qkey": "Q_INDUSTRY",
         "cms_col": "industry",
@@ -694,7 +662,7 @@ CMS_QUESTIONS: List[dict] = [
     # VAL questions (3)  — used for tuning / early stopping
     # =========================================================
 
-    # ── Q20: Citi Bike frequency  [Questionnaire §9.13 CITI_BIKE_FREQ]
+    # ── Q18: Citi Bike frequency  [Questionnaire §9.13 CITI_BIKE_FREQ]
     {
         "qkey": "Q_CITIBIKE_FREQ",
         "cms_col": "citi_bike_freq",
@@ -724,7 +692,7 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "active_transport",
     },
 
-    # ── Q9: Transit harassment experience  [Questionnaire §10.2 HARASSMENT]
+    # ── Q19: Transit harassment experience  [Questionnaire §10.2 HARASSMENT]
     {
         "qkey": "Q_TRANSIT_SAFETY",
         "cms_col": "harassment",
@@ -749,9 +717,8 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "transit_experience",
     },
 
-    # ── Q19: Change in household vehicle count  [Questionnaire §7.6 VEHICLE_CHANGE]
-    #   Moved to VAL: household change structure is different from frequency training
-    #   questions but less novel than test; gives val loss a non-frequency signal.
+    # ── Q20: Change in household vehicle count  [Questionnaire §7.6 VEHICLE_CHANGE]
+    #   VAL: household asset-change structure provides a non-frequency validation signal.
     {
         "qkey": "Q_VEHICLE_CHANGE",
         "cms_col": "vehicle_change",
@@ -776,7 +743,7 @@ CMS_QUESTIONS: List[dict] = [
     # TEST questions (3)  — held out for final evaluation
     # =========================================================
 
-    # ── Q20: Change in household bicycle count  [Questionnaire §9.8 BIKE_CHANGE]
+    # ── Q21: Change in household bicycle count  [Questionnaire §9.8 BIKE_CHANGE]
     {
         "qkey": "Q_BIKE_CHANGE",
         "cms_col": "bike_change",
@@ -797,7 +764,7 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "active_transport",
     },
 
-    # ── Q21: Housing tenure  [Questionnaire §8.3 RESIDENCE_RENT_OWN]
+    # ── Q22: Housing tenure  [Questionnaire §8.3 RESIDENCE_RENT_OWN]
     {
         "qkey": "Q_HOUSING_TENURE",
         "cms_col": "residence_rent_own",
@@ -822,7 +789,7 @@ CMS_QUESTIONS: List[dict] = [
         "theme": "housing",
     },
 
-    # ── Q22: EV purchase consideration  [Questionnaire §7 EV_PURCHASE]
+    # ── Q23: EV purchase consideration  [Questionnaire §7 EV_PURCHASE]
     #   TEST: attitudinal / long-run adaptation question — model trained on
     #   current behavioral frequencies must generalise to future intent.
     #   Code 4 (already bought but no longer primary vehicle, n=6) → merged with code 2.
@@ -856,7 +823,7 @@ MISSING_CODES = {995, 996, 997, 998, 999}
 
 
 # =========================================================================
-# 4.  STEERING PROMPT BUILDERS  (mirrors step0_data_adapter.py)
+# 4.  STEERING PROMPT BUILDERS
 # =========================================================================
 
 def _mcq_block(question: str, options: List[str]) -> str:
@@ -869,6 +836,10 @@ def _mcq_block(question: str, options: List[str]) -> str:
 
 
 def build_qa_steering(attr_name: str, attr_def: dict, group: str) -> str:
+    """
+    Build QA steering text (SubPop format):
+      multi-turn demographic Q&A ending with 'Answer: (X) group'.
+    """
     options = attr_def["steering_options"]
     question = attr_def["steering_question"]
     block = _mcq_block(question, options)
@@ -877,13 +848,28 @@ def build_qa_steering(attr_name: str, attr_def: dict, group: str) -> str:
 
 
 def build_bio_steering(attr_def: dict, group: str) -> str:
-    template = attr_def.get("bio_template", "I am in the {group} group.")
-    return template.format(group=group)
+    """
+    Build BIO steering text (SubPop format):
+      'Below you will be asked to provide a short description of your [attr]
+       and then answer some questions. Description: [first-person statement].'
+    Uses group_display_map for groups that need display-name overrides (e.g. 'the Bronx').
+    """
+    display = attr_def.get("group_display_map", {}).get(group, group)
+    if "bio_template" not in attr_def:
+        raise KeyError(f"Attribute definition is missing 'bio_template'. Add an explicit template.")
+    return attr_def["bio_template"].format(group=display)
 
 
 def build_portray_steering(attr_def: dict, group: str) -> str:
-    template = attr_def.get("portray_template", "Portray someone in the {group} group.")
-    return template.format(group=group)
+    """
+    Build PORTRAY steering text (SubPop format):
+      'Answer the following question as if you [condition].'
+    Uses group_display_map for groups that need display-name overrides (e.g. 'the Bronx').
+    """
+    display = attr_def.get("group_display_map", {}).get(group, group)
+    if "portray_template" not in attr_def:
+        raise KeyError(f"Attribute definition is missing 'portray_template'. Add an explicit template.")
+    return attr_def["portray_template"].format(group=display)
 
 
 # =========================================================================
@@ -1039,7 +1025,7 @@ def compute_subgroup_weights(df: pd.DataFrame) -> pd.DataFrame:
 
 def build_demographics_csv(weights_df: pd.DataFrame) -> pd.DataFrame:
     """
-    Build the demographics_congestion.csv format expected by step2
+    Build the cms_demographics.csv format expected by step2
     (attribute | group | steering_QA | steering_BIO | steering_PORTRAY).
     """
     rows = []
@@ -1058,7 +1044,7 @@ def build_demographics_csv(weights_df: pd.DataFrame) -> pd.DataFrame:
 
 def build_steering_prompts_json(demographics_df: pd.DataFrame) -> dict:
     """
-    Build the congestion_steering_prompts.json expected by step2.
+    Build the cms_steering_prompts.json expected by step2.
     Structure: { attribute: { group: { QA: ..., BIO: ..., PORTRAY: ... } } }
     """
     prompts: dict = {}
@@ -1088,7 +1074,7 @@ def main():
     )
     parser.add_argument(
         "--output_dir", type=str,
-        default="approach2_outputs/cms",
+        default=DEFAULT_CMS_OUTPUT_DIR,
         help="Directory to write all outputs",
     )
     parser.add_argument(
@@ -1173,12 +1159,12 @@ def main():
 
     # ------------------------------------------------------------------
     # F. Build question train/val/test split (required by step3)
-    #    25 questions: 19 train / 3 val / 3 test
+    #    23 questions: 17 train / 3 val / 3 test
     #
     #    Split logic (theme-stratified):
-    #      train (15) → commute (4) + shared_mobility (1) + active_transport (2)
-    #                   + auto_dependency (1) + socioeconomic (3) + built_environment (1)
-    #                   + equity (1) + household (1) + commute/work_zone (1)
+    #      train (17) → commute (5) + shared_mobility (1) + active_transport (2)
+    #                   + auto_dependency (1) + socioeconomic (4) + built_environment (1)
+    #                   + equity (1) + household (2)
     #      val   (3)  → active_transport (1) + transit_experience (1)
     #                   + auto_dependency/change (1)
     #      test  (3)  → active_transport/change (1) + housing (1)
@@ -1193,8 +1179,6 @@ def main():
         "Q_COMMUTE_MODE",
         "Q_TELEWORK_FREQ",
         "Q_WFH_POLICY",
-        "Q_COMMUTE_FREQ",
-        "Q_WORK_IN_REGION",
         "Q_JOB_TYPE",
         # shared mobility
         "Q_TNC_FREQ",
@@ -1227,7 +1211,7 @@ def main():
     ]
     TEST_QKEYS = [
         "Q_BIKE_CHANGE",        # household asset change — active transport domain
-        "Q_HOUSING_TENURE",     # housing economics — furthest from any train question
+        "Q_HOUSING_TENURE",     # housing economics — structurally distinct from train questions
         "Q_EV_PURCHASE",        # long-run adaptation intent — cross-domain generalisation test
     ]
 
@@ -1272,17 +1256,7 @@ def main():
               f"{len(sub)} distributions, "
               f"min cell n={min_n}")
 
-    print(f"\nNext steps:")
-    print(f"  step2: python step2_vllm_baselines.py \\")
-    print(f"      --demographics_csv {demo_path} \\")
-    print(f"      --steering_json    {steering_path} \\")
-    print(f"      --questions_json   {q_path} \\")
-    print(f"      --output_dir       {out_dir}")
-    print(f"\n  step6: python step6_full_evaluation.py \\")
-    print(f"      --ground_truth_csv {dist_path} \\")
-    print(f"      --demographics_csv {demo_path} \\")
-    print(f"      --weights_csv      {weights_path} \\")
-    print(f"      --output_dir       {out_dir}/evaluation")
+    print(f"\nOutputs written to: {out_dir}")
 
 
 if __name__ == "__main__":

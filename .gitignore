@@ -35,7 +35,7 @@ approach2_outputs/cms/evaluation/
 subpop-main/subpop/train/datasets/cms/
 
 # ── Model checkpoints (GB+, store on Drive only) ─────────────────────
-checkpoints/
+checkpoints*/
 output_dir*/
 peft_checkpointing/
 *.safetensors
@@ -51,5 +51,12 @@ peft_checkpointing/
 # ✓  approach2_outputs/cms/cms_*.csv  (small metadata outputs)
 # ✓  approach2_outputs/cms/cms_*.json (questions, steering, split)
 # ✓  requirements*.txt
-# ✓  colab_gpu_steps.ipynb
+# ✓  colab_run.ipynb
 output_colab/
+
+# ── Archived experiment folders live outside the code repo ───────────
+run*_*/
+results_archive/
+
+# ── Not for submission (local tools, experimental scripts, audit helpers) ──
+gitignore/

@@ -1,12 +1,12 @@
 """
 step2_vllm_baselines.py
 
-Phase 4 of the upgraded pipeline: multi-format zero-shot baselines + statistical bounds.
+Zero-shot baselines and statistical bounds using vLLM.
 
 Features:
   - All 3 SubPop steering prompt formats (QA, BIO, PORTRAY)
   - Per-attribute steering (not composite commuter_profile)
-  - Auto-fallback from Llama-3.1-8B to Mistral-7B if access is pending
+  - Llama/Mistral fallback if HuggingFace access is pending; other models (e.g. Qwen) fail fast
   - Statistical bounds (uniform upper, bootstrap lower)
 
 Outputs (under OUT_DIR):
@@ -37,12 +37,12 @@ import argparse
 import ast
 import json
 import sys
-from itertools import combinations
 from pathlib import Path
-from typing import List, Dict, Optional
-
 import numpy as np
 import pandas as pd
+
+
+DEFAULT_CMS_DIR = "approach2_outputs/cms"
 
 # =========================================================================
 # Import SubPop utilities (add to path if needed)
@@ -50,7 +50,7 @@ import pandas as pd
 SUBPOP_ROOT = Path(__file__).parent / "subpop-main"
 sys.path.insert(0, str(SUBPOP_ROOT))
 
-from subpop.utils.survey_utils import generate_mcq, ordinal_emd, list_normalize
+from subpop.utils.survey_utils import generate_mcq, ordinal_emd
 
 
 # =========================================================================
@@ -58,7 +58,6 @@ from subpop.utils.survey_utils import generate_mcq, ordinal_emd, list_normalize
 # =========================================================================
 
 OPTION_LETTERS = ["A", "B", "C", "D", "E", "F", "G"]
-ORDINAL_VALUES = [1.0, 2.0, 3.0, 4.0, 5.0]  # fallback only
 
 
 # =========================================================================
@@ -73,11 +72,18 @@ def tvd(p: list, q: list) -> float:
 def load_ordinal_flags(questions_json: str) -> dict:
     """
     Return {qkey: bool} where True = ordinal (use WD), False = nominal (use TVD).
-    Defaults to True (ordinal/WD) if is_ordinal key is absent.
+    Raises KeyError if any question is missing the is_ordinal field.
     """
     with open(questions_json) as f:
         questions = json.load(f)
-    return {q["qkey"]: bool(q.get("is_ordinal", True)) for q in questions}
+    result = {}
+    for q in questions:
+        if "is_ordinal" not in q:
+            raise KeyError(
+                f"Question '{q['qkey']}' is missing 'is_ordinal' in {questions_json}"
+            )
+        result[q["qkey"]] = bool(q["is_ordinal"])
+    return result
 
 
 def bound_distance(gt_dist: list, pred_dist: list,
@@ -96,18 +102,22 @@ MODEL_PREFERENCE = [
 
 def resolve_model(requested_model: str) -> str:
     """
-    Try to load the requested model. If it fails due to gated/pending access,
-    fall back through MODEL_PREFERENCE until one succeeds.
-    Returns the model name that was successfully resolved.
+    Resolve the model to use for inference.
+    Llama/Mistral requests fall back within MODEL_PREFERENCE if access is pending.
+    All other models (e.g. Qwen) raise immediately on failure to avoid writing
+    mislabeled outputs into that model's output directory.
     """
     from huggingface_hub import snapshot_download
     from huggingface_hub.utils import GatedRepoError, RepositoryNotFoundError
 
     candidates = [requested_model]
-    # Append fallbacks that aren't already in the list
-    for m in MODEL_PREFERENCE:
-        if m != requested_model:
-            candidates.append(m)
+    # Only legacy Llama/Mistral runs use fallback. For explicitly requested
+    # model families such as Qwen, fail fast rather than writing mislabeled
+    # predictions into that model's output directory.
+    if requested_model in MODEL_PREFERENCE:
+        for m in MODEL_PREFERENCE:
+            if m != requested_model:
+                candidates.append(m)
 
     for model_name in candidates:
         try:
@@ -117,20 +127,19 @@ def resolve_model(requested_model: str) -> str:
             print(f"  Access confirmed: using {model_name}")
             return model_name
         except GatedRepoError:
-            print(f"  Access PENDING/DENIED for {model_name} — trying next model")
+            print(f"  Access PENDING/DENIED for {model_name}")
         except RepositoryNotFoundError:
-            print(f"  Model not found: {model_name} — trying next model")
+            print(f"  Model not found: {model_name}")
         except Exception as e:
-            # Network error, quota, etc. — don't silently swallow
+            # Re-raise unless the error is clearly an access/gating issue
             if "gated" in str(e).lower() or "access" in str(e).lower():
-                print(f"  Access issue for {model_name}: {e} — trying next model")
+                print(f"  Access issue for {model_name}: {e}")
             else:
                 raise
 
     raise RuntimeError(
         f"No accessible model found. Tried: {candidates}\n"
-        "Request access at https://huggingface.co/meta-llama or use "
-        "--model_name mistralai/Mistral-7B-v0.1 directly."
+        "Verify the model name and your HuggingFace access for the requested model."
     )
 
 
@@ -148,7 +157,7 @@ def build_full_prompt(steering_text: str, prompt_format: str, question: str, opt
 
 
 # =========================================================================
-# LOGPROB EXTRACTION (reused from old step2)
+# LOGPROB EXTRACTION
 # =========================================================================
 
 def extract_distribution_from_logprobs(logprobs_dict: dict, tokenizer, n_options: int = 5) -> list:
@@ -206,9 +215,11 @@ def run_zero_shot(
         attr  = demo_row["attribute"]
         group = demo_row["group"]
         if attr not in steering_prompts:
-            print(f"  WARNING: no steering for attribute '{attr}', skipping"); continue
+            raise KeyError(f"No steering prompts found for attribute '{attr}'. "
+                           "Check that cms_steering_prompts.json is up to date.")
         if group not in steering_prompts[attr]:
-            print(f"  WARNING: no steering for {attr}={group}, skipping"); continue
+            raise KeyError(f"No steering prompt found for {attr}='{group}'. "
+                           "Check that cms_steering_prompts.json is up to date.")
         steering_text = steering_prompts[attr][group][prompt_format]
         for q in questions:
             options   = q.get("options", OPTION_LETTERS[:5])
@@ -221,7 +232,8 @@ def run_zero_shot(
             })
 
     print(f"  Built {len(prompt_records)} prompts for {prompt_format} format")
-    model_name = resolve_model(model_name)  # falls back to Mistral if Llama access pending
+    model_name = resolve_model(model_name)
+    # Current Colab vLLM caps sample logprobs at 20. Higher values fail validation.
     sampling_params = SamplingParams(max_tokens=1, temperature=1.0, logprobs=20)
     llm = LLM(model=model_name, tensor_parallel_size=tp_size, dtype="float16",
               max_model_len=2048, gpu_memory_utilization=0.90, enforce_eager=True, disable_log_stats=True)
@@ -253,7 +265,7 @@ def run_zero_shot(
 def compute_bounds(
     ground_truth_csv: str,
     output_path: Path,
-    questions_json: Optional[str] = None,
+    questions_json: str,
     n_bootstrap: int = 1000,
     seed: int = 42,
 ):
@@ -271,19 +283,18 @@ def compute_bounds(
         metric                     — 'WD' or 'TVD' (for auditing)
 
     Args:
-        questions_json: path to cms_questions.json; if None, all questions are
-                        treated as ordinal (WD).  A warning is printed if absent.
+        questions_json: path to cms_questions.json with is_ordinal metadata for every qkey.
     """
     np.random.seed(seed)
 
     # Load ordinal flags (WD vs TVD per question)
-    if questions_json is not None:
-        ordinal_flags = load_ordinal_flags(questions_json)
-        print(f"  Loaded ordinal flags for {len(ordinal_flags)} questions")
-    else:
-        ordinal_flags = {}
-        print("  WARNING: --questions_json not provided; treating all questions as "
-              "ordinal (WD).  Pass --questions_json for metric-consistent bounds.")
+    if questions_json is None:
+        raise ValueError(
+            "--questions_json is required. "
+            "Pass approach2_outputs/cms/cms_questions.json for is_ordinal metadata."
+        )
+    ordinal_flags = load_ordinal_flags(questions_json)
+    print(f"  Loaded ordinal flags for {len(ordinal_flags)} questions")
 
     gt_df = pd.read_csv(ground_truth_csv)
     gt_df["responses"] = gt_df["responses"].apply(ast.literal_eval)
@@ -294,7 +305,12 @@ def compute_bounds(
         gt_dist   = row["responses"]
         ordinal   = row["ordinal"]
         qkey      = row["qkey"]
-        is_ord    = ordinal_flags.get(qkey, True)   # default to ordinal if unknown
+        if qkey not in ordinal_flags:
+            raise KeyError(
+                f"Missing is_ordinal metadata for qkey '{qkey}'. "
+                f"Check that {questions_json} covers all qkeys in {ground_truth_csv}."
+            )
+        is_ord = ordinal_flags[qkey]
         n_options = len(gt_dist)
         uniform   = [1.0 / n_options] * n_options
         metric    = "WD" if is_ord else "TVD"
@@ -335,7 +351,7 @@ def compute_bounds(
     for m in ["WD", "TVD"]:
         sub = bounds_df[bounds_df["metric"] == m]
         if len(sub):
-            print(f"\n  [{m}] {len(sub)} questions")
+            print(f"\n  [{m}] {len(sub)} distribution rows")
             print(f"    Uniform upper bound (mean): {sub['bound_uniform_upper'].mean():.4f}")
             print(f"    Bootstrap lower bound (mean): {sub['bound_bootstrap_lower_mean'].mean():.4f}")
             print(f"    Bootstrap 95% CI: [{sub['bound_bootstrap_ci_lower'].mean():.4f}, "
@@ -358,16 +374,16 @@ def main():
                              "bounds: compute uniform upper + bootstrap lower bounds; "
                              "all: run both")
     parser.add_argument("--demographics_csv", type=str,
-                        default="approach2_outputs/cms/cms_demographics.csv")
+                        default=f"{DEFAULT_CMS_DIR}/cms_demographics.csv")
     parser.add_argument("--steering_json", type=str,
-                        default="approach2_outputs/cms/cms_steering_prompts.json")
+                        default=f"{DEFAULT_CMS_DIR}/cms_steering_prompts.json")
     parser.add_argument("--questions_json", type=str,
-                        default="approach2_outputs/cms/cms_questions.json")
+                        default=f"{DEFAULT_CMS_DIR}/cms_questions.json")
     parser.add_argument("--ground_truth_csv", type=str, default=None,
                         help="Ground truth distributions CSV (from step1_cms_adapter)")
-    parser.add_argument("--output_dir", type=str, default="approach2_outputs/cms")
+    parser.add_argument("--output_dir", type=str, default=DEFAULT_CMS_DIR)
     parser.add_argument("--model_name", type=str, default="meta-llama/Llama-3.1-8B",
-                        help="Model to use. Falls back to Mistral-7B if Llama access is pending.")
+                        help="Model to use. Legacy Llama/Mistral runs can fall back within that family; explicitly requested public models fail fast if unavailable.")
     parser.add_argument("--tp_size", type=int, default=1)
     parser.add_argument("--formats", nargs="+", default=["QA", "BIO", "PORTRAY"],
                         choices=["QA", "BIO", "PORTRAY"])

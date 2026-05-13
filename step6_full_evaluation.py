@@ -1,25 +1,25 @@
 """
 step6_full_evaluation.py
 
-Phase 7: Comprehensive evaluation framework matching SubPop paper quality.
+Evaluation framework for the CMS SubPop replication.
 
-Upgrades over old step6_analyze_results.ipynb:
-  1. Bootstrap confidence intervals on WD  (SubPop Figure 3)
-  2. Per-attribute WD breakdown            (SubPop Tables 9-10)
-  3. Entropy analysis                      (response diversity check)
-  4. Inter-group disagreement heatmaps     (SubPop Figure 4)
-  5. Ablation comparison table             (SubPop Table 1 style)
-  6. Generalization analysis               (unseen questions + unseen subgroups)
-  7. Population-weighted aggregate opinion
+Computes, per method and question scope:
+  1. Bootstrap confidence intervals on WD/TVD  (SubPop Figure 3)
+  2. Per-attribute WD/TVD breakdown            (SubPop Tables 9-10)
+  3. Entropy analysis                          (response diversity check)
+  4. Inter-group disagreement heatmaps         (SubPop Figure 4)
+  5. Ablation comparison table                 (SubPop Table 1 style)
+  6. Population-weighted aggregate opinion
 
 Scope-matched outputs:
   evaluation/descriptive_all_rows/   — every question, every (attr, group, qkey) row
-  evaluation/test_only_fair/         — test questions only (apples-to-apples comparison
+                                       disagreement_heatmaps/ (ground truth + per-method)
+  evaluation/test_only_fair/         — test questions only (scope-matched comparison
                                        between zero-shot and fine-tuned models, which are
                                        only evaluated on held-out test questions)
+                                       disagreement_heatmaps/ (same structure)
   evaluation/                        — ablation_table.csv (both scopes combined)
                                        method_coverage.csv (audit manifest)
-                                       disagreement_heatmaps/ (ground truth + per-method)
 
 Usage:
     python step6_full_evaluation.py \\
@@ -37,16 +37,19 @@ import json
 import sys
 from itertools import combinations
 from pathlib import Path
-from typing import List, Dict, Optional, Set
+from typing import Dict, Optional, Set
 
 import numpy as np
 import pandas as pd
+
+
+DEFAULT_CMS_DIR = "approach2_outputs/cms"
 
 # Add SubPop to path
 SUBPOP_ROOT = Path(__file__).parent / "subpop-main"
 sys.path.insert(0, str(SUBPOP_ROOT))
 
-from subpop.utils.survey_utils import ordinal_emd, get_entropy, list_normalize
+from subpop.utils.survey_utils import ordinal_emd
 
 
 # =========================================================================
@@ -55,13 +58,16 @@ from subpop.utils.survey_utils import ordinal_emd, get_entropy, list_normalize
 
 def load_ordinal_flags(questions_json_path: str) -> dict:
     """Return {qkey: is_ordinal} from cms_questions.json."""
-    try:
-        with open(questions_json_path, "r") as f:
-            questions = json.load(f)
-        return {q["qkey"]: bool(q.get("is_ordinal", True)) for q in questions}
-    except FileNotFoundError:
-        print(f"  WARNING: {questions_json_path} not found — treating all questions as ordinal")
-        return {}
+    with open(questions_json_path, "r") as f:
+        questions = json.load(f)
+    flags = {}
+    for q in questions:
+        if "is_ordinal" not in q:
+            raise KeyError(
+                f"Question '{q['qkey']}' is missing 'is_ordinal' in {questions_json_path}"
+            )
+        flags[q["qkey"]] = bool(q["is_ordinal"])
+    return flags
 
 
 def tvd(p: list, q: list) -> float:
@@ -101,17 +107,23 @@ def parse_dist(x):
 
 
 def parse_ordinal(x, n_options: int = None):
-    """Parse ordinal values. Falls back to [1, 2, ..., n_options] if parsing fails."""
+    """Parse ordinal values from string or list.
+
+    Falls back to [1, 2, ..., n_options] only when x is None or NaN — this
+    covers fine-tuned model outputs from run_inference.py, which do not include
+    an ordinal column. Malformed non-empty ordinal strings raise ValueError. The
+    fallback is used only when ordinal metadata is absent from prediction files.
+    """
     if isinstance(x, str):
         try:
             result = ast.literal_eval(x)
             if isinstance(result, list) and len(result) > 0:
                 return result
-        except Exception:
-            pass
+        except (ValueError, SyntaxError) as exc:
+            raise ValueError(f"Cannot parse ordinal values: {x!r}") from exc
     if isinstance(x, list) and len(x) > 0:
         return x
-    # Fallback: use n_options if provided, otherwise 5
+    # Fallback for missing ordinal column (e.g. run_inference.py outputs)
     n = n_options if (n_options is not None and n_options > 0) else 5
     return list(range(1, n + 1))
 
@@ -164,8 +176,9 @@ def compute_bootstrap_ci(
     filter_qkeys: Optional[Set[str]] = None,
 ) -> pd.DataFrame:
     """
-    Compute bootstrap CI for WD between predicted and ground truth distributions.
-    For each (attribute, group, question) pair, resample and compute WD.
+    Compute bootstrap CI for the configured distance metric (WD or TVD) between
+    predicted and ground truth distributions. For each (attribute, group, question)
+    pair, resample and compute WD or TVD based on question type.
 
     filter_qkeys: if provided, restrict analysis to this set of question keys.
     """
@@ -187,7 +200,9 @@ def compute_bootstrap_ci(
         n_options = len(gt)
         ordinal_raw = row.get("ordinal_gt") or row.get("ordinal_pred")
         ordinal = parse_ordinal(ordinal_raw, n_options=n_options)
-        is_ord = (ordinal_flags or {}).get(row["qkey"], True)
+        if ordinal_flags is None or row["qkey"] not in ordinal_flags:
+            raise KeyError(f"Missing is_ordinal metadata for qkey '{row['qkey']}'")
+        is_ord = ordinal_flags[row["qkey"]]
 
         # Point estimate
         wd_point = compute_distance(gt, pred, ordinal, is_ord)
@@ -223,7 +238,7 @@ def compute_bootstrap_ci(
 
 
 # =========================================================================
-# 2. PER-ATTRIBUTE WD BREAKDOWN
+# 2. PER-ATTRIBUTE DISTANCE BREAKDOWN
 # =========================================================================
 
 def per_attribute_wd(
@@ -231,10 +246,10 @@ def per_attribute_wd(
     predictions_df: pd.DataFrame,
     ordinal_flags: dict = None,
     filter_qkeys: Optional[Set[str]] = None,
-) -> tuple:
+) -> pd.DataFrame:
     """
-    Compute mean WD per attribute (SubPop Tables 9-10).
-    Shows which demographic dimensions the model captures best/worst.
+    Compute mean distance per attribute (SubPop Tables 9-10).
+    Summarizes model error by demographic dimension.
 
     filter_qkeys: if provided, restrict analysis to this set of question keys.
     """
@@ -252,30 +267,19 @@ def per_attribute_wd(
         pred = parse_dist(row["responses_pred"])
         n_options = len(gt)
         ordinal = parse_ordinal(row.get("ordinal_gt"), n_options=n_options)
-        is_ord = (ordinal_flags or {}).get(row["qkey"], True)
+        if ordinal_flags is None or row["qkey"] not in ordinal_flags:
+            raise KeyError(f"Missing is_ordinal metadata for qkey '{row['qkey']}'")
+        is_ord = ordinal_flags[row["qkey"]]
         wd = compute_distance(gt, pred, ordinal, is_ord)
-        rows.append({
-            "attribute": row["attribute"],
-            "group": row["group"],
-            "qkey": row["qkey"],
-            "wd": wd,
-        })
+        rows.append({"attribute": row["attribute"], "wd": wd})
 
     detail_df = pd.DataFrame(rows)
-
     if detail_df.empty:
-        empty = pd.DataFrame(columns=["attribute", "mean_wd", "std_wd", "n_pairs"])
-        empty_grp = pd.DataFrame(columns=["attribute", "group", "mean_wd", "n_pairs"])
-        return empty, empty_grp, detail_df
+        return pd.DataFrame(columns=["attribute", "mean_wd", "std_wd", "n_pairs"])
 
-    # Aggregate: mean WD per attribute, per group, and overall
     per_attr = detail_df.groupby("attribute")["wd"].agg(["mean", "std", "count"]).reset_index()
     per_attr.columns = ["attribute", "mean_wd", "std_wd", "n_pairs"]
-
-    per_group = detail_df.groupby(["attribute", "group"])["wd"].agg(["mean", "count"]).reset_index()
-    per_group.columns = ["attribute", "group", "mean_wd", "n_pairs"]
-
-    return per_attr, per_group, detail_df
+    return per_attr
 
 
 # =========================================================================
@@ -335,7 +339,7 @@ def intergroup_disagreement(
     filter_qkeys: Optional[Set[str]] = None,
 ) -> Dict[str, pd.DataFrame]:
     """
-    For each attribute, compute pairwise WD between groups on the same question.
+    For each attribute, compute pairwise distance between groups on the same question.
     Returns dict of attribute → DataFrame heatmaps.
     Mirrors SubPop Figure 4.
 
@@ -360,7 +364,7 @@ def intergroup_disagreement(
             if len(groups) < 2:
                 continue
 
-            # Compute average pairwise WD across all (filtered) questions
+            # Compute average pairwise distance across all filtered questions
             disagreement_matrix = pd.DataFrame(0.0, index=groups, columns=groups)
             count_matrix = pd.DataFrame(0, index=groups, columns=groups)
 
@@ -377,7 +381,9 @@ def intergroup_disagreement(
                 if q_ordinal is None:
                     first_dist = next(iter(group_dists.values())) if group_dists else []
                     q_ordinal = list(range(1, len(first_dist) + 1)) if first_dist else [1, 2, 3, 4, 5]
-                is_ord = (ordinal_flags or {}).get(qkey, True)
+                if ordinal_flags is None or qkey not in ordinal_flags:
+                    raise KeyError(f"Missing is_ordinal metadata for qkey '{qkey}'")
+                is_ord = ordinal_flags[qkey]
 
                 for g1, g2 in combinations(groups, 2):
                     if g1 in group_dists and g2 in group_dists:
@@ -412,7 +418,7 @@ def build_ablation_table(
     Build SubPop Table 1-style ablation table.
     Rows = attributes, Columns = methods.
 
-    filter_qkeys: if provided, only compute WD on this subset of questions.
+    filter_qkeys: if provided, only compute distance metrics on this subset of questions.
                   Use this to restrict zero-shot to the same test questions
                   that fine-tuned was evaluated on (fair comparison).
     """
@@ -434,7 +440,9 @@ def build_ablation_table(
                 pred = parse_dist(row["responses_pred"])
                 n_options = len(gt)
                 ordinal = parse_ordinal(row.get("ordinal_gt"), n_options=n_options)
-                is_ord = (ordinal_flags or {}).get(row["qkey"], True)
+                if ordinal_flags is None or row["qkey"] not in ordinal_flags:
+                    raise KeyError(f"Missing is_ordinal metadata for qkey '{row['qkey']}'")
+                is_ord = ordinal_flags[row["qkey"]]
                 wd = compute_distance(gt, pred, ordinal, is_ord)
                 attr = row["attribute"]
                 method_wds.setdefault(attr, []).append(wd)
@@ -482,13 +490,12 @@ def population_weighted_opinion(
 ) -> pd.DataFrame:
     """
     Compute population-weighted aggregate opinion per question.
-    Uses PUMS PWGTP weights for proper population representation.
+    Uses the `weight` column from cms_subgroup_weights.csv for population representation.
 
     filter_qkeys: if provided, restrict to this set of question keys.
     ordinal_flags: {qkey: is_ordinal}. mean_opinion_score is set to NaN for
                    nominal questions because option indices carry no numerical
-                   meaning there (e.g. commute mode option 1 vs option 3 is
-                   not a meaningful numeric difference).
+                   meaning (unordered response categories).
     """
     merged = predictions_df.merge(
         weights_df,
@@ -501,7 +508,9 @@ def population_weighted_opinion(
     for qkey in merged["qkey"].unique():
         q_df = merged[merged["qkey"] == qkey]
         question = q_df.iloc[0].get("question", qkey)
-        is_ordinal = (ordinal_flags or {}).get(qkey, True)
+        if ordinal_flags is None or qkey not in ordinal_flags:
+            raise KeyError(f"Missing is_ordinal metadata for qkey '{qkey}'")
+        is_ordinal = ordinal_flags[qkey]
 
         # Determine number of options from first valid distribution
         first_dist = parse_dist(q_df.iloc[0]["responses"])
@@ -513,10 +522,16 @@ def population_weighted_opinion(
 
         for _, row in q_df.iterrows():
             dist = parse_dist(row["responses"])
-            # Guard against mismatched lengths (shouldn't happen within a qkey)
             if len(dist) != n_options:
-                dist = dist[:n_options] + [0.0] * max(0, n_options - len(dist))
-            w = float(row.get("weight", row.get("pop_share", 1.0)))
+                raise ValueError(
+                    f"Distribution length mismatch for {qkey}: expected {n_options}, got {len(dist)}"
+                )
+            if "weight" not in row.index or pd.isna(row["weight"]):
+                raise KeyError(
+                    f"Missing population weight for {row['attribute']}='{row['group']}'. "
+                    "Check that cms_subgroup_weights.csv covers all (attribute, group) pairs."
+                )
+            w = float(row["weight"])
             weighted_dist += np.array(dist) * w
             total_weight += w
 
@@ -545,6 +560,123 @@ def population_weighted_opinion(
         rows.append(record)
 
     return pd.DataFrame(rows)
+
+
+# =========================================================================
+# 7. QUESTION-SUBSET SENSITIVITY ANALYSIS
+#    Post-hoc sensitivity analysis, not cross-validation.
+#    The model is fixed (trained on one question split). This function
+#    evaluates its predictions across non-overlapping question subsets
+#    and reports variance. Use test_only_fair/ for unseen-question evaluation.
+# =========================================================================
+
+def question_subset_sensitivity(
+    ground_truth_df: pd.DataFrame,
+    prediction_files: Dict[str, str],
+    ordinal_flags: dict = None,
+    n_folds: int = 5,
+    seed: int = 42,
+) -> tuple:
+    """
+    Post-hoc fold sensitivity analysis over a single fixed model.
+
+    Splits all ground-truth qkeys into n_folds equal groups (deterministic,
+    seeded), then evaluates each prediction file on each fold independently.
+
+    Coverage heterogeneity: zero-shot methods have predictions for all
+    questions; fine-tuned methods only cover their test questions. Folds are
+    built from all ground-truth qkeys, so each method's `n_covered_qkeys` per
+    fold may differ. The `pct_covered` column records this coverage. Compare
+    methods only when their coverage is similar, or use the common-qkeys section.
+
+    Returns:
+        fold_df          : per-(method, fold) rows with coverage columns
+        attr_df          : per-(method, fold, attribute) breakdown
+        method_qkeys     : dict mapping method_name → set of its qkeys
+    """
+    np.random.seed(seed)
+
+    all_qkeys = sorted(ground_truth_df["qkey"].unique())
+    n = len(all_qkeys)
+    indices = np.random.permutation(n)
+    fold_assignments = np.array_split(indices, n_folds)
+    folds = [[all_qkeys[i] for i in idx] for idx in fold_assignments]
+
+    # Pre-load all prediction files and record their qkey coverage
+    method_data: Dict[str, pd.DataFrame] = {}
+    method_qkeys: Dict[str, set] = {}
+    for method_name, pred_path in prediction_files.items():
+        try:
+            pdf = load_distributions(pred_path)
+            method_data[method_name] = pdf
+            method_qkeys[method_name] = set(pdf["qkey"].unique())
+        except Exception as exc:
+            raise RuntimeError(
+                f"Could not load prediction file for {method_name}: {pred_path}"
+            ) from exc
+
+    fold_rows = []
+    attr_rows = []
+
+    for fold_idx, fold_qkeys in enumerate(folds):
+        fold_set = set(fold_qkeys)
+        n_fold_q = len(fold_qkeys)
+
+        for method_name, pred_df in method_data.items():
+            merged = ground_truth_df.merge(
+                pred_df,
+                on=["qkey", "attribute", "group"],
+                suffixes=("_gt", "_pred"),
+                how="inner",
+            )
+            fold_merged = merged[merged["qkey"].isin(fold_set)]
+            if fold_merged.empty:
+                continue
+
+            # Per-row distance
+            attr_wds: Dict[str, list] = {}
+            all_wds = []
+            for _, row in fold_merged.iterrows():
+                gt      = parse_dist(row["responses_gt"])
+                pred    = parse_dist(row["responses_pred"])
+                n_opt   = len(gt)
+                ordinal = parse_ordinal(row.get("ordinal_gt"), n_options=n_opt)
+                if ordinal_flags is None or row["qkey"] not in ordinal_flags:
+                    raise KeyError(f"Missing is_ordinal metadata for qkey '{row['qkey']}'")
+                is_ord = ordinal_flags[row["qkey"]]
+                wd = compute_distance(gt, pred, ordinal, is_ord)
+                if not np.isnan(wd):
+                    all_wds.append(wd)
+                    attr_wds.setdefault(row["attribute"], []).append(wd)
+
+            n_covered = len(fold_merged["qkey"].unique())
+            pct_covered = n_covered / n_fold_q if n_fold_q > 0 else 0.0
+
+            if all_wds:
+                fold_rows.append({
+                    "method":           method_name,
+                    "fold":             fold_idx + 1,
+                    "fold_qkeys":       "|".join(sorted(fold_qkeys)),
+                    "n_fold_questions": n_fold_q,
+                    "n_covered_qkeys":  n_covered,
+                    "pct_covered":      round(pct_covered, 3),
+                    "n_rows":           len(all_wds),
+                    "mean_wd":          float(np.mean(all_wds)),
+                    "std_wd":           float(np.std(all_wds)),
+                    "min_wd":           float(np.min(all_wds)),
+                    "max_wd":           float(np.max(all_wds)),
+                })
+
+            for attr, wds in attr_wds.items():
+                attr_rows.append({
+                    "method":    method_name,
+                    "fold":      fold_idx + 1,
+                    "attribute": attr,
+                    "n_rows":    len(wds),
+                    "mean_wd":   float(np.mean(wds)),
+                })
+
+    return pd.DataFrame(fold_rows), pd.DataFrame(attr_rows), method_qkeys
 
 
 # =========================================================================
@@ -586,24 +718,32 @@ def _coverage_row(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Full evaluation framework (SubPop paper quality)"
+        description="Full evaluation framework for the CMS SubPop replication"
     )
     parser.add_argument("--ground_truth_csv", type=str,
-                        default="approach2_outputs/cms/cms_survey_distributions.csv")
+                        default=f"{DEFAULT_CMS_DIR}/cms_survey_distributions.csv")
     parser.add_argument("--questions_json", type=str,
-                        default="approach2_outputs/cms/cms_questions.json",
+                        default=f"{DEFAULT_CMS_DIR}/cms_questions.json",
                         help="Path to cms_questions.json (needed for ordinal vs nominal flag)")
     parser.add_argument("--question_split_json", type=str,
                         default=None,
                         help="Path to cms_question_split.json; enables fair test-only analysis")
-    parser.add_argument("--predictions_dir", type=str, default="approach2_outputs/cms")
+    parser.add_argument("--predictions_dir", type=str, default=DEFAULT_CMS_DIR)
     parser.add_argument("--demographics_csv", type=str,
-                        default="approach2_outputs/cms/cms_demographics.csv")
+                        default=f"{DEFAULT_CMS_DIR}/cms_demographics.csv")
     parser.add_argument("--weights_csv", type=str,
-                        default="approach2_outputs/cms/cms_subgroup_weights.csv")
-    parser.add_argument("--output_dir", type=str, default="approach2_outputs/cms/evaluation")
+                        default=f"{DEFAULT_CMS_DIR}/cms_subgroup_weights.csv")
+    parser.add_argument("--output_dir", type=str, default=f"{DEFAULT_CMS_DIR}/evaluation")
     parser.add_argument("--n_bootstrap", type=int, default=1000)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--n_sensitivity_folds", type=int, default=5,
+        help=(
+            "Number of question-subset folds for post-hoc stability analysis "
+            "(0 to disable). This is post-hoc sensitivity analysis, not cross-validation; "
+            "the model is fixed and folds measure prediction variance across question subsets."
+        ),
+    )
     args = parser.parse_args()
 
     out_dir = Path(args.output_dir)
@@ -637,7 +777,10 @@ def main():
         ("results_finetuned_QA.csv", "Fine-tuned QA"),
         ("results_finetuned_BIO.csv", "Fine-tuned BIO"),
         ("results_finetuned_PORTRAY.csv", "Fine-tuned PORTRAY"),
-        ("results_finetuned_ALL.csv", "Fine-tuned ALL"),
+        # Sequential fine-tuning: pretrain on Pew waves → CMS fine-tune
+        ("results_finetuned_QA_seq.csv", "Fine-tuned QA (seq)"),
+        ("results_finetuned_BIO_seq.csv", "Fine-tuned BIO (seq)"),
+        ("results_finetuned_PORTRAY_seq.csv", "Fine-tuned PORTRAY (seq)"),
     ]:
         path = pred_dir / pattern
         if path.exists():
@@ -645,10 +788,7 @@ def main():
             print(f"  Found: {label} → {path}")
 
     if not prediction_files:
-        print("  No prediction files found.")
-        print("  Zero-shot results: run step2_vllm_baselines.py --mode zeroshot")
-        print("  Fine-tuned results: run subpop-main/scripts/experiment/run_inference.py")
-        print("  Will compute evaluation metrics on ground truth only.")
+        raise FileNotFoundError(f"No prediction files found in {pred_dir}")
 
     # Load test qkeys for fair-scope analysis
     test_qkeys = None
@@ -659,17 +799,25 @@ def main():
         test_qkeys = set(split_data.get("test", []))
         print(f"\n  Loaded question split — {len(test_qkeys)} test qkeys: {sorted(test_qkeys)}")
     else:
-        print("\n  NOTE: cms_question_split.json not found; test_only_fair/ outputs will be skipped.")
+        raise FileNotFoundError(
+            f"cms_question_split.json not found: {split_path}\n"
+            "Pass --question_split_json or ensure cms_question_split.json is in predictions_dir."
+        )
 
     # Coverage manifest rows
     coverage_rows = []
+
+    # Load weights once (used in every scope × method iteration)
+    if not Path(args.weights_csv).exists():
+        raise FileNotFoundError(f"Subgroup weights file not found: {args.weights_csv}")
+    weights_df = pd.read_csv(args.weights_csv)
 
     # -------------------------------------------------------------------------
     # Helper: run all per-method analyses for one scope
     # -------------------------------------------------------------------------
     def run_scope(scope_dir: Path, scope_label: str, qkey_filter: Optional[Set[str]]):
         """
-        Run bootstrap CI, per-attribute WD, entropy, and population-weighted
+        Run bootstrap CI, per-attribute distance, entropy, and population-weighted
         analyses for all prediction files under the given qkey filter, writing
         results to scope_dir.
         """
@@ -690,9 +838,8 @@ def main():
 
             try:
                 pred_df = load_distributions(pred_path)
-            except Exception as e:
-                print(f"  WARNING: could not load {pred_path}: {e}")
-                continue
+            except Exception as exc:
+                raise RuntimeError(f"Could not load prediction file: {pred_path}") from exc
 
             # Build merge once for coverage stats
             merged_for_cov = gt_df.merge(
@@ -712,8 +859,8 @@ def main():
             )
             ci_df.to_csv(scope_dir / f"bootstrap_ci_{safe_name}.csv", index=False)
 
-            # ── Per-attribute WD ─────────────────────────────────────────────
-            per_attr, per_group, detail = per_attribute_wd(
+            # ── Per-attribute distance ───────────────────────────────────────
+            per_attr = per_attribute_wd(
                 gt_df, pred_df,
                 ordinal_flags=ordinal_flags,
                 filter_qkeys=qkey_filter,
@@ -732,14 +879,12 @@ def main():
                 heatmap.to_csv(heatmap_dir / f"{key}_{safe_name}.csv")
 
             # ── Population-weighted opinion ───────────────────────────────────
-            if Path(args.weights_csv).exists():
-                weights_df = pd.read_csv(args.weights_csv)
-                weighted = population_weighted_opinion(
-                    pred_df, weights_df,
-                    filter_qkeys=qkey_filter,
-                    ordinal_flags=ordinal_flags,
-                )
-                weighted.to_csv(scope_dir / f"population_weighted_{safe_name}.csv", index=False)
+            weighted = population_weighted_opinion(
+                pred_df, weights_df,
+                filter_qkeys=qkey_filter,
+                ordinal_flags=ordinal_flags,
+            )
+            weighted.to_csv(scope_dir / f"population_weighted_{safe_name}.csv", index=False)
 
         # Print quick summary for this scope
         if prediction_files:
@@ -812,6 +957,133 @@ def main():
     ablation.to_csv(out_dir / "ablation_table.csv")
     print(ablation.round(4).to_string())
 
+    # ── Question-subset sensitivity analysis ────────────────────────────────
+    if prediction_files and args.n_sensitivity_folds > 0:
+        print(f"\n{'='*60}")
+        print("QUESTION-SUBSET SENSITIVITY ANALYSIS")
+        print("Post-hoc sensitivity analysis with a single fixed model.")
+        print("   Measures prediction stability across question subsets.")
+        print("   For unseen-question evaluation see: test_only_fair/")
+        print(f"   n_folds={args.n_sensitivity_folds}  seed={args.seed}")
+        print(f"{'='*60}")
+
+        sens_dir = out_dir / "question_subset_sensitivity"
+        sens_dir.mkdir(exist_ok=True)
+
+        fold_df, attr_df, method_qkeys = question_subset_sensitivity(
+            gt_df,
+            prediction_files,
+            ordinal_flags=ordinal_flags,
+            n_folds=args.n_sensitivity_folds,
+            seed=args.seed,
+        )
+
+        if not fold_df.empty:
+            fold_df.to_csv(sens_dir / "fold_results.csv", index=False)
+            attr_df.to_csv(sens_dir / "fold_results_by_attribute.csv", index=False)
+
+            # ── Coverage heterogeneity check ─────────────────────────────────
+            n_gt_qkeys = gt_df["qkey"].nunique()
+            coverage_pcts = {
+                m: len(qs) / n_gt_qkeys
+                for m, qs in method_qkeys.items()
+            }
+            min_cov = min(coverage_pcts.values())
+            max_cov = max(coverage_pcts.values())
+            coverage_inconsistent = (max_cov - min_cov) > 0.20
+
+            if coverage_inconsistent:
+                print("\n  COVERAGE WARNING: methods cover different question subsets.")
+                print("    Across-method mean_wd comparisons in this section are misleading.")
+                print("    Use test_only_fair/ for valid cross-method comparisons.")
+                for m, pct in sorted(coverage_pcts.items()):
+                    n_q = len(method_qkeys.get(m, set()))
+                    print(f"    {m:<30} {pct*100:5.1f}% of GT qkeys ({n_q}/{n_gt_qkeys})")
+
+            # ── Per-method summary across folds ──────────────────────────────
+            # Only use folds where this method had meaningful coverage (>0 rows)
+            summary_rows = []
+            for method in fold_df["method"].unique():
+                mdf = fold_df[fold_df["method"] == method]
+                mean_wd = mdf["mean_wd"].mean()
+                std_wd  = mdf["mean_wd"].std()
+                n_f     = len(mdf)
+                avg_cov = mdf["pct_covered"].mean()
+                summary_rows.append({
+                    "method":           method,
+                    "across_fold_mean": round(float(mean_wd), 6),
+                    "across_fold_std":  round(float(std_wd), 6) if not np.isnan(std_wd) else float("nan"),
+                    "n_folds":          n_f,
+                    "avg_pct_covered":  round(float(avg_cov), 3),
+                })
+            summary = pd.DataFrame(summary_rows).sort_values("across_fold_mean")
+            summary.to_csv(sens_dir / "sensitivity_summary.csv", index=False)
+
+            print("\nPer-method stability (interpret within method only if coverage differs):")
+            cov_note = " [avg% of fold qkeys covered]" if coverage_inconsistent else ""
+            print(f"  {'Method':<30} {'Mean dist':>9}  {'± Std':>7}  {'Folds':>5}  {'Cov%':>6}{cov_note}")
+            print("  " + "-" * 65)
+            for _, row in summary.iterrows():
+                std_str = f"{row['across_fold_std']:.4f}" if not np.isnan(row["across_fold_std"]) else "   n/a"
+                print(f"  {row['method']:<30} {row['across_fold_mean']:>8.4f}  "
+                      f"±{std_str:>6}  {int(row['n_folds']):>5}  {row['avg_pct_covered']*100:>5.1f}%")
+
+            # ── Per-fold distance pivot ───────────────────────────────────────
+            print(f"\nPer-fold distance breakdown (seed={args.seed}):")
+            pivot = fold_df.pivot(index="method", columns="fold", values="mean_wd")
+            pivot.columns = [f"fold_{c}" for c in pivot.columns]
+            print(pivot.round(4).to_string())
+            pivot.to_csv(sens_dir / "fold_pivot.csv")
+
+            # ── Common-qkeys cross-method comparison ─────────────────────────
+            if len(method_qkeys) > 1:
+                common_qkeys = set.intersection(*method_qkeys.values()) if method_qkeys else set()
+                if len(common_qkeys) >= args.n_sensitivity_folds:
+                    print(f"\nCommon-qkeys cross-method comparison "
+                          f"({len(common_qkeys)} qkeys shared by all methods):")
+                    common_summary_rows = []
+                    for method in fold_df["method"].unique():
+                        mdf = fold_df[fold_df["method"] == method]
+                        # Rows where all qkeys in fold are in common_qkeys
+                        # proxy: avg pct_covered == 1.0 (meaning fold was fully within common)
+                        full_folds = mdf[mdf["pct_covered"] >= 1.0]
+                        if full_folds.empty:
+                            continue
+                        common_summary_rows.append({
+                            "method": method,
+                            "common_qkeys_mean_wd": float(full_folds["mean_wd"].mean()),
+                            "common_qkeys_std_wd":  float(full_folds["mean_wd"].std()),
+                            "n_full_folds":         len(full_folds),
+                        })
+                    if common_summary_rows:
+                        common_df = pd.DataFrame(common_summary_rows).sort_values("common_qkeys_mean_wd")
+                        common_df.to_csv(sens_dir / "common_qkeys_summary.csv", index=False)
+                        print(f"  {'Method':<30} {'Mean dist':>9}  {'± Std':>7}  {'Full folds':>10}")
+                        print("  " + "-" * 60)
+                        for _, row in common_df.iterrows():
+                            std_str = f"{row['common_qkeys_std_wd']:.4f}" if not np.isnan(row["common_qkeys_std_wd"]) else "   n/a"
+                            print(f"  {row['method']:<30} {row['common_qkeys_mean_wd']:>8.4f}  "
+                                  f"±{std_str:>6}  {int(row['n_full_folds']):>10}")
+                elif len(common_qkeys) > 0:
+                    print(f"\n  Note: only {len(common_qkeys)} qkeys shared across all methods "
+                          f"(need ≥{args.n_sensitivity_folds} for fold analysis) — "
+                          f"cross-method comparison skipped.")
+                    pd.DataFrame({"common_qkeys": sorted(common_qkeys)}).to_csv(
+                        sens_dir / "common_qkeys.csv", index=False)
+                else:
+                    print("\n  Note: no qkeys shared across all methods — "
+                          "cross-method comparison not possible.")
+
+            print(f"\n  Outputs → {sens_dir}/")
+            print(f"    fold_results.csv              — per-(method,fold) with coverage cols")
+            print(f"    fold_results_by_attribute.csv — per-(method,fold,attribute)")
+            print(f"    sensitivity_summary.csv        — mean±std + avg coverage per method")
+            print(f"    fold_pivot.csv                 — method × fold distance matrix")
+            if len(method_qkeys) > 1:
+                print(f"    common_qkeys_summary.csv       — cross-method on shared qkeys only")
+        else:
+            print("  No data produced (no matching prediction files or ground truth rows).")
+
     # ── Method coverage manifest ────────────────────────────────────────────
     if coverage_rows:
         coverage_df = pd.DataFrame(coverage_rows)
@@ -840,9 +1112,10 @@ def main():
     print(f"All outputs saved to {out_dir}/")
     print(f"\nKey files:")
     print(f"  ablation_table.csv                      — SubPop Table 1 (all Qs + test Qs columns)")
-    print(f"  method_coverage.csv                     — audit: n_rows/n_qkeys per method × scope")
+    if coverage_rows:
+        print(f"  method_coverage.csv                     — audit: n_rows/n_qkeys per method × scope")
     print(f"  descriptive_all_rows/                   — all questions (full characterization)")
-    print(f"    bootstrap_ci_*.csv                    — WD with 95% CI")
+    print(f"    bootstrap_ci_*.csv                    — distance metric with 95% CI")
     print(f"    per_attribute_wd_*.csv                — breakdown by demographic attribute")
     print(f"    entropy_*.csv                         — response diversity analysis")
     print(f"    population_weighted_*.csv             — population-weighted aggregate opinion")
@@ -850,6 +1123,11 @@ def main():
     if test_qkeys:
         print(f"  test_only_fair/                         — test questions only (fair comparison)")
         print(f"    (same file structure as descriptive_all_rows/)")
+    if prediction_files and args.n_sensitivity_folds > 0:
+        print(f"  question_subset_sensitivity/            — post-hoc stability analysis")
+        print(f"    fold_results.csv                      — per-(method, fold) mean distance")
+        print(f"    sensitivity_summary.csv               — mean±std across folds per method")
+        print(f"    fold_pivot.csv                        — method × fold distance matrix")
 
 
 if __name__ == "__main__":
