@@ -23,10 +23,11 @@ from transformers import (
     AutoConfig,
     AutoTokenizer,
     BitsAndBytesConfig,
-    AutoProcessor, 
+    AutoProcessor,
     LlamaForCausalLM,
     MistralForCausalLM, # mistral support (custom)
     MllamaForConditionalGeneration,
+    Qwen2ForCausalLM,   # qwen2 support
 )
 from transformers.models.llama.modeling_llama import LlamaDecoderLayer
 from transformers.models.mistral.modeling_mistral import MistralDecoderLayer # mistral support (custom)
@@ -228,8 +229,18 @@ def main(**kwargs):
                 device_map="auto" if train_config.quantization and not train_config.enable_fsdp else None,
                 torch_dtype=torch.float16 if train_config.use_fp16 else torch.bfloat16,
             )
+    elif config.model_type == "qwen2": # qwen2 support
+        is_vision = False
+        model = Qwen2ForCausalLM.from_pretrained(
+            train_config.model_name,
+            quantization_config=bnb_config,
+            use_cache=use_cache,
+            attn_implementation="sdpa" if train_config.use_fast_kernels else None,
+            device_map="auto" if train_config.quantization and not train_config.enable_fsdp else None,
+            torch_dtype=torch.float16 if train_config.use_fp16 else torch.bfloat16,
+        )
     else:
-        raise ValueError(f"Model type {config.model_type} is not supported. Please use llama or mllama model.")
+        raise ValueError(f"Model type {config.model_type} is not supported. Please use llama, mllama, mistral, or qwen2 model.")
     # Load the tokenizer and add special tokens
     tokenizer = AutoTokenizer.from_pretrained(train_config.model_name if train_config.tokenizer_name is None else train_config.tokenizer_name)
     if not tokenizer.pad_token_id: 
