@@ -14,11 +14,11 @@ def get_preprocessed_opinionqa(dataset_config, tokenizer, split, save = True, de
 
     def tokenize_add_label(sample):
         prompt = tokenizer.encode(
-            tokenizer.bos_token + sample["input_prompt"],
+            (tokenizer.bos_token or '') + sample["input_prompt"],
             add_special_tokens=False
         )
         answer = tokenizer.encode(
-            sample["output_prompt"].strip() + tokenizer.eos_token,
+            sample["output_prompt"].strip() + (tokenizer.eos_token or ''),
             add_special_tokens=False
         ) # detail: adding strip(), because " A" is tokenized as ['<s>', '', ' A']
           # i.e., the whitespace is automatically included in the token list..
@@ -75,7 +75,7 @@ def get_preprocessed_opinionqa_ce_or_wd_loss(
                 add_special_tokens=False
             )
             answer = tokenizer.encode(
-                "Answer: A" + tokenizer.eos_token, # "A" is just a placeholder
+                "Answer: A" + (tokenizer.eos_token or ''), # "A" is just a placeholder
                 add_special_tokens=False
             )[-2:] # [-2:] indicates the option and the eos_token
 
@@ -102,7 +102,7 @@ def get_preprocessed_opinionqa_ce_or_wd_loss(
                 add_generation_prompt = True
             )
             answer = tokenizer.encode(
-                "Answer: A" + tokenizer.eos_token,
+                "Answer: A" + (tokenizer.eos_token or ''),
                 add_special_tokens=False
             )[-2:]
                      
