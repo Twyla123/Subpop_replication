@@ -71,7 +71,7 @@ def get_preprocessed_opinionqa_ce_or_wd_loss(
 
         if not chat_template: # using pretrained base model
             prompt = tokenizer.encode(
-                tokenizer.bos_token + sample["input_prompt"],
+                (tokenizer.bos_token or '') + sample["input_prompt"],
                 add_special_tokens=False
             )
             answer = tokenizer.encode(
