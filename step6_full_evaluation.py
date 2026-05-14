@@ -155,11 +155,12 @@ def load_distributions(csv_path: str) -> pd.DataFrame:
         print(f"  WARNING: {nan_mask.sum()} rows dropped from {csv_path!r} — all-NaN distribution (model inference failure)")
         df = df[~nan_mask].reset_index(drop=True)
     if "ordinal" in df.columns:
-        df["ordinal_parsed"] = df.apply(
-            lambda r: parse_ordinal(r["ordinal"], n_options=len(parse_dist(r["responses"]))), axis=1
-        )
+        df["ordinal_parsed"] = [
+            parse_ordinal(ord_val, n_options=len(resp))
+            for ord_val, resp in zip(df["ordinal"], df["responses_parsed"])
+        ]
     else:
-        df["ordinal_parsed"] = df["responses_parsed"].apply(lambda d: list(range(1, len(d) + 1)))
+        df["ordinal_parsed"] = [list(range(1, len(d) + 1)) for d in df["responses_parsed"]]
     return df
 
 
