@@ -98,11 +98,14 @@ def parse_dist(x):
     try:
         return ast.literal_eval(x)
     except (ValueError, SyntaxError):
-        # NumPy format: brackets with space-separated floats, no commas
-        import re
-        nums = re.findall(r'[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?', x)
-        if nums:
-            return [float(n) for n in nums]
+        # NumPy format: brackets with space-separated values, no commas.
+        # Handles both finite floats and nan/inf (e.g. '[nan nan nan]').
+        inner = x.lstrip('[').rstrip(']').strip()
+        if inner:
+            try:
+                return [float(v) for v in inner.split()]
+            except ValueError:
+                pass
         raise ValueError(f"Cannot parse distribution: {x!r}")
 
 
@@ -146,6 +149,11 @@ def load_distributions(csv_path: str) -> pd.DataFrame:
                 f"Columns found: {list(df.columns)}"
             )
     df["responses_parsed"] = df["responses"].apply(parse_dist)
+    # Drop rows where the model produced an all-NaN distribution (inference failure).
+    nan_mask = df["responses_parsed"].apply(lambda d: any(np.isnan(v) for v in d))
+    if nan_mask.any():
+        print(f"  WARNING: {nan_mask.sum()} rows dropped from {csv_path!r} — all-NaN distribution (model inference failure)")
+        df = df[~nan_mask].reset_index(drop=True)
     if "ordinal" in df.columns:
         df["ordinal_parsed"] = df.apply(
             lambda r: parse_ordinal(r["ordinal"], n_options=len(parse_dist(r["responses"]))), axis=1
