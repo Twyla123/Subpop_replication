@@ -850,6 +850,10 @@ def main():
             except Exception as exc:
                 raise RuntimeError(f"Could not load prediction file: {pred_path}") from exc
 
+            if pred_df.empty:
+                print(f"  SKIP {method_name}: no valid predictions after NaN filtering — omitted from evaluation")
+                continue
+
             # Build merge once for coverage stats
             merged_for_cov = gt_df.merge(
                 pred_df, on=["qkey", "attribute", "group"],
@@ -901,8 +905,11 @@ def main():
             for method_name, pred_path in prediction_files.items():
                 safe_name = method_name.replace(" ", "_")
                 ci_path = scope_dir / f"bootstrap_ci_{safe_name}.csv"
-                if ci_path.exists():
-                    ci_df = pd.read_csv(ci_path)
+                if ci_path.exists() and ci_path.stat().st_size > 0:
+                    try:
+                        ci_df = pd.read_csv(ci_path)
+                    except pd.errors.EmptyDataError:
+                        ci_df = pd.DataFrame()
                     if not ci_df.empty:
                         mean_wd = ci_df["wd_point"].mean()
                         ci_lo = ci_df["wd_ci_lower"].mean()
